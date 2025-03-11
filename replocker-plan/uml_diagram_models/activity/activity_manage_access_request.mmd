@@ -1,0 +1,9 @@
+flowchart TD
+    A[Admin Logs In] --> B[MFA Required]
+    B --> C[View Pending Requests]
+    C --> D{Approve?}
+    D -->|Yes| E[Generate 7-Day Token]
+    E --> F[Store Token in access_token]
+    F --> G[Email Token to User]
+    D -->|No| H[Log Denial Reason]
+    H --> I[Notify User]

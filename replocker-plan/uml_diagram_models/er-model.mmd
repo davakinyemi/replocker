@@ -1,0 +1,71 @@
+erDiagram
+    ADMIN ||--o{ REPORT_COLLECTION : creates
+    ADMIN {
+        uuid admin_id PK
+        varchar(255) username
+        varchar(255) email
+        varchar(255) password_hash
+        timestamp created_at
+        uuid keycloak_user_id FK
+    }
+    
+    USER ||--o{ ACCESS_TOKEN : requests
+    USER {
+        uuid user_id PK
+        varchar(64) hashed_email "SHA-256"
+        boolean is_active
+        timestamp created_at
+    }
+    
+    REPORT_COLLECTION ||--o{ REPORT : contains
+    REPORT_COLLECTION {
+        uuid collection_id PK
+        varchar(255) name
+        text description
+        boolean is_locked
+        boolean is_published
+        timestamp created_at
+        timestamp modified_at
+        uuid admin_id FK
+        boolean is_deleted
+        timestamp deleted_at
+    }
+    
+    REPORT {
+        uuid report_id PK
+        varchar(255) name
+        varchar(255) file_path "Local storage path"
+        bigint size_bytes
+        enum report_type "CSV/XLSX"
+        timestamp upload_date
+        uuid collection_id FK
+    }
+    
+    ACCESS_TOKEN {
+        uuid token_id PK
+        varchar(36) token_value
+        uuid collection_id FK
+        uuid user_id FK
+        timestamp created_at
+        timestamp expires_at
+        boolean is_active
+        boolean is_revoked
+    }
+    
+    ALLOWED_DOMAIN {
+        uuid domain_id PK
+        varchar(255) domain_name "@company.com"
+        uuid admin_id FK
+    }
+    
+    ACTIVITY_LOG {
+        uuid log_id PK
+        uuid user_id FK
+        uuid report_id FK
+        uuid collection_id FK
+        enum action_type "VIEW/DOWNLOAD/REQUEST"
+        inet ip_address
+        timestamp created_at
+    }
+    
+    ADMIN ||--o{ ALLOWED_DOMAIN : manages

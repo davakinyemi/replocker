@@ -1,0 +1,10 @@
+flowchart TD
+    A[Admin Logs In] --> B[MFA Verification]
+    B --> C[Create New Collection]
+    C --> D[Upload CSV/XLSX File]
+    D --> E{Virus Scan Passed?}
+    E -->|Yes| F[Store File Locally]
+    F --> G[Add Metadata to PostgreSQL]
+    G --> H[Publish Collection]
+    E -->|No| I[Delete File & Notify Admin]
+    H --> J[Log Activity: COLLECTION_PUBLISHED]

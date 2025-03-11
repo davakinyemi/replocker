@@ -1,0 +1,5 @@
+flowchart TD
+    A[User Accesses Locked Collection] --> B{Token Valid?}
+    B -->|Yes| C[Grant Access]
+    B -->|No| D[Show Expiry Warning]
+    D --> E[Redirect to Request Form]

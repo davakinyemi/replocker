@@ -1,0 +1,135 @@
+classDiagram  
+    direction LR  
+
+    %% Core Entities (GDPR-Aligned)  
+    class Admin {  
+        -UUID adminId  
+        -String username  
+        -String email  
+        -String passwordHash  
+        -LocalDateTime createdAt  
+        -UUID keycloakUserId  
+        +createCollection(name: String, isLocked: boolean): ReportCollection  
+        +updateAllowedDomains(domains: String[]): void  
+    }  
+
+    class User {  
+        -UUID userId  
+        -String hashedEmail  
+        -LocalDateTime createdAt  
+        +requestAccess(collectionId: UUID): AccessToken  
+    }  
+
+    class ReportCollection {  
+        -UUID collectionId  
+        -String name  
+        -String description  
+        -boolean isLocked  
+        -boolean isPublished  
+        -LocalDateTime createdAt  
+        +publish(): void  
+        +unpublish(): void  
+    }  
+
+    class Report {  
+        -UUID reportId  
+        -String filePath  
+        -ReportType type  
+        -LocalDateTime uploadDate  
+        +preview(): void  
+        +download(format: FileFormat): void  
+    }  
+
+    class AccessToken {  
+        -UUID tokenId  
+        -String tokenValue  
+        -LocalDateTime expiresAt  
+        +validate(): boolean  
+        +revoke(): void  
+    }  
+
+    class ActivityLog {  
+        -UUID logId  
+        -ActionType action  
+        -String ipAddress  
+        -LocalDateTime timestamp  
+    }  
+
+    class AllowedDomain {  
+        -UUID domainId  
+        -String domainName  
+    }  
+
+    %% Spring Boot Layer  
+    class ReportController {  
+        +uploadReport(file: MultipartFile): ResponseEntity~UUID~  
+        +downloadReport(reportId: UUID): ResponseEntity~Resource~  
+        +deleteReport(reportId: UUID): void  
+        @PreAuthorize("hasRole('ADMIN')")  
+    }  
+
+    class TokenService {  
+        +generateToken(userEmail: String): AccessToken  
+        +purgeExpiredTokens(): void  
+    }  
+
+    class AuditService {  
+        +logAccess(action: ActionType, ip: String): void  
+        +exportLogs(): Resource  
+    }  
+
+    class FlywayMigrationService {  
+        +applyGdprDeletionJob(): void  
+    }  
+
+    class SecurityConfig {  
+        -String tlsCiphers = "TLS_AES_256_GCM_SHA384"  
+        -boolean enableWaf = true  
+        +configureTls1_3(): void  
+    }  
+
+    %% Angular Layer  
+    class ReportViewerComponent {  
+        +parsedData: any[]  
+        +previewFile(file: File): void  
+        +downloadAsCSV(): void  
+        +downloadAsXLSX(): void  
+    }  
+
+    class KeycloakAuthService {  
+        +login(username: String, password: String): void  
+        +refreshToken(): void  
+        +getRoles(): String[]  
+        +setupMfa(): void  
+    }  
+
+    %% Relationships  
+    Admin "1" --> "0..*" ReportCollection : creates  
+    User "1" --> "0..*" AccessToken : requests  
+    ReportCollection "1" --> "0..*" Report : contains  
+    Admin "1" --> "0..*" AllowedDomain : manages  
+    AuditService --> ActivityLog : logs  
+    TokenService --> AccessToken : manages 
+    KeycloakAuthService ..> Admin : authenticates
+
+    %% Dependencies  
+    ReportController ..> ReportService : depends  
+    ReportService ..> ReportRepository : depends  
+    SecurityConfig --> ReportController : secures  
+    FlywayMigrationService ..> ReportRepository : cascades deletes  
+
+    %% Design Patterns  
+    class RepositoryPattern {  
+        <<interface>>  
+        +save(entity: T): T  
+        +findById(id: UUID): T  
+        +delete(id: UUID): void  
+    }  
+
+    class StrategyPattern {  
+        <<interface>>  
+        +executeSearch(query: String): SearchResult[]  
+    }  
+
+    ReportRepository ..|> RepositoryPattern  
+    SearchService ..|> StrategyPattern  

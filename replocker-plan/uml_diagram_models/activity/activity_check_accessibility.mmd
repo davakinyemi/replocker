@@ -1,0 +1,8 @@
+flowchart TD
+    A[User/Admin Previews Report] --> B[Render Tabular Data]
+    B --> C[Check ARIA Labels]
+    C --> D[Test Keyboard Navigation]
+    D --> E{WCAG 2.2 AA Compliant?}
+    E -->|Yes| F[Confirm Accessibility]
+    E -->|No| G[Log Issues in activity_log]
+    G --> H[Notify Admin via Dashboard]

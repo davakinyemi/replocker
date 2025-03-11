@@ -1,0 +1,14 @@
+flowchart TD
+    A[User Opens Locked Collection] --> B{Token Available?}
+    B -->|Yes| C[Enter Token]
+    C --> D{Valid & Unexpired?}
+    D -->|Yes| E[View/Download Reports]
+    D -->|No| F[Show Error: Invalid/Expired Token]
+    B -->|No| G[Request Access Form]
+    G --> H{Valid Domain?}
+    H -->|No| I[Show Error: Unauthorized Domain]
+    H -->|Yes| J[Submit Request]
+    J --> K[System Sends Email to Admin]
+    K --> L[Admin Approves/Denies]
+    L -->|Approved| M[Token Emailed to User]
+    L -->|Denied| N[Denial Notified]

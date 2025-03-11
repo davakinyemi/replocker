@@ -1,0 +1,8 @@
+flowchart TD
+    A[Start Nightly Job] --> B[Fetch Expired Tokens]
+    B --> C[Fetch Reports >365 Days Old]
+    C --> D{Any Records Found?}
+    D -->|Yes| E[Soft Delete Records]
+    E --> F[Log Deletion in activity_log]
+    F --> G[Hard Delete After 30 Days]
+    D -->|No| H[End Process]
