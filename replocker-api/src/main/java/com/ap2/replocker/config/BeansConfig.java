@@ -3,6 +3,7 @@ package com.ap2.replocker.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -14,6 +15,11 @@ import java.util.Collections;
 @Configuration
 @RequiredArgsConstructor
 public class BeansConfig {
+    @Bean
+    public AuditorAware<String> auditorAware() {
+        return new ApplicationAuditAware();
+    }
+
     @Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
