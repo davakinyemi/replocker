@@ -39,6 +39,7 @@ export class KeycloakService {
         subscriber.next(this._profile);
       } else {
         this._keycloak.loadUserProfile().then(profile => {
+          this._profile = { ...profile, token: this._keycloak.token };
           if (this._profile) {
             subscriber.next(this._profile);
           }
