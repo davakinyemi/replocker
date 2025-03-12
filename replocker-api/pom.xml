@@ -12,7 +12,7 @@
 	<artifactId>replocker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>replocker-api</name>
-	<description>A secure report locker for secure and persistent report data storage</description>
+	<description>A report locker for secure and persistent report data storage</description>
 	<url/>
 	<licenses>
 		<license/>
