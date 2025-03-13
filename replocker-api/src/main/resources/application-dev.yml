@@ -21,6 +21,9 @@ spring:
         jwt:
           issuer-uri: "http://localhost:9090/realms/replocker"
 
+springdoc:
+  default-produces-media-type: application/json
+
 application:
   file:
     uploads:
