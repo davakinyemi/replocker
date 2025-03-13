@@ -23,18 +23,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
-    @CreatedBy
+public class BaseAuditingEntity {
+    /* @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
-    private String createdBy;
+    private String createdBy; */
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
-    @LastModifiedBy
+    /* @LastModifiedBy
     @Column(name = "last_modified_by", insertable = false)
-    private String lastModifiedBy;
+    private String lastModifiedBy; */
 
     @LastModifiedDate
     @Column(name = "last_modified_date", insertable = false)

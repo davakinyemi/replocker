@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: postgres-sql-replocker
+    container_name: postgres-sql-rpl
     image: postgres
     environment:
       POSTGRES_USER: username
@@ -12,10 +12,10 @@ services:
     ports:
       - 5432:5432
     networks:
-      - spring-demo
+      - rpl-net
     restart: unless-stopped
   keycloak:
-    container_name: keycloak-replocker
+    container_name: keycloak-rpl
     image: quay.io/keycloak/keycloak:26.1.3
     ports:
       - 9090:8080
@@ -23,12 +23,12 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     networks:
-      - spring-demo
+      - rpl-net
     command:
       - "start-dev"
 
 networks:
-  spring-demo:
+  rpl-net:
     driver: bridge
 
 volumes:
