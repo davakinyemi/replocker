@@ -25,4 +25,12 @@ public class AdminMapper {
 
         return admin;
     }
+
+    public AdminResponse toAdminResponse(Admin admin) {
+        return AdminResponse.builder()
+                .id(admin.getId())
+                .username(admin.getUsername())
+                .email(admin.getEmail())
+                .build();
+    }
 }
