@@ -21,5 +21,10 @@ spring:
         jwt:
           issuer-uri: "http://localhost:9090/realms/replocker"
 
+application:
+  file:
+    uploads:
+      report-output-path: ./replocker-store
+
 server:
   port: 8088
