@@ -30,5 +30,6 @@ public class AdminSynchronizerFilter extends OncePerRequestFilter {
 
             this.adminSynchronizer.synchronizeWithIdp(token.getToken()); // IDP = Identity Provider (Keycloak)
         }
+        filterChain.doFilter(request, response);
     }
 }
