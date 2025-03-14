@@ -13,7 +13,19 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableAsync
-
+@SecurityScheme(
+		name = "keycloak",
+		type = SecuritySchemeType.OAUTH2,
+		bearerFormat = "JWT",
+		scheme = "bearer",
+		in = SecuritySchemeIn.HEADER,
+		flows = @OAuthFlows(
+				password = @OAuthFlow(
+						authorizationUrl = "http://localhost:9090/realms/replocker/protocol/openid-connect/auth",
+						tokenUrl = "http://localhost:9090/realms/replocker/protocol/openid-connect/token"
+				)
+		)
+)
 public class RepLockerApiApplication {
 
 	public static void main(String[] args) {

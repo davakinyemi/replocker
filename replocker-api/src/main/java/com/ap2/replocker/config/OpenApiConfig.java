@@ -1,4 +1,4 @@
-package com.ap2.replocker.config;
+/* package com.ap2.replocker.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -10,13 +10,13 @@ import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.annotations.servers.Server; */
 
 /**
  * @author Dave AKN
  * @version 1.0
  */
-@OpenAPIDefinition(
+/* @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
                         name = "Dave AKN",
@@ -62,4 +62,4 @@ import io.swagger.v3.oas.annotations.servers.Server;
         )
 )
 public class OpenApiConfig {
-}
+} */
