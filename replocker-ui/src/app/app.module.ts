@@ -4,8 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
-import {httpTokenInterceptor} from './services/interceptor/http-token.interceptor';
-import {KeycloakService} from './services/keycloak/keycloak.service';
+import {MaterialModule} from './material/material.module';
+import {KeycloakService} from './utils/keycloak/keycloak.service';
+import {keycloakHttpInterceptor} from './utils/http/keycloak-http.interceptor';
 
 export function initializeKeycloak() {
   const kcService = inject(KeycloakService);
@@ -18,11 +19,12 @@ export function initializeKeycloak() {
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MaterialModule
   ],
   providers: [
     provideHttpClient(
-      withInterceptors([httpTokenInterceptor])
+      withInterceptors([keycloakHttpInterceptor])
     ),
     provideAppInitializer(initializeKeycloak)
   ],

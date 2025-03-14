@@ -68,7 +68,7 @@ classDiagram
         @PreAuthorize("hasRole('ADMIN')")  
     }  
 
-    class TokenService {  
+    class _tokenService {
         +generateToken(userEmail: String): AccessToken  
         +purgeExpiredTokens(): void  
     }  
@@ -109,7 +109,7 @@ classDiagram
     ReportCollection "1" --> "0..*" Report : contains  
     Admin "1" --> "0..*" AllowedDomain : manages  
     AuditService --> ActivityLog : logs  
-    TokenService --> AccessToken : manages 
+    _tokenService --> AccessToken : manages
     KeycloakAuthService ..> Admin : authenticates
 
     %% Dependencies  

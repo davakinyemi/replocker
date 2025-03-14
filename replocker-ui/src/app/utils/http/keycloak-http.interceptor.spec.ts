@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpInterceptorFn } from '@angular/common/http';
 
-import { httpTokenInterceptor } from './http-token.interceptor';
+import { keycloakHttpInterceptor } from './keycloak-http.interceptor';
 
-describe('httpTokenInterceptor', () => {
+describe('keycloakHttpInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) => 
-    TestBed.runInInjectionContext(() => httpTokenInterceptor(req, next));
+    TestBed.runInInjectionContext(() => keycloakHttpInterceptor(req, next));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
