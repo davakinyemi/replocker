@@ -1,14 +1,16 @@
 package com.ap2.replocker.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.security.*;
+import io.swagger.v3.oas.annotations.security.OAuthFlow;
+import io.swagger.v3.oas.annotations.security.OAuthFlows;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
-
-import static io.swagger.v3.oas.annotations.enums.SecuritySchemeIn.HEADER;
-import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.OAUTH2;
 
 /**
  * @author Dave AKN
@@ -47,20 +49,17 @@ import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.OAUTH2;
         }
 )
 @SecurityScheme(
-        name = "bearerAuth",
-        description = "JWT auth description",
-        scheme = "bearer",
-        type = OAUTH2,
-        flows = @OAuthFlows(
-                clientCredentials =
-                @OAuthFlow(
-                        // authorizationUrl = "http://localhost:9090/realms/replocker/protocol/openid-connect/auth"
-                        tokenUrl = "http://localhost:9090/realms/replocker/protocol/openid-connect/token",
-                        scopes = @OAuthScope(name = "openid", description = "OpenID scope")
-                )
-        ),
+        name = "keycloak",
+        type = SecuritySchemeType.OAUTH2,
         bearerFormat = "JWT",
-        in = HEADER
+        scheme = "bearer",
+        in = SecuritySchemeIn.HEADER,
+        flows = @OAuthFlows(
+                password = @OAuthFlow(
+                        authorizationUrl = "http://localhost:9090/realms/replocker/protocol/openid-connect/auth",
+                        tokenUrl = "http://localhost:9090/realms/replocker/protocol/openid-connect/token"
+                )
+        )
 )
 public class OpenApiConfig {
 }
