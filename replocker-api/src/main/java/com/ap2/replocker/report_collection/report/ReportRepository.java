@@ -1,4 +1,6 @@
 package com.ap2.replocker.report_collection.report;
 
-public interface ReportRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReportRepository extends JpaRepository<Report, String> {
 }
