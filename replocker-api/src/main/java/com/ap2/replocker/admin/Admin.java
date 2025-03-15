@@ -1,6 +1,5 @@
 package com.ap2.replocker.admin;
 
-
 import com.ap2.replocker.common.BaseAuditingEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

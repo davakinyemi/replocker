@@ -27,9 +27,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 		)
 )
 public class RepLockerApiApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(RepLockerApiApplication.class, args);
 	}
-
 }

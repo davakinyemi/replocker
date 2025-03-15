@@ -9,8 +9,8 @@ erDiagram
         uuid keycloak_user_id FK
     }
     
-    USER ||--o{ ACCESS_TOKEN : requests
-    USER {
+    _USER ||--o{ ACCESS_TOKEN : requests
+    _USER {
         uuid user_id PK
         varchar(64) hashed_email "SHA-256"
         boolean is_active
