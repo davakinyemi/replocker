@@ -1,6 +1,6 @@
-package com.ap2.replocker.file;
+/* package com.ap2.replocker.file;
 
-import com.ap2.replocker.exception.custom.InvalidFileTypeException;
+
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +17,10 @@ import java.nio.file.Paths;
 import static java.io.File.separator;
 import static java.lang.System.currentTimeMillis;
 
-/**
- * @author Dave AKN
- * @version 1.0
- */
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class FileService {
-    // private final ClamavClient clamavClient;
-
+public class _FileService {
     @Value("${application.file.uploads.report-output-path}")
     private String fileUploadPath;
 
@@ -34,59 +28,37 @@ public class FileService {
             @Nonnull MultipartFile sourceFile,
             @Nonnull String reportCollectionId
     ) {
-        this.validateFileType(sourceFile);
-        // this.scanForViruses(sourceFile);
-
         final String fileUploadSubPath = "report_collection" + separator + reportCollectionId;
-
-        return this.uploadFile(sourceFile, fileUploadSubPath, reportCollectionId);
+        return this.uploadFile(sourceFile, fileUploadSubPath);
     }
 
-    public String uploadFile(
+    private String uploadFile(
             @Nonnull MultipartFile sourceFile,
-            @Nonnull String fileUploadSubPath,
-            @Nonnull String reportCollectionId
+            @Nonnull String fileUploadSubPath
     ) {
         final String finalUploadPath = this.fileUploadPath + separator + fileUploadSubPath;
         File targetFolder = new File(finalUploadPath);
+
         if (!targetFolder.exists()) {
             boolean folderCreated = targetFolder.mkdirs();
             if (!folderCreated) {
-                log.warn("Could not create folder: {}", targetFolder);
+                log.warn("Failed to create the target folder: " + targetFolder);
                 return null;
             }
         }
 
         final String fileExtension = this.getFileExtension(sourceFile.getOriginalFilename());
-        String targetFilePath = finalUploadPath + separator + reportCollectionId + separator + currentTimeMillis() + "." + fileExtension;
+        String targetFilePath = finalUploadPath + separator + currentTimeMillis() + "." + fileExtension;
         Path targetPath = Paths.get(targetFilePath);
-
         try {
             Files.write(targetPath, sourceFile.getBytes());
-            log.info("Uploaded file: {}", targetFilePath);
+            log.info("File uploaded to: " + targetFilePath);
             return targetFilePath;
         } catch (IOException exception) {
-            log.error("Could not upload file: {}", targetFilePath, exception);
+            log.error("File was not uploaded", exception);
         }
         return null;
     }
-
-    private void validateFileType(MultipartFile file) {
-        String fileType = file.getContentType();
-        if (!"text/csv".equals(fileType) && !"application/vnd.ms-excel".equals(fileType)) {
-            throw new InvalidFileTypeException();
-        }
-    }
-
-    /* private void scanForViruses(MultipartFile file) {
-        try {
-            if (this.clamavClient.scan(file.getBytes()) != ClamavClient.SCAN_RESULT_CLEAN) {
-                throw new VirusDetectedException();
-            }
-        } catch (IOException exception) {
-            throw new FileProcessingException();
-        }
-    } */
 
     private String getFileExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) return "";
@@ -96,4 +68,4 @@ public class FileService {
 
         return fileName.substring(lastDotIndex + 1).toLowerCase();
     }
-}
+} */
