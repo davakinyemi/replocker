@@ -1,5 +1,6 @@
 package com.ap2.replocker.exception;
 
+import com.ap2.replocker.exception.custom.InvalidFileTypeException;
 import com.ap2.replocker.exception.custom.OperationNotPermittedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(OperationNotPermittedException.class)
     public ResponseEntity<ExceptionResponse> handleException(OperationNotPermittedException exception) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .error(exception.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(InvalidFileTypeException.class)
+    public ResponseEntity<ExceptionResponse> handleException(InvalidFileTypeException exception) {
         return ResponseEntity
                 .status(BAD_REQUEST)
                 .body(
