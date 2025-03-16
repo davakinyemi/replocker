@@ -1,9 +1,7 @@
 package com.ap2.replocker.report_collection.report;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.ap2.replocker.report_collection.ReportCollection;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +19,17 @@ public class Report {
     @Id
     @GeneratedValue(strategy = UUID)
     private String id;
+
+    @Column(nullable = false)
+    private String name;
+
+    private String filePath;
+    private long sizeBytes;
+
+    @Enumerated(EnumType.STRING)
+    private ReportType type;
+
+    @ManyToOne
+    @JoinColumn(name = "collection_id", nullable = false)
+    private ReportCollection collection;
 }
