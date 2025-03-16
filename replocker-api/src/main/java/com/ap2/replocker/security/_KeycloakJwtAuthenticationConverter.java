@@ -1,4 +1,4 @@
-package com.ap2.replocker.security;
+/*package com.ap2.replocker.security;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
@@ -37,4 +37,4 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.replace("-", "_")))
                 .collect(toSet());
     }
-}
+}*/
