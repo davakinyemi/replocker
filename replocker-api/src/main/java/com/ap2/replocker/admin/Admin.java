@@ -20,11 +20,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @SuperBuilder
-@Table(name = "admin", uniqueConstraints = {
-        @UniqueConstraint(name = "uc_admin_username", columnNames = "username"),
-        @UniqueConstraint(name = "uc_admin_hashed_email", columnNames = "hashed_email"),
-        @UniqueConstraint(name = "uc_admin_keycloak_id", columnNames = "keycloak_user_id")
-})
+@Table(
+        name = "admin",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uc_admin_username", columnNames = "username"),
+                @UniqueConstraint(name = "uc_admin_hashed_email", columnNames = "hashed_email"),
+                @UniqueConstraint(name = "uc_admin_keycloak_id", columnNames = "keycloak_user_id")
+        }
+)
 public class Admin extends BaseAuditingEntity {
     @Id
     @GeneratedValue

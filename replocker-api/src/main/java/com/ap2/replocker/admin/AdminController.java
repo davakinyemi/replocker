@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("admin")
-@SecurityRequirement(name =  "keycloak")
+@SecurityRequirement(name = "keycloak")
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;

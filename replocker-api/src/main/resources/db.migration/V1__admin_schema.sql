@@ -1,10 +1,10 @@
 CREATE TABLE admin (
-    id uuid PRIMARY KEY,
+    id UUID PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     hashed_email VARCHAR(64) NOT NULL,
-    keycloak_user_id uuid NOT NULL,
-    created_date timestamptz NOT NULL ,
-    last_modified_date timestamptz
+    keycloak_user_id UUID NOT NULL,
+    created_date TIMESTAMPTZ NOT NULL ,
+    last_modified_date TIMESTAMPTZ
 );
 
 CREATE UNIQUE INDEX idx_admin_username ON admin(username);
