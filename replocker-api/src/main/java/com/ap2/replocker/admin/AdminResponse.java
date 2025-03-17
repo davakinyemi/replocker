@@ -2,13 +2,20 @@ package com.ap2.replocker.admin;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class AdminResponse {
-    private String id;
+    private UUID id;
     private String username;
-    private String email;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
+    private List<String> collectionIds;
+    private List<String> allowedDomains;
 }

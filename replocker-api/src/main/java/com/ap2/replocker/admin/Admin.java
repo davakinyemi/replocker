@@ -2,44 +2,43 @@ package com.ap2.replocker.admin;
 
 import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.ReportCollection;
-import com.ap2.replocker.report_collection.access_token.AllowedDomain;
+import com.ap2.replocker.report_collection.access_token.allowed_domain.AllowedDomain;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.List;
-
-import static jakarta.persistence.GenerationType.UUID;
+import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "admin")
-/*@NamedQuery(
-        name = AdminConstants.FIND_ADMIN_BY_EMAIL,
-        query = "SELECT a FROM Admin a WHERE a.email = :email"
-)
-@NamedQuery(
-        name = AdminConstants.FIND_ADMIN_BY_PUBLIC_ID,
-        query = "SELECT a FROM Admin a WHERE a.id = :publicId"
-)*/
+@SuperBuilder
+@Table(name = "admin", uniqueConstraints = {
+        @UniqueConstraint(name = "uc_admin_username", columnNames = "username"),
+        @UniqueConstraint(name = "uc_admin_hashed_email", columnNames = "hashed_email"),
+        @UniqueConstraint(name = "uc_admin_keycloak_id", columnNames = "keycloak_user_id")
+})
 public class Admin extends BaseAuditingEntity {
     @Id
-    @GeneratedValue(strategy = UUID)
-    private String id;
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+    @Column(name = "hashed_email", nullable = false)
+    private String hashedEmail; //SHA-256
 
-    private String passwordHash;
-    private String keycloakUserId;
+    @Column(name = "keycloak_user_id", nullable = false)
+    private UUID keycloakUserId;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private List<ReportCollection> collections;
