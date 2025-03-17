@@ -1,4 +1,4 @@
-package com.ap2.replocker.security;
+/* package com.ap2.replocker.security;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
@@ -6,13 +6,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.Collectors; */
 
 /**
  * @author Dave AKN
  * @version 1.0
  */
-public class KeycloakRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+/* public class _KeycloakRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
     @SuppressWarnings("unchecked")
     public Collection<GrantedAuthority> convert(Jwt jwt) {
         Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
@@ -40,4 +40,4 @@ public class KeycloakRoleConverter implements Converter<Jwt, Collection<GrantedA
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
     }
-}
+} */

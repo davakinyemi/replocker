@@ -1,5 +1,6 @@
 package com.ap2.replocker.security;
 
+import com.ap2.replocker.interceptor.AdminSynchronizerFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -20,9 +22,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
+    private final AdminSynchronizerFilter adminSyncFilter;
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http
+    ) throws Exception {
         http
+                .addFilterBefore(adminSyncFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests ->
@@ -43,14 +49,12 @@ public class SecurityConfig {
                                         "reports/public/**"
                         ).permitAll().anyRequest().authenticated()
                 ).oauth2ResourceServer(auth ->
-                        auth.jwt(token -> token.jwtAuthenticationConverter(keycloakJwtConverter()))
+                        auth.jwt(token -> token.jwtAuthenticationConverter(this.keycloakJwtConverter()))
                 );
         return http.build();
     }
 
     private Converter<Jwt, AbstractAuthenticationToken> keycloakJwtConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter());
-        return converter;
+        return new KeycloakJwtAuthenticationConverter();
     }
 }
