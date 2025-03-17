@@ -46,7 +46,8 @@ public class SecurityConfig {
                                         "/webjars/**",
                                         "/swagger-ui.html",
                                         "/ws/**",
-                                        "reports/public/**"
+                                        "/reports/public/**",
+                                        "/user/request-access"
                         ).permitAll().anyRequest().authenticated()
                 ).oauth2ResourceServer(auth ->
                         auth.jwt(token -> token.jwtAuthenticationConverter(this.keycloakJwtConverter()))
