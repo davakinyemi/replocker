@@ -1,9 +1,9 @@
 package com.ap2.replocker.exception;
 
-import com.ap2.replocker.exception.custom.InvalidFileTypeException;
-import com.ap2.replocker.exception.custom.OperationNotPermittedException;
+import com.ap2.replocker.exception.custom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -56,6 +55,40 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .error(exception.getMessage())
                                 .build()
+                );
+    }
+
+    @ExceptionHandler(AdminNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(AdminNotFoundException exception) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .error(exception.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ExceptionResponse> handleException(InvalidTokenException exception) {
+        return ResponseEntity
+                .status(FORBIDDEN)
+                .body(
+                        ExceptionResponse.builder()
+                                .error(exception.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(CollectionNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(CollectionNotFoundException exception) {
+        return ResponseEntity
+                .status(NOT_FOUND)
+                .body(ExceptionResponse.builder()
+                        .businessErrorCode(BusinessErrorCodes.COLLECTION_NOT_FOUND.ordinal())
+                        .businessExceptionDescription(exception.getMessage())
+                        .error(exception.getMessage())
+                        .build()
                 );
     }
 

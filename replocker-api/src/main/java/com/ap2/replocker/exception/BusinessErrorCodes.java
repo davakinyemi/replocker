@@ -9,6 +9,9 @@ public enum BusinessErrorCodes {
     NO_CODE(0, NOT_IMPLEMENTED, "No code"),
     BAD_CREDENTIALS(304, FORBIDDEN, "One or more access credentials incorrect"),
     INVALID_FILE_TYPE(400, FORBIDDEN, "Invalid file type, provide csv or excel file format"),
+    ADMIN_NOT_FOUND(404, FORBIDDEN, "Admin not found"),
+    INVALID_TOKEN(401, FORBIDDEN, "Invalid token"),
+    COLLECTION_NOT_FOUND(404, FORBIDDEN, "Collection not found"),
     ;
 
     BusinessErrorCodes(int code, HttpStatus httpStatus, String description) {
