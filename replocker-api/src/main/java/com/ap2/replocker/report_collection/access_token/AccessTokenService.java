@@ -1,4 +1,4 @@
-package com.ap2.replocker.user.access_token;
+package com.ap2.replocker.report_collection.access_token;
 
 import com.ap2.replocker.exception.custom.InvalidTokenException;
 import com.ap2.replocker.admin.allowed_domain.AllowedDomainRepository;

@@ -6,4 +6,4 @@ CREATE TABLE allowed_domain(
     last_modified_date TIMESTAMPTZ
 );
 
-CREATE UNIQUE INDEX idx_domain_admin ON allowed_domain(admin_id, lower(domain_name));
+CREATE UNIQUE INDEX uc_domain_admin ON allowed_domain(admin_id, lower(domain_name));

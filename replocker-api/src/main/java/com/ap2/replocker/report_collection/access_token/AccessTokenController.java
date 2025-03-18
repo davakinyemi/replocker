@@ -1,4 +1,4 @@
-package com.ap2.replocker.user.access_token;
+package com.ap2.replocker.report_collection.access_token;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  */
 @RestController
-@RequestMapping("access-tokens")
+@RequestMapping("/collection/access-token")
 @SecurityRequirement(name = "keycloak")
 @RequiredArgsConstructor
 public class AccessTokenController {

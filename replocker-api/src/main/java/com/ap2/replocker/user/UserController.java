@@ -15,7 +15,7 @@ import java.util.UUID;
  * @version 1.0
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 @SecurityRequirement(name = "keycloak")
 @RequiredArgsConstructor
 public class UserController {

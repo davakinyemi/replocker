@@ -1,6 +1,6 @@
 package com.ap2.replocker.user;
 
-import com.ap2.replocker.user.access_token.AccessTokenService;
+import com.ap2.replocker.report_collection.access_token.AccessTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

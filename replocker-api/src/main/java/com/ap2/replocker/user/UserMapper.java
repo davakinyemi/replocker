@@ -1,6 +1,6 @@
 package com.ap2.replocker.user;
 
-import com.ap2.replocker.user.access_token.AccessToken;
+import com.ap2.replocker.report_collection.access_token.AccessToken;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
