@@ -1,5 +1,6 @@
-package com.ap2.replocker.report_collection.action;
+package com.ap2.replocker.report_collection.activity_log;
 
+import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.ReportCollection;
 import com.ap2.replocker.report_collection.report.Report;
 import com.ap2.replocker.user.User;
@@ -8,8 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.UUID;
 
@@ -19,27 +23,30 @@ import static jakarta.persistence.GenerationType.UUID;
  */
 @Getter
 @Setter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "activity_log")
-public class ActivityLog {
+public class ActivityLog extends BaseAuditingEntity {
     @Id
-    @GeneratedValue(strategy = UUID)
-    private String id;
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Report report;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ReportCollection reportCollection;
 
     @Enumerated(EnumType.STRING)
-    private ActionType actionType;
+    @Column(name = "activity_type", nullable = false)
+    private ActivityType activityType;
 
+    @Column(name = "ip_address", nullable = false)
     private String ipAddress;
-    private LocalDateTime createdAt;
 }

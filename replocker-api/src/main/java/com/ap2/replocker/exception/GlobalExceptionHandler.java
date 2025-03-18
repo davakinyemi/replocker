@@ -66,6 +66,20 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .businessErrorCode(BusinessErrorCodes.ADMIN_NOT_FOUND.ordinal())
+                                .businessExceptionDescription(exception.getMessage())
+                                .error(exception.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(UserNotFoundException exception) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.USER_NOT_FOUND.ordinal())
+                                .businessExceptionDescription(exception.getMessage())
                                 .error(exception.getMessage())
                                 .build()
                 );
