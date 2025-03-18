@@ -4,34 +4,46 @@ import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.report.Report;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.List;
-
-import static jakarta.persistence.GenerationType.UUID;
+import java.util.UUID;
 
 @Getter
 @Setter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "report_collection")
+@Table(
+        name = "report_collection",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uc_collection_name", columnNames = "name")
+        }
+)
 public class ReportCollection extends BaseAuditingEntity {
     @Id
-    @GeneratedValue(strategy = UUID)
-    private String id;
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "description")
     private String description;
-    private boolean isLocked;
-    private boolean isPublished;
 
-    @ManyToOne
+    @Column(name = "is_locked")
+    @Builder.Default
+    private boolean isLocked = false;
+
+    @Column(name = "is_published")
+    @Builder.Default
+    private boolean isPublished = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
 
