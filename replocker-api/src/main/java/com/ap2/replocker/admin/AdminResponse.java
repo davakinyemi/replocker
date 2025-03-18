@@ -16,6 +16,6 @@ public class AdminResponse {
     private String username;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
-    private List<String> collectionIds;
+    private List<UUID> collectionIds;
     private List<String> allowedDomains;
 }

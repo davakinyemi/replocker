@@ -1,15 +1,13 @@
 package com.ap2.replocker.user;
 
 import com.ap2.replocker.common.BaseAuditingEntity;
-import com.ap2.replocker.report_collection.access_token.AccessToken;
+import com.ap2.replocker.user.access_token.AccessToken;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.List;
 import java.util.UUID;
-
-import static jakarta.persistence.GenerationType.UUID;
 
 @Getter
 @Setter
@@ -33,6 +31,7 @@ public class User extends BaseAuditingEntity {
     private String hashedEmail; // SHA-256 hashed
 
     @Builder.Default
+    @Column(name = "is_active")
     private boolean isActive = true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

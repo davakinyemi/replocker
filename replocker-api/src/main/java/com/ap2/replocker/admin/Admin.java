@@ -2,7 +2,7 @@ package com.ap2.replocker.admin;
 
 import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.ReportCollection;
-import com.ap2.replocker.report_collection.access_token.allowed_domain.AllowedDomain;
+import com.ap2.replocker.user.access_token.allowed_domain.AllowedDomain;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
