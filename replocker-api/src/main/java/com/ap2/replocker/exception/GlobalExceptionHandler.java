@@ -53,6 +53,7 @@ public class GlobalExceptionHandler {
                 .status(BAD_REQUEST)
                 .body(
                         ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.INVALID_FILE_TYPE.ordinal())
                                 .error(exception.getMessage())
                                 .build()
                 );
@@ -64,6 +65,7 @@ public class GlobalExceptionHandler {
                 .status(BAD_REQUEST)
                 .body(
                         ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.ADMIN_NOT_FOUND.ordinal())
                                 .error(exception.getMessage())
                                 .build()
                 );
@@ -75,6 +77,7 @@ public class GlobalExceptionHandler {
                 .status(FORBIDDEN)
                 .body(
                         ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.INVALID_TOKEN.ordinal())
                                 .error(exception.getMessage())
                                 .build()
                 );
@@ -98,6 +101,7 @@ public class GlobalExceptionHandler {
                 .status(CONFLICT)
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(BusinessErrorCodes.DUPLICATE_DOMAIN_NAME.ordinal())
+                        .businessExceptionDescription(exception.getMessage())
                         .error(exception.getMessage())
                         .build());
     }
@@ -108,6 +112,18 @@ public class GlobalExceptionHandler {
                 .status(CONFLICT)
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(BusinessErrorCodes.DUPLICATE_COLLECTION_NAME.ordinal())
+                        .businessExceptionDescription(exception.getMessage())
+                        .error(exception.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(DuplicateReportException.class)
+    public ResponseEntity<ExceptionResponse> handleException(DuplicateReportException exception) {
+        return ResponseEntity
+                .status(CONFLICT)
+                .body(ExceptionResponse.builder()
+                        .businessErrorCode(BusinessErrorCodes.DUPLICATE_REPORT_NAME.ordinal())
+                        .businessExceptionDescription(exception.getMessage())
                         .error(exception.getMessage())
                         .build());
     }
