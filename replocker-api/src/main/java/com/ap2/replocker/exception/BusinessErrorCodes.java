@@ -13,6 +13,7 @@ public enum BusinessErrorCodes {
     INVALID_TOKEN(401, FORBIDDEN, "Invalid token"),
     COLLECTION_NOT_FOUND(404, FORBIDDEN, "Collection not found"),
     DUPLICATE_DOMAIN_NAME(409, FORBIDDEN, "Duplicate domain name"),
+    DUPLICATE_COLLECTION_NAME(409, FORBIDDEN, "Duplicate collection name"),
     ;
 
     BusinessErrorCodes(int code, HttpStatus httpStatus, String description) {

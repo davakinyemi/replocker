@@ -102,6 +102,16 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(DuplicateCollectionException.class)
+    public ResponseEntity<ExceptionResponse> handleException(DuplicateCollectionException exception) {
+        return ResponseEntity
+                .status(CONFLICT)
+                .body(ExceptionResponse.builder()
+                        .businessErrorCode(BusinessErrorCodes.DUPLICATE_COLLECTION_NAME.ordinal())
+                        .error(exception.getMessage())
+                        .build());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
         LOGGER.error("Unhandled exception occurred: {}", exception.getMessage(), exception);
