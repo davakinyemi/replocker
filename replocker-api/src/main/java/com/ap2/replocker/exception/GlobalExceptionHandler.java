@@ -92,6 +92,16 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(DuplicateDomainException.class)
+    public ResponseEntity<ExceptionResponse> handleException(DuplicateDomainException exception) {
+        return ResponseEntity
+                .status(CONFLICT)
+                .body(ExceptionResponse.builder()
+                        .businessErrorCode(BusinessErrorCodes.DUPLICATE_DOMAIN_NAME.ordinal())
+                        .error(exception.getMessage())
+                        .build());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
         LOGGER.error("Unhandled exception occurred: {}", exception.getMessage(), exception);

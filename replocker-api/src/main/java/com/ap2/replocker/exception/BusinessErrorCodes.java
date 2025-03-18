@@ -12,6 +12,7 @@ public enum BusinessErrorCodes {
     ADMIN_NOT_FOUND(404, FORBIDDEN, "Admin not found"),
     INVALID_TOKEN(401, FORBIDDEN, "Invalid token"),
     COLLECTION_NOT_FOUND(404, FORBIDDEN, "Collection not found"),
+    DUPLICATE_DOMAIN_NAME(409, FORBIDDEN, "Duplicate domain name"),
     ;
 
     BusinessErrorCodes(int code, HttpStatus httpStatus, String description) {

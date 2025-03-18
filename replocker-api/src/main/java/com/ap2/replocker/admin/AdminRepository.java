@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface AdminRepository extends JpaRepository<Admin, String> {
+public interface AdminRepository extends JpaRepository<Admin, UUID> {
     Optional<Admin> findByUsername(@Param("username") String username);
     Optional<Admin> findByHashedEmail(@Param("hashed_email") String hashedEmail);
     Optional<Admin> findByKeycloakUserId(@Param("keycloak_user_id") UUID keycloakUserId);
