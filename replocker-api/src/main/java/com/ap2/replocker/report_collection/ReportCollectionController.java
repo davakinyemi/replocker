@@ -1,6 +1,7 @@
 package com.ap2.replocker.report_collection;
 
 import com.ap2.replocker.common.PageResponse;
+import com.ap2.replocker.report_collection.report.ReportResponse;
 import com.ap2.replocker.report_collection.report.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReportCollectionController {
     private final ReportCollectionService reportCollectionService;
+    private final ReportService reportService;
 
     @Operation(summary = "Create report collection (Admin only")
     @PostMapping("/create")
@@ -44,5 +46,15 @@ public class ReportCollectionController {
     ) {
         return ResponseEntity.ok(this.reportCollectionService.getPublicCollections(page, size));
     }
+
+    /* @Operation(summary = "List reports in collection")
+    @GetMapping
+    public PageResponse<ReportResponse> getReports(
+            @RequestParam UUID collectionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+    } */
 
 }
