@@ -19,7 +19,7 @@ import java.util.UUID;
  * @version 1.0
  */
 @RestController
-@RequestMapping("admin/domains")
+@RequestMapping("/admin/domain")
 @SecurityRequirement(name = "keycloak")
 @RequiredArgsConstructor
 public class AllowedDomainController {
