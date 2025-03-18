@@ -18,7 +18,7 @@ import java.util.UUID;
 @Table(
         name = "_user",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uc_user_hashed_email", columnNames = "hashed_email")
+                @UniqueConstraint(name = "uc_user_email", columnNames = "email")
         }
 )
 public class User extends BaseAuditingEntity {
@@ -27,8 +27,8 @@ public class User extends BaseAuditingEntity {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "hashed_email", nullable = false)
-    private String hashedEmail; // SHA-256 hashed
+    @Column(name = "email", nullable = false)
+    private String email;
 
     @Builder.Default
     @Column(name = "is_active")

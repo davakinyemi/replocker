@@ -13,7 +13,7 @@ public class UserMapper {
 
     public User toUser(UserRequest userRequest) {
         return User.builder()
-                .hashedEmail(this.hashEmail(userRequest.email()))
+                .email(userRequest.email())
                 .build();
     }
 
@@ -28,7 +28,7 @@ public class UserMapper {
                 .build();
     }
 
-    protected String hashEmail(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
+    /* protected String hashEmail(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
         return DigestUtils.sha256Hex(email.toLowerCase().trim());
-    }
+    } */
 }

@@ -16,16 +16,15 @@ public class UserService {
     private final AccessTokenService tokenService;
 
     public UserResponse createOrGetUser(UserRequest userRequest) {
-        String hashedEmail = this.userMapper.hashEmail(userRequest.email());
-        return this.userRepository.findByHashedEmail(hashedEmail)
+        return this.userRepository.findByEmail(userRequest.email())
                 .map(this.userMapper::toUserResponse)
-                .orElseGet(() -> this.createNewUser(hashedEmail));
+                .orElseGet(() -> this.createNewUser(userRequest.email()));
 
     }
 
-    private UserResponse createNewUser(String hashedEmail) {
+    private UserResponse createNewUser(String email) {
         User newUser = User.builder()
-                .hashedEmail(hashedEmail)
+                .email(email)
                 .isActive(true)
                 .build();
         return this.userMapper.toUserResponse(userRepository.save(newUser));
