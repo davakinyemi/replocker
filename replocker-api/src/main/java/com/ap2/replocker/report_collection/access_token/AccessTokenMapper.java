@@ -29,7 +29,7 @@ public class AccessTokenMapper {
                 .expiresAt(LocalDateTime.now().plusDays(7))
                 .collection(this.reportCollectionRepository.findById(request.collectionId())
                         .orElseThrow(() -> new CollectionNotFoundException(request.collectionId())))
-                .user(this.userRepository.findByHashedEmail(this.hashEmail(request.email()))
+                .user(this.userRepository.findByEmail(request.email())
                         .orElseGet(() -> this.createUser(request.email())))
                 .build();
     }
@@ -47,11 +47,11 @@ public class AccessTokenMapper {
 
     private User createUser(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
         return this.userRepository.save(User.builder()
-                .hashedEmail(this.hashEmail(email))
+                .email(email)
                 .build());
     }
 
-    protected String hashEmail(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
+    /* protected String hashEmail(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
         return DigestUtils.sha256Hex(email.toLowerCase().trim());
-    }
+    } */
 }

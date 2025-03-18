@@ -39,7 +39,7 @@ public class ReportCollectionService {
     }
 
     public PageResponse<ReportCollectionResponse> getPublicCollections(int page, int size) {
-        Page<ReportCollection> collections = this.reportCollectionRepository.findByIsPublishedTrueAndIsLockedFalse(
+        Page<ReportCollection> collections = this.reportCollectionRepository.findByPublishedTrueAndLockedFalse(
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"))
         );
 
