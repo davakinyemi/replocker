@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.report_collection.activity_log;
 
 import com.ap2.replocker.common.PageResponse;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+*/
 /**
  * @author Dave AKN
  * @version 1.0
- */
+ *//*
+
 @RestController
 @RequestMapping("/activity-log")
 @SecurityRequirement(name = "keycloak")
@@ -20,7 +23,8 @@ import java.util.UUID;
 public class ActivityLogController {
     private final ActivityLogService activityLogService;
 
-    /*@Operation(summary = "Get activity logs for collection")
+    */
+/*@Operation(summary = "Get activity logs for collection")
     @GetMapping("/collection/{collectionId}")
     @PreAuthorize("hasRole('REPORT_ADMIN')")
     public PageResponse<ActivityLogResponse> getLogsByCollection(
@@ -32,5 +36,7 @@ public class ActivityLogController {
                 this.activityLogService.getLogsByCollection(collectionId, page, size)
                         .map(this.activityLogService.getMapper()::toResponse)
         );
-    } */
+    } *//*
+
 }
+*/

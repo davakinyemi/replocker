@@ -1,9 +1,9 @@
-package com.ap2.replocker.report_collection.activity_log;
+/* package com.ap2.replocker.report_collection.activity_log;
 
 import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.ReportCollection;
+import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import com.ap2.replocker.report_collection.report.Report;
-import com.ap2.replocker.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,16 +12,13 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import static jakarta.persistence.GenerationType.UUID;
+import java.util.UUID; */
 
 /**
  * @author Dave AKN
  * @version 1.0
  */
-@Getter
+/* @Getter
 @Setter
 @SuperBuilder
 @AllArgsConstructor
@@ -35,7 +32,7 @@ public class ActivityLog extends BaseAuditingEntity {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private AccessRequest accessRequest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Report report;
@@ -49,4 +46,4 @@ public class ActivityLog extends BaseAuditingEntity {
 
     @Column(name = "ip_address", nullable = false)
     private String ipAddress;
-}
+} */

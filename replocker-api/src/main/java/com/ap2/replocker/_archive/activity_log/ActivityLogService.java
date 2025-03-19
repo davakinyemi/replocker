@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.report_collection.activity_log;
 
 import com.ap2.replocker.exception.custom.CollectionNotFoundException;
@@ -16,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+*/
 /**
  * @author Dave AKN
  * @version 1.0
- */
+ *//*
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -51,3 +54,4 @@ public class ActivityLogService {
     }
 
 }
+*/

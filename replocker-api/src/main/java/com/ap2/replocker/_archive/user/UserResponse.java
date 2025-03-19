@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.user;
 
 import lombok.*;
@@ -17,3 +18,4 @@ public class UserResponse {
     private boolean isActive;
     private List<UUID> tokenIds;
 }
+*/

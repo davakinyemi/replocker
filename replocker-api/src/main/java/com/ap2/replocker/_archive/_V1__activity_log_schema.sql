@@ -1,4 +1,4 @@
-CREATE TABLE activity_log (
+/*CREATE TABLE activity_log (
     id UUID PRIMARY KEY,
     activity_type VARCHAR(20) NOT NULL CHECK (activity_type IN ('ACCESS', 'DOWNLOAD', 'REQUEST')),
     ip_address INET NOT NULL,
@@ -9,4 +9,4 @@ CREATE TABLE activity_log (
 );
 
 CREATE INDEX idx_activity_log_created ON activity_log(created_date);
-CREATE INDEX idx_activity_log_collection ON activity_log(collection_id);
+CREATE INDEX idx_activity_log_collection ON activity_log(collection_id);*/

@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.user;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+*/
 /**
  * @author Dave AKN
  * @version 1.0
- */
+ *//*
+
 @RestController
 @RequestMapping("/user")
 @SecurityRequirement(name = "keycloak")
@@ -31,3 +34,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 }
+*/

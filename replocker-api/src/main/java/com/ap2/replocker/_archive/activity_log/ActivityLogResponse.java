@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.report_collection.activity_log;
 
 import com.ap2.replocker.report_collection.ReportCollectionResponse;
@@ -8,10 +9,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+*/
 /**
  * @author Dave AKN
  * @version 1.0
- */
+ *//*
+
 @Getter
 @Setter
 @Builder
@@ -26,3 +29,4 @@ public class ActivityLogResponse {
     private ReportCollectionResponse reportCollection;
     private LocalDateTime createdDate;
 }
+*/

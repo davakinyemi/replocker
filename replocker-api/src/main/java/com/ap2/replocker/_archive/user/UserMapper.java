@@ -1,10 +1,8 @@
+/*
 package com.ap2.replocker.user;
 
-import com.ap2.replocker.report_collection.access_token.AccessToken;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.ap2.replocker.report_collection.access_request.access_token.AccessToken;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +26,10 @@ public class UserMapper {
                 .build();
     }
 
-    /* protected String hashEmail(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
+    */
+/* protected String hashEmail(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
         return DigestUtils.sha256Hex(email.toLowerCase().trim());
-    } */
+    } *//*
+
 }
+*/

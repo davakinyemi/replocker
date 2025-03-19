@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.user;
 
 import jakarta.validation.constraints.Email;
@@ -9,3 +10,4 @@ public record UserRequest(
         String email
 ) {
 }
+*/

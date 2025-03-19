@@ -1,7 +1,8 @@
+/*
 package com.ap2.replocker.user;
 
 import com.ap2.replocker.common.BaseAuditingEntity;
-import com.ap2.replocker.report_collection.access_token.AccessToken;
+import com.ap2.replocker.report_collection.access_request.access_token.AccessToken;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -37,3 +38,4 @@ public class User extends BaseAuditingEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<AccessToken> tokens;
 }
+*/

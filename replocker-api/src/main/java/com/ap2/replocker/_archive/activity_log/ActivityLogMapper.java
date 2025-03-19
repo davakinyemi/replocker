@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.report_collection.activity_log;
 
 import com.ap2.replocker.report_collection.ReportCollection;
@@ -9,10 +10,12 @@ import com.ap2.replocker.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+*/
 /**
  * @author Dave AKN
  * @version 1.0
- */
+ *//*
+
 @Service
 @RequiredArgsConstructor
 public class ActivityLogMapper {
@@ -42,3 +45,4 @@ public class ActivityLogMapper {
                 .build();
     }
 }
+*/

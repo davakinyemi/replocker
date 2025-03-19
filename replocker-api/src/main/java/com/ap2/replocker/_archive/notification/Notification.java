@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.notification;
 
 import lombok.*;
@@ -14,3 +15,4 @@ public class Notification {
     private String adminId;
     private String requestTitle;
 }
+*/

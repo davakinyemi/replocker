@@ -1,4 +1,5 @@
-package com.ap2.replocker.ws;
+/*
+package com.ap2.replocker._archive.ws;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -55,3 +56,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         return false;
     }
 }
+*/

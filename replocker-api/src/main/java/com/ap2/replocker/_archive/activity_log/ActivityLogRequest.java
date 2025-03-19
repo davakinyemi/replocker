@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.report_collection.activity_log;
 
 import jakarta.validation.constraints.NotBlank;
@@ -13,3 +14,4 @@ public record ActivityLogRequest(
         UUID reportCollectionID
 ) {
 }
+*/
