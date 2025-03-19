@@ -12,4 +12,5 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
     boolean existsByNameAndReportCollectionId(String name, UUID collectionId);
     Page<Report> findByReportCollectionId(UUID collectionId, Pageable pageable);
     List<Report> findByCreatedDateBefore(LocalDateTime threshold);
+    void deleteByCreatedDateBefore(LocalDateTime threshold);
 }
