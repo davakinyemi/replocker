@@ -9,5 +9,5 @@ CREATE TABLE report_collection (
     last_modified_date TIMESTAMPTZ
 );
 
-CREATE UNIQUE INDEX uc_collection_name ON report_collection(name);
+CREATE UNIQUE INDEX uc_report_collection_name ON report_collection(name);
 CREATE INDEX idx_collection_published ON report_collection(is_published, is_locked);
