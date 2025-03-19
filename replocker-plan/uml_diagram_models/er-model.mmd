@@ -1,72 +1,88 @@
 erDiagram
-    ADMIN ||--o{ REPORT_COLLECTION : creates
+    ADMIN ||--o{ REPORT_COLLECTION : "creates"
+    ADMIN ||--o{ ALLOWED_DOMAIN : "manages"
+    ADMIN ||--o{ WEBSOCKET_AUDIT : "initiates"
+    ADMIN ||--o{ NOTIFICATION : "receives"
+
+    REPORT_COLLECTION ||--o{ REPORT : "contains"
+    REPORT_COLLECTION ||--o{ ACCESS_REQUEST : "receives requests for"
+    REPORT_COLLECTION ||--o{ ACCESS_TOKEN : "grants access to"
+
+    ACCESS_REQUEST ||--|| ACCESS_TOKEN : "generates"
+    ACCESS_REQUEST ||--o{ NOTIFICATION : "triggers"
+
     ADMIN {
-        uuid admin_id PK
-        varchar(255) username
-        varchar(255) email
-        varchar(255) password_hash
-        timestamp created_at
-        uuid keycloak_user_id FK
+        UUID id PK
+        VARCHAR(255) username UK
+        VARCHAR(64) email UK
+        UUID keycloak_user_id UK
+        TIMESTAMPTZ created_date
+        TIMESTAMPTZ last_modified_date
     }
-    
-    _USER ||--o{ ACCESS_TOKEN : requests
-    _USER {
-        uuid user_id PK
-        varchar(64) hashed_email "SHA-256"
-        boolean is_active
-        timestamp created_at
-    }
-    
-    REPORT_COLLECTION ||--o{ REPORT : contains
+
     REPORT_COLLECTION {
-        uuid collection_id PK
-        varchar(255) name
-        text description
-        boolean is_locked
-        boolean is_published
-        timestamp created_at
-        timestamp modified_at
-        uuid admin_id FK
-        boolean is_deleted
-        timestamp deleted_at
+        UUID id PK
+        VARCHAR(255) name UK
+        TEXT description
+        BOOLEAN is_locked
+        BOOLEAN is_published
+        UUID admin_id FK
+        TIMESTAMPTZ created_date
+        TIMESTAMPTZ last_modified_date
     }
-    
+
     REPORT {
-        uuid report_id PK
-        varchar(255) name
-        varchar(255) file_path "Local storage path"
-        bigint size_bytes
-        enum report_type "CSV/XLSX"
-        timestamp upload_date
-        uuid collection_id FK
+        UUID id PK
+        VARCHAR(255) name
+        VARCHAR(255) file_path
+        BIGINT size_bytes
+        ENUM report_type "CSV/XLSX"
+        UUID report_collection_id FK
+        TIMESTAMPTZ created_date
     }
-    
+
+    ACCESS_REQUEST {
+        UUID id PK
+        VARCHAR(255) name
+        VARCHAR(255) email
+        TEXT message
+        ENUM status "PENDING/APPROVED/REJECTED"
+        UUID report_collection_id FK
+        TEXT admin_comment
+        TIMESTAMPTZ created_date
+    }
+
     ACCESS_TOKEN {
-        uuid token_id PK
-        varchar(36) token_value
-        uuid collection_id FK
-        uuid user_id FK
-        timestamp created_at
-        timestamp expires_at
-        boolean is_active
-        boolean is_revoked
+        UUID id PK
+        VARCHAR(36) token_value UK
+        UUID report_collection_id FK
+        UUID access_request_id FK
+        TIMESTAMPTZ created_date
+        TIMESTAMPTZ expires_at
+        BOOLEAN is_active
+        BOOLEAN is_revoked
     }
-    
+
     ALLOWED_DOMAIN {
-        uuid domain_id PK
-        varchar(255) domain_name "@company.com"
-        uuid admin_id FK
+        UUID id PK
+        VARCHAR(255) domain_name
+        UUID admin_id FK
+        TIMESTAMPTZ created_date
+        TIMESTAMPTZ last_modified_date
     }
-    
-    ACTIVITY_LOG {
-        uuid log_id PK
-        uuid user_id FK
-        uuid report_id FK
-        uuid collection_id FK
-        enum action_type "VIEW/DOWNLOAD/REQUEST"
-        inet ip_address
-        timestamp created_at
+
+    NOTIFICATION {
+        UUID id PK
+        TEXT message
+        BOOLEAN is_read
+        UUID admin_id FK
+        UUID access_request_id FK
+        TIMESTAMPTZ created_date
     }
-    
-    ADMIN ||--o{ ALLOWED_DOMAIN : manages
-    %% ACCESS_TOKEN ||--|| REPORT_COLLECTION : access
+
+    WEBSOCKET_AUDIT {
+        UUID id PK
+        UUID admin_id FK
+        TIMESTAMPTZ connection_time
+        TIMESTAMPTZ disconnect_time
+    }
