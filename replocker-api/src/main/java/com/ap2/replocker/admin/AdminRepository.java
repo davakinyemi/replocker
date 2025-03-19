@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public interface AdminRepository extends JpaRepository<Admin, UUID> {
     Optional<Admin> findByUsername(@Param("username") String username);
-    Optional<Admin> findByHashedEmail(@Param("hashed_email") String hashedEmail);
+    Optional<Admin> findByEmail(@Param("hashed_email") String email);
     Optional<Admin> findByKeycloakUserId(@Param("keycloak_user_id") UUID keycloakUserId);
     boolean existsByUsername(@Param("username") String username);
-    boolean existsByHashedEmail(@Param("hashed_email") String hashedEmail);
+    boolean existsByEmail(@Param("hashed_email") String email);
     boolean existsByKeycloakUserId(@Param("keycloak_user_id") UUID keycloakUserId);
 }
