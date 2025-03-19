@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -51,7 +50,7 @@ public class SecurityConfig {
                         ).permitAll().anyRequest().authenticated()
                 ).oauth2ResourceServer(auth ->
                         auth.jwt(token -> token.jwtAuthenticationConverter(this.keycloakJwtConverter()))
-                );
+                ).csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**"));
         return http.build();
     }
 

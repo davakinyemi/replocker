@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Transactional
 @Slf4j
 public class NotificationService {
+    private final SimpMessagingTemplate messagingTemplate;
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
     private final AdminRepository adminRepository;
@@ -41,6 +43,14 @@ public class NotificationService {
                 .accessRequest(request)
                 .build();
         this.notificationRepository.save(notification);
+    }
+
+    public void notifyAdmin(UUID adminId, Notification notification) {
+        this.messagingTemplate.convertAndSendToUser(
+                adminId.toString(),
+                "/queue/notifications",
+                notification
+        );
     }
 
     public void markNotificationAsRead(UUID notificationId) {
