@@ -3,13 +3,14 @@ package com.ap2.replocker.admin.allowed_domain;
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.common.BaseAuditingEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
-
-import static jakarta.persistence.GenerationType.UUID;
 
 /**
  * @author Dave AKN

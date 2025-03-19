@@ -1,6 +1,6 @@
 package com.ap2.replocker.exception.custom;
 
-import lombok.*;
+import lombok.Getter;
 
 import java.util.UUID;
 

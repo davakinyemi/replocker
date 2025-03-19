@@ -1,7 +1,5 @@
 package com.ap2.replocker.report_collection;
 
-import com.ap2.replocker.admin.AdminResponse;
-import com.ap2.replocker.report_collection.report.ReportResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;

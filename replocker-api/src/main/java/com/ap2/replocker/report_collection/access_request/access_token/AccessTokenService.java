@@ -1,7 +1,7 @@
 package com.ap2.replocker.report_collection.access_request.access_token;
 
-import com.ap2.replocker.exception.custom.InvalidTokenException;
 import com.ap2.replocker.admin.allowed_domain.AllowedDomainRepository;
+import com.ap2.replocker.exception.custom.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

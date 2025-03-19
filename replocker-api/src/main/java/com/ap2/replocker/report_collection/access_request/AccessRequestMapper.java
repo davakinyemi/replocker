@@ -2,7 +2,6 @@ package com.ap2.replocker.report_collection.access_request;
 
 import com.ap2.replocker.exception.custom.CollectionNotFoundException;
 import com.ap2.replocker.report_collection.ReportCollectionRepository;
-import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

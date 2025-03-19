@@ -3,7 +3,6 @@ package com.ap2.replocker.report_collection;
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.admin.AdminMapper;
 import com.ap2.replocker.report_collection.report.Report;
-import com.ap2.replocker.report_collection.report.ReportMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

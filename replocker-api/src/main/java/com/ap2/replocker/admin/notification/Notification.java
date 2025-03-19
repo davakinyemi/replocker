@@ -2,7 +2,6 @@ package com.ap2.replocker.admin.notification;
 
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.common.BaseAuditingEntity;
-import com.ap2.replocker.report_collection.ReportCollection;
 import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import jakarta.persistence.*;
 import lombok.*;

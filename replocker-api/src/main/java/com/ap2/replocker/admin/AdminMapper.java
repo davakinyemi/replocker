@@ -1,9 +1,8 @@
 package com.ap2.replocker.admin;
 
-import com.ap2.replocker.report_collection.ReportCollection;
 import com.ap2.replocker.admin.allowed_domain.AllowedDomain;
+import com.ap2.replocker.report_collection.ReportCollection;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 

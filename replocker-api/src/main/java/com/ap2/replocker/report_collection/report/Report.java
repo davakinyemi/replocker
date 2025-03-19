@@ -3,7 +3,10 @@ package com.ap2.replocker.report_collection.report;
 import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.ReportCollection;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 

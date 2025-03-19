@@ -1,7 +1,6 @@
 package com.ap2.replocker.report_collection.report;
 
 import com.ap2.replocker.report_collection.ReportCollection;
-import com.ap2.replocker.report_collection.ReportCollectionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

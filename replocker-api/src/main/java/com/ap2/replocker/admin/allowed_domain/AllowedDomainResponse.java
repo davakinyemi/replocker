@@ -1,6 +1,5 @@
 package com.ap2.replocker.admin.allowed_domain;
 
-import com.ap2.replocker.admin.AdminResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
