@@ -1,4 +1,4 @@
-package com.ap2.replocker.report_collection.access_token;
+package com.ap2.replocker.report_collection.access_request.access_token;
 
 import lombok.*;
 
@@ -18,7 +18,7 @@ public class AccessTokenResponse {
     private UUID id;
     private String tokenValue;
     private LocalDateTime expiresAt;
-    private UUID collectionId;
-    private UUID userId;
+    private UUID reportCollectionId;
+    private UUID accessRequestId;
     private boolean isActive;
 }

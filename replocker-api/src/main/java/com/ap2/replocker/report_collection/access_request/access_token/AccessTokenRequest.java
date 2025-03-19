@@ -1,4 +1,4 @@
-package com.ap2.replocker.report_collection.access_token;
+package com.ap2.replocker.report_collection.access_request.access_token;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +11,6 @@ public record AccessTokenRequest(
         @Email
         String email,
         @NotNull
-        UUID collectionId
+        UUID reportCollectionId
 ) {
 }

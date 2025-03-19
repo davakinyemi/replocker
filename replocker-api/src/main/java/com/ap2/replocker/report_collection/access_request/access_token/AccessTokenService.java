@@ -1,4 +1,4 @@
-package com.ap2.replocker.report_collection.access_token;
+package com.ap2.replocker.report_collection.access_request.access_token;
 
 import com.ap2.replocker.exception.custom.InvalidTokenException;
 import com.ap2.replocker.admin.allowed_domain.AllowedDomainRepository;
@@ -26,18 +26,18 @@ public class AccessTokenService {
 
    public void validateToken(String tokenValue, UUID collectionId) {
        AccessToken token = this.accessTokenRepository.findByTokenValue(tokenValue)
-               .orElseThrow(() -> new InvalidTokenException("Token not found"));
+               .orElseThrow(() -> new InvalidTokenException("Token not found", tokenValue));
 
        if (token.isRevoked() || !token.isActive()) {
-           throw new InvalidTokenException("Token revoked or no longer active");
+           throw new InvalidTokenException("Token revoked or no longer active", tokenValue);
        }
 
        if (LocalDateTime.now().isAfter(token.getExpiresAt())) {
-           throw new InvalidTokenException("Token expired");
+           throw new InvalidTokenException("Token expired", tokenValue);
        }
 
-       if (!token.getCollection().getId().equals(collectionId)) {
-           throw new InvalidTokenException("Token not valid for this collection");
+       if (!token.getReportCollection().getId().equals(collectionId)) {
+           throw new InvalidTokenException("Token not valid for this collection", tokenValue);
        }
    }
 

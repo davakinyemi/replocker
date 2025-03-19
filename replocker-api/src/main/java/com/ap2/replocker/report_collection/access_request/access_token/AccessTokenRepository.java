@@ -1,7 +1,7 @@
-package com.ap2.replocker.report_collection.access_token;
+package com.ap2.replocker.report_collection.access_request.access_token;
 
 import com.ap2.replocker.report_collection.ReportCollection;
-import com.ap2.replocker.user.User;
+import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -15,8 +15,8 @@ import java.util.UUID;
  */
 public interface AccessTokenRepository extends JpaRepository<AccessToken, UUID> {
     Optional<AccessToken> findByTokenValue(String tokenValue);
-    boolean existsByUserAndCollectionAndExpiresAtAfter(
-            User user,
+    boolean existsByAccessRequestAndReportCollectionAndExpiresAtAfter(
+            AccessRequest accessRequest,
             ReportCollection reportCollection,
             LocalDateTime expiresAt
     );

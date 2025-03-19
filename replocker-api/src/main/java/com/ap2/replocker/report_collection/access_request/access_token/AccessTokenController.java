@@ -1,4 +1,4 @@
-package com.ap2.replocker.report_collection.access_token;
+package com.ap2.replocker.report_collection.access_request.access_token;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;

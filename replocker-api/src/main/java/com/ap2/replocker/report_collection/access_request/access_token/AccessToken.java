@@ -1,10 +1,11 @@
-package com.ap2.replocker.report_collection.access_token;
+package com.ap2.replocker.report_collection.access_request.access_token;
 
 import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.ReportCollection;
-import com.ap2.replocker.user.User;
+import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -36,12 +37,12 @@ public class AccessToken extends BaseAuditingEntity {
     private String tokenValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "collection_id", nullable = false)
-    private ReportCollection collection;
+    @JoinColumn(name = "report_collection_id", nullable = false)
+    private ReportCollection reportCollection;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "access_request_id", nullable = false)
+    private AccessRequest accessRequest;
 
     @Column(name = "expires_at", nullable = false)
     private LocalDateTime expiresAt;
