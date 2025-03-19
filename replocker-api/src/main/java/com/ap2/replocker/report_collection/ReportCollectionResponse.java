@@ -19,7 +19,7 @@ public class ReportCollectionResponse {
     private String description;
     private boolean isLocked;
     private boolean isPublished;
-    private AdminResponse admin;
-    private List<ReportResponse> reports;
+    private UUID adminId;
+    private List<UUID> reportIds;
     private LocalDateTime createdDate;
 }

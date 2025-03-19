@@ -3,15 +3,10 @@ package com.ap2.replocker.report_collection.report;
 import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.ReportCollection;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -24,10 +19,10 @@ import java.util.UUID;
         name = "report",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uc_report_name_collection",
+                        name = "uc_report_name_report_collection",
                         columnNames = {
                                 "name",
-                                "collection_id"
+                                "report_collection_id"
                         }
                 )
         }
@@ -52,6 +47,6 @@ public class Report extends BaseAuditingEntity {
     private ReportType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "collection_id", nullable = false)
-    private ReportCollection collection;
+    @JoinColumn(name = "report_collection_id", nullable = false)
+    private ReportCollection reportCollection;
 }

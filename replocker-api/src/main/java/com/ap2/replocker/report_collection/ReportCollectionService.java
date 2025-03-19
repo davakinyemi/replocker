@@ -32,24 +32,15 @@ public class ReportCollectionService {
     public ReportCollectionResponse createCollection(ReportCollectionRequest request, UUID adminId) {
         this.validateUniqueName(request.name());
         Admin admin = this.adminRepository.findById(adminId)
-                .orElseThrow(() -> new AdminNotFoundException(adminId));
+                .orElseThrow(() -> new AdminNotFoundException("", adminId));
 
         ReportCollection reportCollection = this.reportCollectionRepository.save(this.reportCollectionMapper.toReportCollection(request, admin));
         return this.reportCollectionMapper.toReportCollectionResponse(reportCollection);
     }
 
-    public PageResponse<ReportCollectionResponse> getPublicCollections(int page, int size) {
-        Page<ReportCollection> collections = this.reportCollectionRepository.findByPublishedTrueAndLockedFalse(
-                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"))
-        );
-
-        Page<ReportCollectionResponse> responsePage = collections.map(this.reportCollectionMapper::toReportCollectionResponse);
-        return PageResponse.fromPage(responsePage);
-    }
-
     private void validateUniqueName(String name) {
         if (this.reportCollectionRepository.existsByNameIgnoreCase(name)) {
-            throw new DuplicateCollectionException(name);
+            throw new DuplicateCollectionException("", name);
         }
     }
 }

@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ReportMapper {
-    private final ReportCollectionMapper reportCollectionMapper;
 
     public Report toReport(ReportRequest request, ReportCollection collection) {
         return Report.builder()
                 .name(request.name())
-                .collection(collection)
+                .reportCollection(collection)
                 .build();
     }
 
@@ -25,7 +24,7 @@ public class ReportMapper {
                 .sizeBytes(report.getSizeBytes())
                 .type(report.getType())
                 .createdDate(report.getCreatedDate())
-                .collection(this.reportCollectionMapper.toReportCollectionResponse(report.getCollection()))
+                .reportCollectionId(report.getReportCollection().getId())
                 .build();
     }
 }

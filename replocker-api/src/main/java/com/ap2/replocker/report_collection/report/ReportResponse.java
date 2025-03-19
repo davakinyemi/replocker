@@ -1,6 +1,5 @@
 package com.ap2.replocker.report_collection.report;
 
-import com.ap2.replocker.report_collection.ReportCollectionResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,5 +17,5 @@ public class ReportResponse {
     private long sizeBytes;
     private ReportType type;
     private LocalDateTime createdDate;
-    private ReportCollectionResponse collection;
+    private UUID reportCollectionId;
 }

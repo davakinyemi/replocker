@@ -16,6 +16,6 @@ public record ReportRequest(
         MultipartFile file,
 
         @NotNull(message = "Collection ID cannot be null")
-        UUID collectionId
+        UUID reportCollectionId
 ) {
 }

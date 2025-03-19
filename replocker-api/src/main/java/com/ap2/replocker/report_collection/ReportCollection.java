@@ -20,7 +20,7 @@ import java.util.UUID;
 @Table(
         name = "report_collection",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uc_collection_name", columnNames = "name")
+                @UniqueConstraint(name = "uc_report_collection_name", columnNames = "name")
         }
 )
 public class ReportCollection extends BaseAuditingEntity {
@@ -47,6 +47,6 @@ public class ReportCollection extends BaseAuditingEntity {
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
 
-    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reportCollection", cascade = CascadeType.ALL)
     private List<Report> reports;
 }

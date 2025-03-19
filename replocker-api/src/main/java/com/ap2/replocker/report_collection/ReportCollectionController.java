@@ -38,14 +38,14 @@ public class ReportCollectionController {
                 );
     }
 
-    @Operation(summary = "List public collections")
+    /* @Operation(summary = "List public collections")
     @GetMapping("/public")
     public ResponseEntity<PageResponse<ReportCollectionResponse>> getPublicCollections(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(this.reportCollectionService.getPublicCollections(page, size));
-    }
+    } */
 
     /* @Operation(summary = "List reports in collection")
     @GetMapping

@@ -11,6 +11,7 @@ public enum BusinessErrorCodes {
     INVALID_FILE_TYPE(400, FORBIDDEN, "Invalid file type, provide csv or excel file format"),
     ADMIN_NOT_FOUND(404, FORBIDDEN, "Admin not found"),
     USER_NOT_FOUND(404, FORBIDDEN, "User not found"),
+    ACCESS_REQUEST_NOT_FOUND(404, FORBIDDEN, "Access request not found"),
     INVALID_TOKEN(401, FORBIDDEN, "Invalid token"),
     COLLECTION_NOT_FOUND(404, FORBIDDEN, "Collection not found"),
     DUPLICATE_DOMAIN_NAME(409, FORBIDDEN, "Duplicate domain name"),

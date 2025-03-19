@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ReportRepository extends JpaRepository<Report, UUID> {
-    boolean existsByNameAndCollectionId(String name, UUID collectionId);
-    Page<Report> findByCollectionId(UUID collectionId, Pageable pageable);
+    boolean existsByNameAndReportCollectionId(String name, UUID collectionId);
+    Page<Report> findByReportCollectionId(UUID collectionId, Pageable pageable);
     List<Report> findByCreatedDateBefore(LocalDateTime threshold);
 }

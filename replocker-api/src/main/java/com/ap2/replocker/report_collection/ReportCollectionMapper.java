@@ -2,6 +2,7 @@ package com.ap2.replocker.report_collection;
 
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.admin.AdminMapper;
+import com.ap2.replocker.report_collection.report.Report;
 import com.ap2.replocker.report_collection.report.ReportMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 public class ReportCollectionMapper {
 
     private final AdminMapper adminMapper;
-    private final ReportMapper reportMapper;
 
     public ReportCollection toReportCollection(ReportCollectionRequest request, Admin admin) {
         return ReportCollection.builder()
@@ -30,9 +30,9 @@ public class ReportCollectionMapper {
                 .description(reportCollection.getDescription())
                 .isLocked(reportCollection.isLocked())
                 .isPublished(reportCollection.isPublished())
-                .admin(this.adminMapper.toAdminResponse(reportCollection.getAdmin()))
-                .reports(reportCollection.getReports().stream()
-                        .map(this.reportMapper::toReportResponse)
+                .adminId(reportCollection.getAdmin().getId())
+                .reportIds(reportCollection.getReports().stream()
+                        .map(Report::getId)
                         .toList())
                 .createdDate(reportCollection.getCreatedDate())
                 .build();

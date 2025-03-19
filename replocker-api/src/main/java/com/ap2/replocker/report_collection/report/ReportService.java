@@ -29,8 +29,8 @@ public class ReportService {
     }
 
     private void validateUniqueName(String name, UUID collectionId) {
-        if (this.reportRepository.existsByNameAndCollectionId(name, collectionId)) {
-            throw new DuplicateReportException(name);
+        if (this.reportRepository.existsByNameAndReportCollectionId(name, collectionId)) {
+            throw new DuplicateReportException("", name);
         }
     }
 
