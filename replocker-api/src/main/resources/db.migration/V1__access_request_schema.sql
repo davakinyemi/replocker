@@ -3,7 +3,7 @@ CREATE TABLE access_request (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     message TEXT,
-    status VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED')),
     report_collection_id UUID NOT NULL REFERENCES report_collection(id),
     admin_comment TEXT,
     created_date TIMESTAMPTZ NOT NULL

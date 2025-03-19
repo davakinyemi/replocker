@@ -1,68 +1,99 @@
-CREATE TYPE report_type AS ENUM ('CSV', 'XLSX');
-CREATE TYPE action_type AS ENUM ('VIEW', 'DOWNLOAD', 'REQUEST');
+CREATE TYPE REPORT_TYPE AS ENUM ('CSV', 'XLSX');
+CREATE TYPE ACCESS_REQUEST_TYPE AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
 CREATE TABLE admin (
-    admin_id UUID PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    keycloak_user_id UUID NOT NULL
-);
-
-CREATE TABLE "user" (
-    user_id UUID PRIMARY KEY,
-    hashed_email VARCHAR(64) UNIQUE NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    id UUID PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(64) NOT NULL,
+    keycloak_user_id UUID NOT NULL,
+    created_date TIMESTAMPTZ NOT NULL ,
+    last_modified_date TIMESTAMPTZ
 );
 
 CREATE TABLE report_collection (
-    collection_id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    is_locked BOOLEAN DEFAULT FALSE,
-    is_published BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    modified_at TIMESTAMPTZ DEFAULT NOW(),
-    admin_id UUID REFERENCES admin(admin_id),
-    is_deleted BOOLEAN DEFAULT FALSE,
-    deleted_at TIMESTAMPTZ
+    is_locked BOOLEAN NOT NULL DEFAULT FALSE,
+    is_published BOOLEAN NOT NULL DEFAULT FALSE,
+    admin_id UUID NOT NULL REFERENCES admin(id),
+    created_date TIMESTAMPTZ NOT NULL,
+    last_modified_date TIMESTAMPTZ
 );
 
 CREATE TABLE report (
-    report_id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     file_path VARCHAR(255) NOT NULL,
     size_bytes BIGINT NOT NULL,
-    type report_type NOT NULL,
-    upload_date TIMESTAMPTZ DEFAULT NOW(),
-    collection_id UUID REFERENCES report_collection(collection_id)
+    type REPORT_TYPE NOT NULL,
+    report_collection_id UUID NOT NULL REFERENCES report_collection(id),
+    created_date TIMESTAMP NOT NULL
+);
+
+CREATE TABLE access_request (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    message TEXT,
+    status ACCESS_REQUEST_TYPE NOT NULL,
+    report_collection_id UUID NOT NULL REFERENCES report_collection(id),
+    admin_comment TEXT,
+    created_date TIMESTAMPTZ NOT NULL
+);
+
+CREATE TABLE allowed_domain(
+    id UUID PRIMARY KEY,
+    domain_name VARCHAR(255) NOT NULL,
+    admin_id UUID NOT NULL REFERENCES admin(id),
+    created_date TIMESTAMPTZ NOT NULL,
+    last_modified_date TIMESTAMPTZ
 );
 
 CREATE TABLE access_token (
-    token_id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY,
     token_value VARCHAR(36) UNIQUE NOT NULL,
-    collection_id UUID REFERENCES report_collection(collection_id),
-    user_id UUID REFERENCES "user"(user_id),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
+    report_collection_id UUID NOT NULL REFERENCES report_collection(id),
+    access_request_id UUID NOT NULL REFERENCES access_request(id),
+    created_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMPTZ NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
-    is_revoked BOOLEAN DEFAULT FALSE
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_revoked BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE allowed_domain (
-    domain_id UUID PRIMARY KEY,
-    domain_name VARCHAR(255) UNIQUE NOT NULL,
-    admin_id UUID REFERENCES admin(admin_id)
+CREATE TABLE notification (
+    id UUID PRIMARY KEY,
+    message TEXT NOT NULL,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    admin_id UUID NOT NULL REFERENCES admin(id),
+    access_request_id UUID NOT NULL REFERENCES access_request(id),
+    created_date TIMESTAMP NOT NULL
 );
 
-CREATE TABLE activity_log (
-    log_id UUID PRIMARY KEY,
-    user_id UUID REFERENCES "user"(user_id),
-    report_id UUID REFERENCES report(report_id),
-    collection_id UUID REFERENCES report_collection(collection_id),
-    action action_type NOT NULL,
-    ip_address INET NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+CREATE TABLE websocket_audit (
+    id UUID PRIMARY KEY,
+    admin_id UUID NOT NULL REFERENCES admin(id),
+    connection_time TIMESTAMPTZ NOT NULL,
+    disconnect_time TIMESTAMPTZ
 );
+
+CREATE UNIQUE INDEX uc_admin_username ON admin(username);
+CREATE UNIQUE INDEX uc_admin_email ON admin(email);
+CREATE UNIQUE INDEX uc_admin_keycloak_id ON admin(keycloak_user_id);
+
+CREATE UNIQUE INDEX uc_domain_admin ON allowed_domain(admin_id, lower(domain_name));
+
+CREATE UNIQUE INDEX uc_report_collection_name ON report_collection(name);
+CREATE INDEX idx_collection_published ON report_collection(is_published, is_locked);
+
+CREATE UNIQUE INDEX uc_report_name_report_collection ON report(name, report_collection_id);
+CREATE INDEX idx_report_upload_date ON report(created_date);
+
+CREATE UNIQUE INDEX uc_request_email_report_collection ON access_request(email, report_collection_id);
+
+CREATE UNIQUE INDEX uc_token_value ON access_token(token_value);
+CREATE INDEX idx_token_expiry ON access_token(expires_at);
+
+CREATE INDEX idx_notification_admin_read ON notification(admin_id, is_read);
+
+CREATE INDEX idx_websocket_admin ON websocket_audit(admin_id);
