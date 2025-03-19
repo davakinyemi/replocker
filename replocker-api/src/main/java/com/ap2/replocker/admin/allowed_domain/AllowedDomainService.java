@@ -28,10 +28,10 @@ public class AllowedDomainService {
 
     public AllowedDomainResponse addDomain(AllowedDomainRequest request, UUID adminId) {
         Admin admin = this.adminRepository.findById(adminId)
-                .orElseThrow(() -> new AdminNotFoundException(adminId));
+                .orElseThrow(() -> new AdminNotFoundException("", adminId));
 
         if (this.domainRepository.existsByAdminIdAndDomainNameIgnoreCase(adminId, request.domainName())) {
-            throw new DuplicateDomainException(request.domainName());
+            throw new DuplicateDomainException("", request.domainName());
         }
 
         AllowedDomain domain = this.domainMapper.toAllowedDomain(request, admin);

@@ -3,10 +3,7 @@ package com.ap2.replocker.admin.allowed_domain;
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.common.BaseAuditingEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -27,7 +24,13 @@ import static jakarta.persistence.GenerationType.UUID;
 @Table(
         name = "allowed_domain",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uc_domain_admin", columnNames = {"admin_id", "domain_name"})
+                @UniqueConstraint(
+                        name = "uc_domain_admin",
+                        columnNames = {
+                                "admin_id",
+                                "domain_name"
+                        }
+                )
         }
 )
 public class AllowedDomain extends BaseAuditingEntity {

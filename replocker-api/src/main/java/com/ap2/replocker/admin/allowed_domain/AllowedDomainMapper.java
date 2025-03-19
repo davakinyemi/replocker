@@ -25,7 +25,7 @@ public class AllowedDomainMapper {
         return AllowedDomainResponse.builder()
                 .id(domain.getId())
                 .domainName(domain.getDomainName())
-                .adminResponse(adminMapper.toAdminResponse(domain.getAdmin()))
+                .adminId(domain.getAdmin().getId())
                 .createdDate(domain.getCreatedDate())
                 .build();
     }

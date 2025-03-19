@@ -18,6 +18,6 @@ import java.util.UUID;
 public class AllowedDomainResponse {
     private UUID id;
     private String domainName;
-    private AdminResponse adminResponse;
+    private UUID adminId;
     private LocalDateTime createdDate;
 }
