@@ -33,7 +33,7 @@ public class GdprComplianceService {
     }
 
     private void purgeReports() {
-        LocalDateTime threshold = LocalDateTime.now().minus(365, ChronoUnit.DAYS);
+        LocalDateTime threshold = LocalDateTime.now().minusDays(365);
         this.reportRepository.deleteByCreatedDateBefore(threshold);
     }
 }
