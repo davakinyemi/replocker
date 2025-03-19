@@ -25,7 +25,6 @@ import static java.lang.System.currentTimeMillis;
 @Slf4j
 @RequiredArgsConstructor
 public class FileService {
-    // private final ClamavClient clamavClient;
 
     @Value("${application.file.uploads.report-output-path}")
     private String fileUploadPath;
@@ -35,7 +34,6 @@ public class FileService {
             @Nonnull String reportCollectionId
     ) {
         this.validateFileType(sourceFile);
-        // this.scanForViruses(sourceFile);
 
         final String fileUploadSubPath = "report_collection" + separator + reportCollectionId;
 
@@ -74,19 +72,9 @@ public class FileService {
     private void validateFileType(MultipartFile file) {
         String fileType = file.getContentType();
         if (!"text/csv".equals(fileType) && !"application/vnd.ms-excel".equals(fileType)) {
-            throw new InvalidFileTypeException();
+            throw new InvalidFileTypeException("", fileType);
         }
     }
-
-    /* private void scanForViruses(MultipartFile file) {
-        try {
-            if (this.clamavClient.scan(file.getBytes()) != ClamavClient.SCAN_RESULT_CLEAN) {
-                throw new VirusDetectedException();
-            }
-        } catch (IOException exception) {
-            throw new FileProcessingException();
-        }
-    } */
 
     private String getFileExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) return "";
