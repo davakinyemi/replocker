@@ -85,6 +85,19 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(AccessRequestNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(AccessRequestNotFoundException exception) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.ACCESS_REQUEST_NOT_FOUND.ordinal())
+                                .businessExceptionDescription(exception.getMessage())
+                                .error(exception.getMessage())
+                                .build()
+                );
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ExceptionResponse> handleException(InvalidTokenException exception) {
         return ResponseEntity

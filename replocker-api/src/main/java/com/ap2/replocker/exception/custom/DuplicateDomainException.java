@@ -7,6 +7,5 @@ import java.util.UUID;
  * @version 1.0
  */
 public class DuplicateDomainException extends RuntimeException {
-    public DuplicateDomainException() {}
-    public DuplicateDomainException(String message) { super(message); }
+    public DuplicateDomainException(String message, String name) { super(message + ": " + name); }
 }

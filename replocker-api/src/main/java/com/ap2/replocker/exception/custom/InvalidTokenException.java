@@ -5,5 +5,5 @@ package com.ap2.replocker.exception.custom;
  * @version 1.0
  */
 public class InvalidTokenException extends RuntimeException {
-    public InvalidTokenException(String message) { super(message); }
+    public InvalidTokenException(String message, String token) { super(message + ": " + token); }
 }

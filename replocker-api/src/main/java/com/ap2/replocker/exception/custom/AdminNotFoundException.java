@@ -7,6 +7,7 @@ import java.util.UUID;
  * @version 1.0
  */
 public class AdminNotFoundException extends RuntimeException {
-    public AdminNotFoundException(UUID adminId) {}
-    public AdminNotFoundException(String message) { super(message); }
+    public AdminNotFoundException(String message, UUID adminId) {
+        super(message + ": " + adminId);
+    }
 }
