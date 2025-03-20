@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/replocker-api/src/main/resources/db.migration/V1__access_token_schema.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/replocker-api/src/main/resources/db.migration/V1__admin_schema.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/replocker-plan/uml_diagram_models/replocker_schemas/V1__access_token_schema.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/replocker-plan/uml_diagram_models/replocker_schemas/V1__admin_schema.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>
