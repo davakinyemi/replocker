@@ -2,6 +2,8 @@ services:
   postgres:
     container_name: postgres-sql-rpl
     image: postgres
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
@@ -22,6 +24,9 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_HOSTNAME: localhost
+      KEYCLOAK_HTTP_ENABLED: true
+      KEYCLOAK_PROXY: edge
     networks:
       - rpl-net
     command:
