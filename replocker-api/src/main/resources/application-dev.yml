@@ -1,10 +1,8 @@
 spring:
-  config:
-    import: optional:file:../.env[properties]
   datasource:
     url: jdbc:postgresql://localhost:5432/replocker
-    username: username
-    password: password
+    username:
+    password:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -21,7 +19,23 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "http://localhost:9090/realms/replocker"
+          issuer-uri: http://localhost:9090/realms/replocker
+
+keycloak:
+  admin:
+    server-url: http://localhost:9090
+    realm: master
+    client-id: admin-cli
+    client-secret:
+    username:
+    password:
+
+smtp:
+  host: smtp.gmail.com
+  port: 587
+  from: noreply@replocker.de
+  username: dav.akinyemi@gmail.com
+  password:
 
 springdoc:
   default-produces-media-type: application/json
