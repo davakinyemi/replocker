@@ -27,7 +27,7 @@ public class ReportCollectionController {
 
     @Operation(summary = "Create report collection (Admin only")
     @PostMapping("/create")
-    @PreAuthorize("hasRole('REPORT_ADMIN')")
+    @PreAuthorize("hasRole('${keycloak.replocker.role-name}')")
     public ResponseEntity<ReportCollectionResponse> createCollection(
             @Valid @RequestBody ReportCollectionRequest request,
             @AuthenticationPrincipal Jwt jwt

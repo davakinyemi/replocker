@@ -26,7 +26,7 @@ public class ActivityLogController {
     */
 /*@Operation(summary = "Get activity logs for collection")
     @GetMapping("/collection/{collectionId}")
-    @PreAuthorize("hasRole('REPORT_ADMIN')")
+    @PreAuthorize("hasRole(${keycloak.replocker.role-name}')")
     public PageResponse<ActivityLogResponse> getLogsByCollection(
             @PathVariable UUID collectionId,
             @RequestParam(defaultValue = "0") int page,

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,7 @@ public class AllowedDomainController {
 
     @Operation(summary = "Add allowed domain")
     @PostMapping
-    @PreAuthorize("hasRole('REPORT_ADMIN')")
+    @PreAuthorize("hasRole('${keycloak.replocker.role-name}')")
     public ResponseEntity<AllowedDomainResponse> addDomain(
             @Valid @RequestBody AllowedDomainRequest request,
             @AuthenticationPrincipal Jwt jwt
@@ -40,7 +41,7 @@ public class AllowedDomainController {
 
     @Operation(summary = "Get domains by admin")
     @GetMapping
-    @PreAuthorize("hasRole('REPORT_ADMIN')")
+    @PreAuthorize("hasRole('${keycloak.replocker.role-name}')")
     public ResponseEntity<List<AllowedDomainResponse>> getDomains(@AuthenticationPrincipal Jwt jwt) {
         UUID adminId = UUID.fromString(jwt.getSubject());
         return ResponseEntity.ok(this.domainService.getDomainsByAdminId(adminId));

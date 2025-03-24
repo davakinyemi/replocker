@@ -63,8 +63,8 @@ public class FileService {
             Files.write(targetPath, sourceFile.getBytes());
             log.info("Uploaded file: {}", targetFilePath);
             return targetFilePath;
-        } catch (IOException exception) {
-            log.error("Could not upload file: {}", targetFilePath, exception);
+        } catch (IOException e) {
+            log.error("Could not upload file: {}", targetFilePath, e);
         }
         return null;
     }
@@ -72,7 +72,7 @@ public class FileService {
     private void validateFileType(MultipartFile file) {
         String fileType = file.getContentType();
         if (!"text/csv".equals(fileType) && !"application/vnd.ms-excel".equals(fileType)) {
-            throw new InvalidFileTypeException("", fileType);
+            throw new InvalidFileTypeException("Invalid file type", fileType);
         }
     }
 
