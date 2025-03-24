@@ -16,8 +16,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 @JsonInclude(NON_EMPTY)
 public class ExceptionResponse {
     private Integer businessErrorCode;
-    private String businessExceptionDescription;
     private String error;
     private Set<String> validationErrors;
-    private Map<String, String> errors;
+    /* private String businessExceptionDescription;
+    private Map<String, String> errors; */
 }

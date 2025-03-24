@@ -1,24 +1,34 @@
 package com.ap2.replocker.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
+import static org.springframework.http.HttpStatus.*;
 
+@Getter
 public enum BusinessErrorCodes {
     NO_CODE(0, NOT_IMPLEMENTED, "No code"),
     BAD_CREDENTIALS(304, FORBIDDEN, "One or more access credentials incorrect"),
     INVALID_FILE_TYPE(400, FORBIDDEN, "Invalid file type, provide csv or excel file format"),
-    ADMIN_NOT_FOUND(404, FORBIDDEN, "Admin not found"),
-    USER_NOT_FOUND(404, FORBIDDEN, "User not found"),
-    ACCESS_REQUEST_NOT_FOUND(404, FORBIDDEN, "Access request not found"),
-    INVALID_TOKEN(401, FORBIDDEN, "Invalid token"),
-    COLLECTION_NOT_FOUND(404, FORBIDDEN, "Collection not found"),
+    ADMIN_NOT_FOUND(404, NOT_FOUND, "Admin not found"),
+    USER_NOT_FOUND(404, NOT_FOUND, "User not found"),
+    ACCESS_REQUEST_NOT_FOUND(404, NOT_FOUND, "Access request not found"),
+    INVALID_TOKEN(401, UNAUTHORIZED, "Invalid token"),
+    COLLECTION_NOT_FOUND(404, NOT_FOUND, "Collection not found"),
     DUPLICATE_DOMAIN_NAME(409, FORBIDDEN, "Duplicate domain name"),
     DUPLICATE_COLLECTION_NAME(409, FORBIDDEN, "Duplicate collection name"),
     DUPLICATE_REPORT_NAME(409, FORBIDDEN, "Duplicate report name"),
+    KEYCLOAK_SERVER_ERROR(500, INTERNAL_SERVER_ERROR, "Keycloak server error"),
     ;
 
+    private final int code;
+    private final HttpStatus httpStatus;
+    private final String description;
+
     BusinessErrorCodes(int code, HttpStatus httpStatus, String description) {
+        this.code = code;
+        this.httpStatus = httpStatus;
+        this.description = description;
     }
+
 }
