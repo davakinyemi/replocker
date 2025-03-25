@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.ClientResource;
 import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,10 +65,17 @@ public class KeycloakInitializer {
     @Value("${keycloak.replocker.password}")
     private String replockerAdminUserPassword;
 
+    @Value("${keycloak.replocker.firstname}")
+    private String replockerAdminUserFirstname;
+
+    @Value("${keycloak.replocker.lastname}")
+    private String replockerAdminUserLastname;
+
     @EventListener(ApplicationReadyEvent.class)
     public void initRealmAndAdminUser() {
         try {
             this.initRealm();
+            // this.configureUmaProtectionRole();
             this.initSingletonAdminUser();
         } catch (RuntimeException e) {
             throw new KeycloakException("Keycloak initialization failed: " + e.getMessage(), e);
@@ -78,6 +85,7 @@ public class KeycloakInitializer {
     private void initRealm() {
         if (!this.realmExists()) {
             this.createRealmWithDefaults();
+            this.configureClientRoles(this.keycloak.realm(this.replockerRealmName));
             log.info("Created new Keycloak realm: {}", this.replockerRealmName);
         }
     }
@@ -106,10 +114,12 @@ public class KeycloakInitializer {
             realm.setRegistrationEmailAsUsername(true);
             realm.setRegistrationAllowed(false);
             realm.setResetPasswordAllowed(true);
+            realm.setUserManagedAccessAllowed(true);
 
             this.configureSmtp(realm);
             this.configureClients(realm);
             this.configureRoles(realm);
+            this.configureDefaultClientScopes(realm);
 
             this.keycloak.realms().create(realm);
         } catch (ClientErrorException e) {
@@ -137,11 +147,97 @@ public class KeycloakInitializer {
         ClientRepresentation client = new ClientRepresentation();
         client.setClientId(this.replockerKcClientId);
         client.setPublicClient(false);
+        client.setSecret(this.replockerKcClientSecret);
         client.setDirectAccessGrantsEnabled(true);
+        client.setServiceAccountsEnabled(true);
+        client.setStandardFlowEnabled(true);
         client.setRedirectUris(List.of("*"));
         client.setWebOrigins(List.of("*"));
-        client.setSecret(this.replockerKcClientSecret);
+        client.setFullScopeAllowed(true);
+
+        client.setProtocolMappers(List.of(
+                this.createRealmRoleMapper(),
+                this.createAudienceMapper(),
+                this.createClientRoleMapper(),
+                this.createGroupMembershipMapper()
+        ));
+
         realm.setClients(List.of(client));
+    }
+
+    private ProtocolMapperRepresentation createRealmRoleMapper() {
+        ProtocolMapperRepresentation realmRoleMapper = new ProtocolMapperRepresentation();
+        realmRoleMapper.setName("realm roles");
+        realmRoleMapper.setProtocol("openid-connect");
+        realmRoleMapper.setProtocolMapper("oidc-usermodel-realm-role-mapper");
+        realmRoleMapper.setConfig(new HashMap<>() {{
+            put("multivalued", "true");
+            put("userinfo.token.claim", "true");
+            put("id.token.claim", "true");
+            put("access.token.claim", "true");
+            put("claim.name", "realm_roles");
+            put("jsonType.label", "String");
+        }});
+
+        return realmRoleMapper;
+    }
+
+    private ProtocolMapperRepresentation createAudienceMapper() {
+        ProtocolMapperRepresentation mapper = new ProtocolMapperRepresentation();
+        mapper.setName("audience-mapper");
+        mapper.setProtocol("openid-connect");
+        mapper.setProtocolMapper("oidc-audience-mapper");
+        mapper.setConfig(new HashMap<>() {{
+            put("included.client.audience", replockerKcClientId); // Use client ID as audience
+            put("id.token.claim", "true");
+            put("access.token.claim", "true");
+            put("add.to.id.token", "true");
+            put("add.to.access.token", "true");
+        }});
+        return mapper;
+    }
+
+
+    private ProtocolMapperRepresentation createClientRoleMapper() {
+        ProtocolMapperRepresentation mapper = new ProtocolMapperRepresentation();
+        mapper.setName("client roles");
+        mapper.setProtocol("openid-connect");
+        mapper.setProtocolMapper("oidc-usermodel-client-role-mapper");
+        mapper.setConfig(new HashMap<>() {{
+            put("multivalued", "true");
+            put("userinfo.token.claim", "true");
+            put("id.token.claim", "true");
+            put("access.token.claim", "true");
+            put("claim.name", "client_roles");
+            put("jsonType.label", "String");
+            put("clientId", replockerKcClientId);
+        }});
+
+        return mapper;
+    }
+
+    private ProtocolMapperRepresentation createGroupMembershipMapper() {
+        ProtocolMapperRepresentation mapper = new ProtocolMapperRepresentation();
+        mapper.setName("groups-mapper");
+        mapper.setProtocol("openid-connect");
+        mapper.setProtocolMapper("oidc-group-membership-mapper");
+        mapper.setConfig(new HashMap<>() {{
+            put("full.path", "false");
+            put("id.token.claim", "true");
+            put("access.token.claim", "true");
+            put("claim.name", "groups");
+            put("jsonType.label", "String");
+        }});
+        return mapper;
+    }
+
+    private void configureDefaultClientScopes(RealmRepresentation realm) {
+        realm.setDefaultDefaultClientScopes(List.of(
+                "web-origins",
+                "roles",
+                "profile",
+                "email"
+        ));
     }
 
     private void configureRoles(RealmRepresentation realm) {
@@ -157,8 +253,6 @@ public class KeycloakInitializer {
         roles.setRealm(replockerRealmRoles);
 
         realm.setRoles(roles);
-        /* realm.setRoles(new RolesRepresentation());
-        realm.getRoles().getRealm().add(new RoleRepresentation(this.replockerAdminRoleName, "RepLocker Admin role", false)); */
     }
 
     private void createInitialAdminUser() {
@@ -168,8 +262,10 @@ public class KeycloakInitializer {
             UserRepresentation adminUser = new UserRepresentation();
             adminUser.setUsername(this.replockerAdminUserName);
             adminUser.setEmail(this.replockerAdminUserEmail);
-            adminUser.setEnabled(true);
             adminUser.setEmailVerified(true);
+            adminUser.setEnabled(true);
+            adminUser.setFirstName(this.replockerAdminUserFirstname);
+            adminUser.setLastName(this.replockerAdminUserLastname);
 
             Response createResponse = usersResource.create(adminUser);
 
@@ -182,16 +278,16 @@ public class KeycloakInitializer {
                 credential.setTemporary(false);
                 usersResource.get(adminUserId).resetPassword(credential);
 
-                UserResource adminUserResource = usersResource.get(adminUserId);
+                /* UserResource adminUserResource = usersResource.get(adminUserId);
                 UserRepresentation userRepresentation = adminUserResource.toRepresentation();
                 userRepresentation.setRequiredActions(List.of(
-                        "UPDATE_PASSWORD", // Password change
-                        "VERIFY_EMAIL" // Email verification
+                        // "UPDATE_PASSWORD", // Password change
+                        // "VERIFY_EMAIL" // Email verification
                         // "CONFIGURE_TOTP", // 2FA setup
                         // "UPDATE_PROFILE" // Profile update
                 ));
-                adminUserResource.update(userRepresentation);
-                this.assignAdminRole(adminUserId);
+                adminUserResource.update(userRepresentation); */
+                this.assignRoles(adminUserId);
             } else {
                 String error = createResponse.readEntity(String.class);
                 throw new KeycloakException("Failed to create admin user: " + error);
@@ -199,11 +295,33 @@ public class KeycloakInitializer {
         }
     }
 
-    private void assignAdminRole(String adminUserId) {
+    private void assignRoles(String adminUserId) {
         RealmResource realm = this.keycloak.realm(this.replockerRealmName);
         RoleRepresentation adminRole = realm.roles().get(this.replockerAdminRoleName).toRepresentation();
-
         realm.users().get(adminUserId).roles().realmLevel().add(Collections.singletonList(adminRole));
+
+        ClientRepresentation client = realm.clients()
+                .findByClientId(this.replockerKcClientId).getFirst();
+
+        ClientResource clientResource = realm.clients().get(client.getId());
+
+        RoleRepresentation clientRole = clientResource.roles()
+                .get(this.replockerAdminRoleName).toRepresentation();
+
+        realm.users().get(adminUserId).roles().clientLevel(client.getId())
+                .add(List.of(clientRole));
+    }
+
+    private void configureClientRoles(RealmResource realm) {
+        ClientRepresentation adminClient = realm.clients()
+                .findByClientId(this.replockerKcClientId).getFirst();
+
+        RoleRepresentation adminClientRole = new RoleRepresentation();
+        adminClientRole.setName(replockerAdminRoleName);
+        adminClientRole.setClientRole(true);
+        adminClientRole.setComposite(false);
+
+        realm.clients().get(adminClient.getId()).roles().create(adminClientRole);
     }
 
     private void syncAdminUserToDatabase() {

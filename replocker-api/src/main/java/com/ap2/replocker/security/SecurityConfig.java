@@ -2,6 +2,7 @@ package com.ap2.replocker.security;
 
 import com.ap2.replocker.interceptor.AdminSynchronizerFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -11,28 +12,33 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig {
+
     private final AdminSynchronizerFilter adminSyncFilter;
+
+    @Value("${keycloak.replocker.role-name}")
+    private String requiredRole;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http
-    ) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(adminSyncFilter, UsernamePasswordAuthenticationFilter.class)
+                // .addFilterBefore(adminSyncFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(adminSyncFilter, BearerTokenAuthenticationFilter.class)
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers("/admin/**").hasRole("${keycloak.replocker.role-name}")
+                                .requestMatchers("/admins/**").hasAnyRole(this.requiredRole)
+                                .requestMatchers("/api/admins/**").hasAnyRole(this.requiredRole)
                                 .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs",

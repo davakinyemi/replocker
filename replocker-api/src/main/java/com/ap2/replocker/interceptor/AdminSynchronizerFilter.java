@@ -6,6 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +23,7 @@ import java.io.IOException;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AdminSynchronizerFilter extends OncePerRequestFilter {
     private final AdminSynchronizer synchronizer;
 
@@ -30,10 +33,23 @@ public class AdminSynchronizerFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof JwtAuthenticationToken jwtAuth) {
-            this.synchronizer.synchronizeWithIdp(jwtAuth.getToken());
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth instanceof JwtAuthenticationToken jwtAuth) {
+                this.synchronizer.synchronizeWithIdp(jwtAuth.getToken());
+            }
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.getWriter().write("Synchronization failed: " + e.getMessage());
+            log.error("Admin synchronization error", e);
         }
-        filterChain.doFilter(request, response);
+
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return !request.getServletPath().startsWith("/admins/");
+    }
+
 }

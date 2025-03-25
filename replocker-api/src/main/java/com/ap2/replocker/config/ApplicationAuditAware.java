@@ -13,16 +13,6 @@ public class ApplicationAuditAware implements AuditorAware<String> {
     @Override
     @NonNull
     public Optional<String> getCurrentAuditor() {
-        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(
-                authentication == null ||
-                        !authentication.isAuthenticated() ||
-                        authentication instanceof AnonymousAuthenticationToken
-
-        ) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(authentication.getName()); */
         return Optional.ofNullable(this.getAuthentication())
                 .filter(this::isValidAuthentication)
                 .map(Authentication::getName);

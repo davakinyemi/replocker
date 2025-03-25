@@ -36,12 +36,16 @@ public class AdminSynchronizer {
     }
 
     private void createAdmin(Jwt token) {
+        log.debug("Creating admin from token: {}", token.getClaims());
         Admin admin = this.adminMapper.fromKeycloakToken(token);
         this.adminRepository.save(admin);
     }
 
     private void updateAdmin(Admin admin, Jwt token) {
         String newEmail = token.getClaimAsString("email");
+        if (newEmail == null) {
+            throw new IllegalStateException("Email claim missing in JWT");
+        }
         if (!admin.getEmail().equals(newEmail)) {
             this.updateAdminKeycloakEmail(admin.getKeycloakUserId().toString(), newEmail);
             admin.setEmail(newEmail);

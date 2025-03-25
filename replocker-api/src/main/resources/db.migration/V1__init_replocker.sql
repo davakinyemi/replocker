@@ -104,6 +104,7 @@ CREATE INDEX idx_token_expiry ON access_token(expires_at);
 
 -- notification table indices
 CREATE INDEX idx_notification_admin_read ON notification(admin_id, is_read);
+CREATE INDEX idx_notification_admin_date ON notification(admin_id, created_date);
 
 -- websocket audit table indices
 CREATE INDEX idx_websocket_admin ON websocket_audit(admin_id);

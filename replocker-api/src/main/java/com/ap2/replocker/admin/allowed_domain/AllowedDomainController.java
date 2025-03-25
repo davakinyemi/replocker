@@ -1,4 +1,4 @@
-package com.ap2.replocker.admin.allowed_domain;
+/** package com.ap2.replocker.admin.allowed_domain;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-/**
+
  * @author Dave AKN
  * @version 1.0
  */
-@RestController
+/* @RestController
 @RequestMapping("/admin/domain")
 @SecurityRequirement(name = "keycloak")
 @RequiredArgsConstructor
@@ -44,6 +44,6 @@ public class AllowedDomainController {
     @PreAuthorize("hasRole('${keycloak.replocker.role-name}')")
     public ResponseEntity<List<AllowedDomainResponse>> getDomains(@AuthenticationPrincipal Jwt jwt) {
         UUID adminId = UUID.fromString(jwt.getSubject());
-        return ResponseEntity.ok(this.domainService.getDomainsByAdminId(adminId));
+        return ResponseEntity.ok(this.domainService.getDomainsByAdmin(adminId));
     }
-}
+} */

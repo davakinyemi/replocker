@@ -1,4 +1,4 @@
-package com.ap2.replocker.admin.notification;
+/** package com.ap2.replocker.admin.notification;
 
 import com.ap2.replocker.common.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-/**
+
  * @author Dave AKN
  * @version 1.0
  */
-@RestController
+/* @RestController
 @RequestMapping("/admin/notifications")
 @SecurityRequirement(name = "keycloak")
 @RequiredArgsConstructor
@@ -42,4 +42,4 @@ public class NotificationController {
         this.notificationService.markNotificationAsRead(notificationId);
         return ResponseEntity.ok().build();
     }
-}
+} */

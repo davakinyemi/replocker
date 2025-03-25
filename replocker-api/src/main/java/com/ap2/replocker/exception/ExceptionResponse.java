@@ -3,7 +3,6 @@ package com.ap2.replocker.exception;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import java.util.Map;
 import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
@@ -18,6 +17,4 @@ public class ExceptionResponse {
     private Integer businessErrorCode;
     private String error;
     private Set<String> validationErrors;
-    /* private String businessExceptionDescription;
-    private Map<String, String> errors; */
 }
