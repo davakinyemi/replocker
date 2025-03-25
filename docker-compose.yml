@@ -8,9 +8,12 @@ services:
       POSTGRES_USER: ${SPRING_BOOT_DATASOURCE_USERNAME}
       POSTGRES_PASSWORD: ${SPRING_BOOT_DATASOURCE_PASSWORD}
       PGDATA: /var/lib/postgresql/data
-      POSTGRES_DB: ${SPRING_BOOT_DATASOURCE_NAME}
+      POSTGRES_MULTIPLE_DATABASES: replocker, keycloak_replocker
+      # POSTGRES_DB: ${SPRING_BOOT_DATASOURCE_NAME}
     volumes:
-      - postgres:/data/postgres
+      # - postgres:/data/postgres
+      - postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
     networks:
