@@ -8,6 +8,6 @@ import java.util.UUID;
  */
 public class AccessRequestNotFoundException extends RuntimeException {
     public AccessRequestNotFoundException(String message, UUID requestId) {
-        super("Access request not found: " + requestId);
+        super(message + ": " + requestId);
     }
 }

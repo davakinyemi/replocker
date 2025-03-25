@@ -25,7 +25,7 @@ public class NotificationController {
 
     @Operation(summary = "Get unread notifications")
     @GetMapping
-    @PreAuthorize("hasRole('REPORT_ADMIN')")
+    @PreAuthorize("hasRole('${keycloak.replocker.role-name}')")
     public PageResponse<NotificationResponse> getNotifications(
             @AuthenticationPrincipal Jwt jwt,
             @RequestParam(defaultValue = "0") int page,
@@ -37,7 +37,7 @@ public class NotificationController {
 
     @Operation(summary = "Mark notification as read")
     @PatchMapping("/{notificationId}/read")
-    @PreAuthorize("hasRole('REPORT_ADMIN')")
+    @PreAuthorize("hasRole('${keycloak.replocker.role-name}')")
     public ResponseEntity<Void> markAsRead(@PathVariable UUID notificationId) {
         this.notificationService.markNotificationAsRead(notificationId);
         return ResponseEntity.ok().build();

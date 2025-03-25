@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers("/admin/**").hasRole("REPORT_ADMIN")
+                                .requestMatchers("/admin/**").hasRole("${keycloak.replocker.role-name}")
                                 .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs",

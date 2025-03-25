@@ -20,7 +20,7 @@ public class AdminController {
 
     @Operation(summary = "Get current admin profile")
     @GetMapping("/me") // http://localhost:8088/api/admins/me
-    @PreAuthorize("hasRole('REPORT_ADMIN')")
+    @PreAuthorize("hasRole('${keycloak.replocker.role-name}')")
     public ResponseEntity<AdminResponse> getCurrentAdmin(@AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(adminService.syncWithKeycloak(jwt));
     }

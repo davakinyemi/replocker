@@ -31,7 +31,7 @@ public class ReportCollectionService {
 
     private void validateUniqueName(String name) {
         if (this.reportCollectionRepository.existsByNameIgnoreCase(name)) {
-            throw new DuplicateCollectionException("", name);
+            throw new DuplicateCollectionException("Duplicate report collection name", name);
         }
     }
 }

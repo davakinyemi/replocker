@@ -20,7 +20,7 @@ public class AccessRequestMapper {
                 .email(accessRequest.email())
                 .message(accessRequest.message())
                 .reportCollection(this.reportCollectionRepository.findById(accessRequest.reportCollectionId())
-                        .orElseThrow(() -> new CollectionNotFoundException("", accessRequest.reportCollectionId())))
+                        .orElseThrow(() -> new CollectionNotFoundException("Report collection not found", accessRequest.reportCollectionId())))
                 .build();
     }
 
