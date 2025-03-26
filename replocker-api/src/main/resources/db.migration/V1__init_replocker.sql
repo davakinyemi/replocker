@@ -16,7 +16,7 @@ CREATE TABLE report_collection (
     description TEXT,
     is_locked BOOLEAN NOT NULL DEFAULT FALSE,
     is_published BOOLEAN NOT NULL DEFAULT FALSE,
-    admin_id UUID NOT NULL REFERENCES admin(id),
+    admin_id UUID NOT NULL REFERENCES admin(id) ON DELETE CASCADE,
     created_date TIMESTAMPTZ NOT NULL,
     last_modified_date TIMESTAMPTZ
 );
@@ -28,7 +28,7 @@ CREATE TABLE report (
     size_bytes BIGINT NOT NULL,
     -- type VARCHAR(20) NOT NULL CHECK (type IN ('CSV', 'XLSX')),
     type REPORT_TYPE NOT NULL,
-    report_collection_id UUID NOT NULL REFERENCES report_collection(id),
+    report_collection_id UUID NOT NULL REFERENCES report_collection(id) ON DELETE CASCADE,
     created_date TIMESTAMP NOT NULL
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE access_request (
     message TEXT,
     -- status VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED')),
     status ACCESS_REQUEST_TYPE NOT NULL,
-    report_collection_id UUID NOT NULL REFERENCES report_collection(id),
+    report_collection_id UUID NOT NULL REFERENCES report_collection(id) ON DELETE CASCADE,
     admin_comment TEXT,
     created_date TIMESTAMPTZ NOT NULL
 );
@@ -55,7 +55,7 @@ CREATE TABLE allowed_domain(
 CREATE TABLE access_token (
     id UUID PRIMARY KEY,
     token_value VARCHAR(36) UNIQUE NOT NULL,
-    report_collection_id UUID NOT NULL REFERENCES report_collection(id),
+    report_collection_id UUID NOT NULL REFERENCES report_collection(id) ON DELETE CASCADE,
     access_request_id UUID NOT NULL REFERENCES access_request(id),
     created_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMPTZ NOT NULL,
@@ -68,13 +68,13 @@ CREATE TABLE notification (
     message TEXT NOT NULL,
     is_read BOOLEAN NOT NULL DEFAULT FALSE,
     admin_id UUID NOT NULL REFERENCES admin(id),
-    access_request_id UUID NOT NULL REFERENCES access_request(id),
+    access_request_id UUID NOT NULL REFERENCES access_request(id) ON DELETE CASCADE,
     created_date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE websocket_audit (
     id UUID PRIMARY KEY,
-    admin_id UUID NOT NULL REFERENCES admin(id),
+    admin_id UUID NOT NULL REFERENCES admin(id) ON DELETE CASCADE,
     connection_time TIMESTAMPTZ NOT NULL,
     disconnect_time TIMESTAMPTZ
 );
