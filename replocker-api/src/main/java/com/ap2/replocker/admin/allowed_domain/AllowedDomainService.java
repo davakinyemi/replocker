@@ -33,10 +33,10 @@ public class AllowedDomainService {
 
     public AllowedDomainResponse addDomain(AllowedDomainRequest request, UUID adminId) {
         Admin admin = this.adminRepository.findById(adminId)
-                .orElseThrow(() -> new AdminNotFoundException("Admin not found", adminId));
+                .orElseThrow(() -> new AdminNotFoundException(adminId));
 
         if (this.domainRepository.existsByAdminIdAndDomainNameIgnoreCase(adminId, request.domainName())) {
-            throw new DuplicateDomainException("Duplicate domain name", request.domainName());
+            throw new DuplicateDomainException(request.domainName());
         }
 
         return this.domainMapper.toAllowedDomainResponse(
@@ -54,7 +54,7 @@ public class AllowedDomainService {
 
     public void deleteDomain(UUID domainId, UUID adminId) {
         AllowedDomain domain = this.domainRepository.findById(domainId)
-                .orElseThrow(() -> new DomainNotFoundException("Domain not found: ", domainId));
+                .orElseThrow(() -> new DomainNotFoundException(domainId));
 
         if (!domain.getAdmin().getId().equals(adminId)) {
             throw new OperationNotPermittedException("Domain ownership violation");

@@ -7,5 +7,5 @@ import java.util.UUID;
  * @version 1.0
  */
 public class DomainNotFoundException extends RuntimeException {
-    public DomainNotFoundException(String message, UUID domainId) { super(message + ": " + domainId); }
+    public DomainNotFoundException(UUID domainId) { super(domainId.toString()); }
 }

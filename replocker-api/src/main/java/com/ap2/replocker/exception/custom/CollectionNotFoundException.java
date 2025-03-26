@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 @Getter
 public class CollectionNotFoundException extends RuntimeException {
-    public CollectionNotFoundException(String message, UUID collectionId) {
-        super(message + ": " + collectionId);
+    public CollectionNotFoundException(UUID collectionId) {
+        super(collectionId.toString());
     }
 }

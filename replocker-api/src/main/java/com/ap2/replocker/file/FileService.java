@@ -72,7 +72,7 @@ public class FileService {
     private void validateFileType(MultipartFile file) {
         String fileType = file.getContentType();
         if (!"text/csv".equals(fileType) && !"application/vnd.ms-excel".equals(fileType)) {
-            throw new InvalidFileTypeException("Invalid file type", fileType);
+            throw new InvalidFileTypeException(fileType);
         }
     }
 

@@ -23,7 +23,7 @@ public class ReportCollectionService {
     public ReportCollectionResponse createCollection(ReportCollectionRequest request, UUID adminId) {
         this.validateUniqueName(request.name());
         Admin admin = this.adminRepository.findById(adminId)
-                .orElseThrow(() -> new AdminNotFoundException("", adminId));
+                .orElseThrow(() -> new AdminNotFoundException(adminId));
 
         ReportCollection reportCollection = this.reportCollectionRepository.save(this.reportCollectionMapper.toReportCollection(request, admin));
         return this.reportCollectionMapper.toReportCollectionResponse(reportCollection);
@@ -31,7 +31,7 @@ public class ReportCollectionService {
 
     private void validateUniqueName(String name) {
         if (this.reportCollectionRepository.existsByNameIgnoreCase(name)) {
-            throw new DuplicateCollectionException("Duplicate report collection name", name);
+            throw new DuplicateCollectionException(name);
         }
     }
 }

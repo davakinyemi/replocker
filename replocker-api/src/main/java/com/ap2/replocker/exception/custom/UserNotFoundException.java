@@ -7,5 +7,5 @@ import java.util.UUID;
  * @version 1.0
  */
 public class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(String message, UUID userId) { super(message + ": " + userId); }
+    public UserNotFoundException(UUID userId) { super(userId.toString()); }
 }

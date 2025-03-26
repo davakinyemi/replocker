@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCodes.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(errorCodes.getCode())
-                        .error(errorCodes.getDescription())
+                        .error(errorCodes.getDescription() + ": " + e.getMessage())
                         .build()
                 );
     }
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(FORBIDDEN)
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(BusinessErrorCodes.INVALID_TOKEN.getCode())
-                        .error(e.getMessage())
+                        .error(BusinessErrorCodes.INVALID_TOKEN.getDescription() + ": " + e.getMessage())
                         .build()
                 );
     }
@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(BusinessErrorCodes.KEYCLOAK_SERVER_ERROR.getCode())
-                        .error(e.getMessage())
+                        .error(BusinessErrorCodes.KEYCLOAK_SERVER_ERROR.getDescription() + ": " + e.getMessage())
                         .build()
                 );
     }

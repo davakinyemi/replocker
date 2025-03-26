@@ -20,7 +20,7 @@ public class AccessTokenMapper {
 
     public AccessToken toAccessToken(UUID accessRequestId) {
         AccessRequest accessRequest = this.accessRequestRepository.findById(accessRequestId)
-                .orElseThrow(() -> new AccessRequestNotFoundException("Access request not found", accessRequestId));
+                .orElseThrow(() -> new AccessRequestNotFoundException(accessRequestId));
 
         return AccessToken.builder()
                 .tokenValue(UUID.randomUUID().toString())

@@ -5,5 +5,5 @@ package com.ap2.replocker.exception.custom;
  * @version 1.0
  */
 public class InvalidFileTypeException extends RuntimeException {
-    public InvalidFileTypeException(String message, String type) { super(message + ": " + type); }
+    public InvalidFileTypeException(String type) { super(type); }
 }

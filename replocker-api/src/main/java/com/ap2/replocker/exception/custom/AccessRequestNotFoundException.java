@@ -7,7 +7,7 @@ import java.util.UUID;
  * @version 1.0
  */
 public class AccessRequestNotFoundException extends RuntimeException {
-    public AccessRequestNotFoundException(String message, UUID requestId) {
-        super(message + ": " + requestId);
+    public AccessRequestNotFoundException(UUID requestId) {
+        super(requestId.toString());
     }
 }

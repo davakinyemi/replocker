@@ -5,5 +5,5 @@ package com.ap2.replocker.exception.custom;
  * @version 1.0
  */
 public class DuplicateDomainException extends RuntimeException {
-    public DuplicateDomainException(String message, String name) { super(message + ": " + name); }
+    public DuplicateDomainException(String name) { super(name); }
 }

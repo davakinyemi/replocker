@@ -20,7 +20,7 @@ public class AdminService {
 
     public AdminResponse getAdminProfile(Jwt jwt) {
         Admin admin = this.adminRepository.findByKeycloakUserId(UUID.fromString(jwt.getSubject()))
-                .orElseThrow(() -> new AdminNotFoundException("Admin not found", UUID.fromString(jwt.getSubject())));
+                .orElseThrow(() -> new AdminNotFoundException(UUID.fromString(jwt.getSubject())));
 
         if (!admin.getEmail().equals(jwt.getClaimAsString("email")) ||
                 !admin.getUsername().equals(jwt.getClaimAsString("preferred_username"))
