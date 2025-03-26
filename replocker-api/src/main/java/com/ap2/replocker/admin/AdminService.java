@@ -30,6 +30,13 @@ public class AdminService {
         return this.adminMapper.toAdminResponse(admin);
     }
 
+    public UUID getAdminId(Jwt jwt) {
+        Admin admin = this.adminRepository.findByKeycloakUserId(UUID.fromString(jwt.getSubject()))
+                .orElseThrow(() -> new AdminNotFoundException(UUID.fromString(jwt.getSubject())));
+
+        return admin.getId();
+    }
+
     public void verifyAdminOwnership(UUID adminId, UUID resourceOwnerId) {
         if (!adminId.equals(resourceOwnerId)) {
             throw new OperationNotPermittedException("Admin ownership mismatch");

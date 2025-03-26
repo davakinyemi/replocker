@@ -43,8 +43,10 @@ public class AdminController {
             @Valid @RequestBody AllowedDomainRequest request,
             @AuthenticationPrincipal Jwt jwt
     ) {
+        UUID adminId = this.adminService.getAdminId(jwt);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(this.allowedDomainService.addDomain(request, UUID.fromString(jwt.getSubject())));
+                .body(this.allowedDomainService.addDomain(request, adminId));
+                // .body(this.allowedDomainService.addDomain(request, UUID.fromString(jwt.getSubject())));
     }
 
     @Operation(summary = "List allowed domains")
@@ -55,8 +57,10 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
+        UUID adminId = this.adminService.getAdminId(jwt);
         return ResponseEntity.ok(
-                this.allowedDomainService.getDomainsByAdmin(UUID.fromString(jwt.getSubject()), page, size)
+                this.allowedDomainService.getDomainsByAdmin(adminId, page, size)
+                // this.allowedDomainService.getDomainsByAdmin(UUID.fromString(jwt.getSubject()), page, size)
         );
     }
 
@@ -67,7 +71,9 @@ public class AdminController {
             @PathVariable UUID id,
             @AuthenticationPrincipal Jwt jwt
     ) {
-        this.allowedDomainService.deleteDomain(id, UUID.fromString(jwt.getSubject()));
+        UUID adminId = this.adminService.getAdminId(jwt);
+        this.allowedDomainService.deleteDomain(id, adminId);
+        // this.allowedDomainService.deleteDomain(id, UUID.fromString(jwt.getSubject()));
         return ResponseEntity.noContent().build();
     }
 
@@ -81,8 +87,10 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
+        UUID adminId = this.adminService.getAdminId(jwt);
         return ResponseEntity.ok(this.notificationService.filterNotifications(
-                UUID.fromString(jwt.getSubject()), startDate, endDate, page, size
+                adminId, startDate, endDate, page, size
+                // UUID.fromString(jwt.getSubject()), startDate, endDate, page, size
         ));
     }
 
@@ -94,8 +102,10 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
+        UUID adminId = this.adminService.getAdminId(jwt);
         return ResponseEntity.ok(this.notificationService.getUnreadNotifications(
-                UUID.fromString(jwt.getSubject()), page, size
+                adminId, page, size
+                // UUID.fromString(jwt.getSubject()), page, size
         ));
     }
 }
