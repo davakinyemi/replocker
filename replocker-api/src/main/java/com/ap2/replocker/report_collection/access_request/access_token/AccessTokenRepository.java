@@ -24,4 +24,6 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, UUID> 
     List<AccessToken> findByExpiresAtBefore(LocalDateTime threshold);
 
     void deleteByExpiresAtBefore(LocalDateTime expiresAtBefore);
+
+    Optional<AccessToken> findByTokenValueAndReportCollectionId(String tokenValue, UUID collectionId);
 }

@@ -54,7 +54,7 @@ CREATE TABLE allowed_domain(
 
 CREATE TABLE access_token (
     id UUID PRIMARY KEY,
-    token_value VARCHAR(36) UNIQUE NOT NULL,
+    token_value VARCHAR(6) UNIQUE NOT NULL CHECK (LENGTH(token_value) = 6),
     report_collection_id UUID NOT NULL REFERENCES report_collection(id) ON DELETE CASCADE,
     access_request_id UUID NOT NULL REFERENCES access_request(id),
     created_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -89,6 +89,7 @@ CREATE UNIQUE INDEX uc_domain_admin ON allowed_domain(admin_id, lower(domain_nam
 
 -- report collection table indices
 CREATE UNIQUE INDEX uc_report_collection_name ON report_collection(name);
+CREATE INDEX idx_collection_admin ON report_collection(admin_id);
 CREATE INDEX idx_collection_published ON report_collection(is_published, is_locked);
 
 -- report table indices

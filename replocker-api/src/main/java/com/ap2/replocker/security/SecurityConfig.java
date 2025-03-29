@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,8 +38,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers("/admins/**").hasAnyRole(this.requiredRole)
-                                .requestMatchers("/api/admins/**").hasAnyRole(this.requiredRole)
+                                .requestMatchers(
+                                        "/admins/**",
+                                        "/api/admins/**",
+                                        "/report-collections/my/**",
+                                        "/api/report-collections/my/**"
+                                ).hasAnyRole(this.requiredRole)
                                 .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs",
@@ -53,7 +58,11 @@ public class SecurityConfig {
                                         "/ws/**",
                                         "/reports/public/**",
                                         "/user/request-access"
-                        ).permitAll().anyRequest().authenticated()
+                                ).permitAll()
+                                .requestMatchers(
+                                        "/report-collections/public/**",
+                                        "/api/report-collections/public/**"
+                                ).permitAll().anyRequest().authenticated()
                 ).oauth2ResourceServer(auth ->
                         auth.jwt(token -> token.jwtAuthenticationConverter(this.keycloakJwtConverter()))
                 ).csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**"));

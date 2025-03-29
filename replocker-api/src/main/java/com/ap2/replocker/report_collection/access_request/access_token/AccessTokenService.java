@@ -32,8 +32,16 @@ public class AccessTokenService {
     private static final int MAX_VALIDITY_DAYS = 7;
 
    public void validateToken(String tokenValue, UUID collectionId) {
-       AccessToken token = this.accessTokenRepository.findByTokenValue(tokenValue)
-               .orElseThrow(() -> new InvalidTokenException("Token not found", tokenValue));
+       if (tokenValue == null || !tokenValue.matches("\\d{6}")) {
+           throw new InvalidTokenException("Invalid 6-digit format", tokenValue);
+       }
+
+       AccessToken token = this.accessTokenRepository.findByTokenValueAndReportCollectionId(tokenValue, collectionId)
+               .orElseThrow(() -> new InvalidTokenException("Token not found, or invalid for this collection", tokenValue));
+
+       /* if (!token.getReportCollection().getId().equals(collectionId)) {
+           throw new InvalidTokenException("Token not valid for this collection", tokenValue);
+       } */
 
        if (token.isRevoked() || !token.isActive()) {
            throw new InvalidTokenException("Token revoked or no longer active", tokenValue);
@@ -43,9 +51,6 @@ public class AccessTokenService {
            throw new InvalidTokenException("Token expired", tokenValue);
        }
 
-       if (!token.getReportCollection().getId().equals(collectionId)) {
-           throw new InvalidTokenException("Token not valid for this collection", tokenValue);
-       }
    }
 
    public AccessTokenResponse createAccessToken(UUID accessRequestId) {
