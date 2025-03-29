@@ -1,11 +1,8 @@
 package com.ap2.replocker.report_collection.access_request;
 
-import com.ap2.replocker.admin.notification.NotificationService;
 import com.ap2.replocker.email.EmailService;
 import com.ap2.replocker.exception.custom.AccessRequestNotFoundException;
 import com.ap2.replocker.report_collection.ReportCollection;
-import com.ap2.replocker.report_collection.access_request.access_token.AccessToken;
-import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenRepository;
 import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenResponse;
 import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -26,8 +22,6 @@ import java.util.UUID;
 @Slf4j
 public class AccessRequestService {
     private final AccessRequestRepository accessRequestRepository;
-    private final AccessTokenRepository accessTokenRepository;
-    private final NotificationService notificationService;
     private final AccessTokenService accessTokenService;
     private final EmailService emailService;
 

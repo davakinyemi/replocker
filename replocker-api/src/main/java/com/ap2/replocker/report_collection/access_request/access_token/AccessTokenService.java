@@ -1,6 +1,5 @@
 package com.ap2.replocker.report_collection.access_request.access_token;
 
-import com.ap2.replocker.admin.allowed_domain.AllowedDomainRepository;
 import com.ap2.replocker.exception.custom.AccessRequestNotFoundException;
 import com.ap2.replocker.exception.custom.InvalidTokenException;
 import com.ap2.replocker.exception.custom.TokenGenerationException;
@@ -27,7 +26,6 @@ import java.util.UUID;
 public class AccessTokenService {
     private final AccessTokenRepository accessTokenRepository;
     private final AccessTokenMapper accessTokenMapper;
-    private final AllowedDomainRepository allowedDomainRepository;
     private final AccessRequestRepository accessRequestRepository;
     private static final int MAX_GENERATION_ATTEMPTS = 10;
     private static final int TOKEN_VALUE_LENGTH = 6;
@@ -72,7 +70,7 @@ public class AccessTokenService {
         String token;
         int attempts = 0;
         do {
-            token = this.generateTokenValue(TOKEN_VALUE_LENGTH);
+            token = this.generateTokenValue();
             attempts++;
         } while (this.accessTokenRepository.existsByTokenValue(token) && attempts < MAX_GENERATION_ATTEMPTS);
 
@@ -87,10 +85,10 @@ public class AccessTokenService {
        this.accessTokenRepository.deleteByExpiresAtBefore(LocalDateTime.now());
    }
 
-   private String generateTokenValue(int length) {
+   private String generateTokenValue() {
        SecureRandom random = new SecureRandom();
        StringBuilder tokenValue = new StringBuilder();
-       for (int i = 0; i < length; i++) {
+       for (int i = 0; i < AccessTokenService.TOKEN_VALUE_LENGTH; i++) {
            tokenValue.append(random.nextInt(10));
        }
        return tokenValue.toString();
