@@ -14,6 +14,7 @@ import java.util.UUID;
  * @version 1.0
  */
 public interface AccessTokenRepository extends JpaRepository<AccessToken, UUID> {
+    boolean existsByTokenValue(String tokenValue);
     Optional<AccessToken> findByTokenValue(String tokenValue);
     boolean existsByAccessRequestAndReportCollectionAndExpiresAtAfter(
             AccessRequest accessRequest,

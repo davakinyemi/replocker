@@ -15,6 +15,7 @@ public enum BusinessErrorCodes {
     DOMAIN_NOT_FOUND(404, NOT_FOUND, "Domain not found"),
     ACCESS_REQUEST_NOT_FOUND(404, NOT_FOUND, "Access request not found"),
     INVALID_TOKEN(401, UNAUTHORIZED, "Invalid token"),
+    TOKEN_GENERATION_FAILURE(403, FORBIDDEN, "Token generation failure"),
     COLLECTION_NOT_FOUND(404, NOT_FOUND, "Collection not found"),
     DUPLICATE_DOMAIN_NAME(409, FORBIDDEN, "Duplicate domain name"),
     DUPLICATE_COLLECTION_NAME(409, FORBIDDEN, "Duplicate collection name"),

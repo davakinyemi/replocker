@@ -67,6 +67,7 @@ public class GlobalExceptionHandler {
         else if (e instanceof DuplicateDomainException) return BusinessErrorCodes.DUPLICATE_DOMAIN_NAME;
         else if (e instanceof DuplicateCollectionException) return BusinessErrorCodes.DUPLICATE_COLLECTION_NAME;
         else if (e instanceof DuplicateReportException) return BusinessErrorCodes.DUPLICATE_REPORT_NAME;
+        else if (e instanceof TokenGenerationException) return BusinessErrorCodes.TOKEN_GENERATION_FAILURE;
         return BusinessErrorCodes.NO_CODE;
     }
 

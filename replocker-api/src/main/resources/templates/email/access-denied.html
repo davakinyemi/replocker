@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Request Denied</title>
+<body style="font-family: Arial, sans-serif; line-height: 1.6">
+  <p>Your access request for <!--/*@thymesVar id="collectionName" type="java.lang.String"*/-->
+  <strong th:text="${collectionName}"></strong> has been reviewed and <span style="color: #dc3545">denied</span>.</p>
+
+  <!--/*@thymesVar id="adminComment" type="java.lang.String"*/-->
+  <div th:if="${adminComment}" style="margin: 20px 0; padding: 15px; background: #f8d7da; border-radius: 5px">
+    <strong>Admin Comment:</strong><br>
+    <span th:text="${adminComment}"></span>
+  </div>
+
+  <p th:unless="${adminComment}" style="color: #6c757d">
+    No additional comments provided by the admin.
+  </p>
+
+  <p style="margin-top: 25px">
+    You may submit a new request with updated information if applicable.
+  </p>
+</body>
+
+</html>
