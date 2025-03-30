@@ -1,12 +1,12 @@
 package com.ap2.replocker.report_collection.access_request;
 
+import com.ap2.replocker.admin.Admin;
+import com.ap2.replocker.admin.allowed_domain.AllowedDomainRepository;
+import com.ap2.replocker.admin.allowed_domain.AllowedDomainService;
 import com.ap2.replocker.admin.notification.NotificationService;
 import com.ap2.replocker.common.PageResponse;
 import com.ap2.replocker.email.EmailService;
-import com.ap2.replocker.exception.custom.AccessRequestNotFoundException;
-import com.ap2.replocker.exception.custom.BusinessRuleException;
-import com.ap2.replocker.exception.custom.CollectionNotFoundException;
-import com.ap2.replocker.exception.custom.DuplicateRequestException;
+import com.ap2.replocker.exception.custom.*;
 import com.ap2.replocker.report_collection.ReportCollection;
 import com.ap2.replocker.report_collection.ReportCollectionRepository;
 import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenResponse;
@@ -35,6 +35,8 @@ public class AccessRequestService {
     private final AccessRequestMapper accessRequestMapper;
     private final AccessTokenService accessTokenService;
     private final ReportCollectionRepository reportCollectionRepository;
+    private final AllowedDomainRepository allowedDomainRepository;
+    private final AllowedDomainService allowedDomainService;
     private final NotificationService notificationService;
     private final EmailService emailService;
 
@@ -77,6 +79,13 @@ public class AccessRequestService {
     public AccessRequestResponse createAccessRequest(UUID collectionId, @Valid AccessRequestDTO requestDTO) throws BusinessRuleException {
         ReportCollection collection = this.reportCollectionRepository.findById(collectionId)
                 .orElseThrow(() -> new CollectionNotFoundException(collectionId));
+
+        Admin admin = collection.getAdmin();
+        String domain = this.allowedDomainService.extractDomain(requestDTO.email());
+
+        if (!this.allowedDomainRepository.existsByAdminIdAndDomainNameIgnoreCase(admin.getId(), domain)) {
+            throw new DomainNotAllowedException(domain);
+        }
 
         if (!collection.isLocked()) {
             throw new BusinessRuleException("Access requests only allowed for locked collections");

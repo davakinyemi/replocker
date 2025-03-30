@@ -61,4 +61,8 @@ public class AllowedDomainService {
         }
         this.domainRepository.delete(domain);
     }
+
+    public String extractDomain(String email) {
+        return email.substring(email.indexOf("@") + 1).toLowerCase().trim();
+    }
 }

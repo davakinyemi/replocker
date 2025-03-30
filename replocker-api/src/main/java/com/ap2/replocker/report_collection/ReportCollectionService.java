@@ -2,6 +2,7 @@ package com.ap2.replocker.report_collection;
 
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.admin.AdminRepository;
+import com.ap2.replocker.admin.allowed_domain.AllowedDomainRepository;
 import com.ap2.replocker.common.PageResponse;
 import com.ap2.replocker.exception.custom.AdminNotFoundException;
 import com.ap2.replocker.exception.custom.CollectionNotFoundException;

@@ -48,6 +48,7 @@ public class GlobalExceptionHandler {
         DuplicateCollectionException.class,
         DuplicateReportException.class,
         DuplicateRequestException.class,
+        DomainNotAllowedException.class,
     })
     public ResponseEntity<ExceptionResponse> handleBusinessExceptions(RuntimeException e) {
         BusinessErrorCodes errorCodes = this.resolveErrorCode(e);
@@ -71,6 +72,7 @@ public class GlobalExceptionHandler {
         else if (e instanceof DuplicateReportException) return BusinessErrorCodes.DUPLICATE_REPORT_NAME;
         else if (e instanceof DuplicateRequestException) return BusinessErrorCodes.DUPLICATE_REQUEST_ACCESS;
         else if (e instanceof TokenGenerationException) return BusinessErrorCodes.TOKEN_GENERATION_FAILURE;
+        else if (e instanceof DomainNotAllowedException) return BusinessErrorCodes.EMAIL_DOMAIN_NOT_PERMITTED;
         return BusinessErrorCodes.NO_CODE;
     }
 

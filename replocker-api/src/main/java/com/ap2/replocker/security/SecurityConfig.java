@@ -25,6 +25,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final AdminSynchronizerFilter adminSyncFilter;
+    private final CustomBearerTokenAuthenticationEntryPoint customEntryPoint;
 
     @Value("${keycloak.replocker.role-name}")
     private String requiredRole;
@@ -32,17 +33,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // .addFilterBefore(adminSyncFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(adminSyncFilter, BearerTokenAuthenticationFilter.class)
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests ->
                         requests
                                 .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/report-collections/public/request-access/**"
+                                ).permitAll()
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/report-collections/public/**"
+                                ).permitAll()
+                                .requestMatchers(
                                         "/admins/**",
-                                        "/api/admins/**",
-                                        "/report-collections/my/**",
-                                        "/api/report-collections/my/**"
+                                        "/report-collections/my/**"
                                 ).hasAnyRole(this.requiredRole)
                                 .requestMatchers(
                                         "/v2/api-docs",
@@ -55,17 +61,12 @@ public class SecurityConfig {
                                         "/swagger-ui/**",
                                         "/webjars/**",
                                         "/swagger-ui.html",
-                                        "/ws/**",
-                                        "/reports/public/**",
-                                        "/user/request-access"
-                                ).permitAll()
-                                .requestMatchers(
-                                        "/report-collections/public/**",
-                                        "/api/report-collections/public/**"
+                                        "/ws/**"
                                 ).permitAll().anyRequest().authenticated()
                 ).oauth2ResourceServer(auth ->
                         auth.jwt(token -> token.jwtAuthenticationConverter(this.keycloakJwtConverter()))
-                ).csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**"));
+                                .authenticationEntryPoint(this.customEntryPoint)
+                ).csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**", "/report-collections/public/**"));
         return http.build();
     }
 

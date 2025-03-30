@@ -23,6 +23,7 @@ public enum BusinessErrorCodes {
     DUPLICATE_REQUEST_ACCESS(409, FORBIDDEN, "Duplicate request access"),
     KEYCLOAK_SERVER_ERROR(500, INTERNAL_SERVER_ERROR, "Keycloak server error"),
     BUSINESS_RULE_ERROR(500, FORBIDDEN, "Business rule error"),
+    EMAIL_DOMAIN_NOT_PERMITTED(400, FORBIDDEN, "Email domain not permitted"),
     ;
 
     private final int code;

@@ -117,7 +117,7 @@ public class ReportCollectionController {
     }
 
     @Operation(summary = "Submit access request for locked collection")
-    @PostMapping("/public/{collectionId}/request-access")
+    @PostMapping("/public/request-access/{collectionId}")
     public ResponseEntity<AccessRequestResponse> createAccessRequest(
         @PathVariable UUID collectionId,
         @Valid @RequestBody AccessRequestDTO requestDTO
@@ -125,38 +125,5 @@ public class ReportCollectionController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(this.accessRequestService.createAccessRequest(collectionId, requestDTO));
     }
-
-    /* @Operation(summary = "Create report collection (Admin only")
-    @PostMapping("/create")
-    @PreAuthorize("hasRole('${keycloak.replocker.role-name}')")
-    public ResponseEntity<ReportCollectionResponse> createCollection(
-            @Valid @RequestBody ReportCollectionRequest request,
-            @AuthenticationPrincipal Jwt jwt
-    ) {
-        UUID adminId = UUID.fromString(jwt.getSubject());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(
-                        this.reportCollectionService.createCollection(request, adminId)
-                );
-    }
-
-    @Operation(summary = "List public collections")
-    @GetMapping("/public")
-    public ResponseEntity<PageResponse<ReportCollectionResponse>> getPublicCollections(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
-    ) {
-        return ResponseEntity.ok(this.reportCollectionService.getPublicCollections(page, size));
-    } */
-
-    /* @Operation(summary = "List reports in collection")
-    @GetMapping
-    public PageResponse<ReportResponse> getReports(
-            @RequestParam UUID collectionId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-
-    } */
 
 }
