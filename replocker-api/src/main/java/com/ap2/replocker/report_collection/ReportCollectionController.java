@@ -61,7 +61,7 @@ public class ReportCollectionController {
                 .body(this.reportCollectionService.createCollection(request, adminId));
     }
 
-    /* @Operation(summary = "List access request for locked report collection")
+    @Operation(summary = "List access request for locked report collection")
     @GetMapping("/my/{collectionId}/access-requests")
     @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
     public ResponseEntity<PageResponse<AccessRequestResponse>> getAccessRequests(
@@ -69,8 +69,8 @@ public class ReportCollectionController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(this.accessRequestService.getRequestsByCollection(collectionId, page,size));
-    } */
+        return ResponseEntity.ok(this.accessRequestService.getRequestsByCollection(collectionId, page, size));
+    }
 
     @Operation(summary = "Update report collection metadata")
     @PatchMapping("/my/{collectionId}/edit")

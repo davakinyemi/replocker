@@ -12,6 +12,7 @@ import java.util.UUID;
  * @version 1.0
  */
 public interface AccessRequestRepository extends JpaRepository<AccessRequest, UUID> {
+    Page<AccessRequest> findByReportCollectionId(UUID collectionId, Pageable pageable);
     Page<AccessRequest> findByReportCollectionIdAndStatus(UUID collectionId, RequestStatus status, Pageable pageable);
     Optional<AccessRequest> findByEmailAndReportCollectionId(String email, UUID collectionId);
 }
