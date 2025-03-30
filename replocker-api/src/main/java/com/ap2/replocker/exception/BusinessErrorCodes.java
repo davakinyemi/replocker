@@ -20,7 +20,9 @@ public enum BusinessErrorCodes {
     DUPLICATE_DOMAIN_NAME(409, FORBIDDEN, "Duplicate domain name"),
     DUPLICATE_COLLECTION_NAME(409, FORBIDDEN, "Duplicate collection name"),
     DUPLICATE_REPORT_NAME(409, FORBIDDEN, "Duplicate report name"),
+    DUPLICATE_REQUEST_ACCESS(409, FORBIDDEN, "Duplicate request access"),
     KEYCLOAK_SERVER_ERROR(500, INTERNAL_SERVER_ERROR, "Keycloak server error"),
+    BUSINESS_RULE_ERROR(500, FORBIDDEN, "Business rule error"),
     ;
 
     private final int code;

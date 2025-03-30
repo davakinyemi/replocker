@@ -4,6 +4,7 @@ import com.ap2.replocker.exception.custom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,7 +46,8 @@ public class GlobalExceptionHandler {
         CollectionNotFoundException.class,
         DuplicateDomainException.class,
         DuplicateCollectionException.class,
-        DuplicateReportException.class
+        DuplicateReportException.class,
+        DuplicateRequestException.class,
     })
     public ResponseEntity<ExceptionResponse> handleBusinessExceptions(RuntimeException e) {
         BusinessErrorCodes errorCodes = this.resolveErrorCode(e);
@@ -67,6 +69,7 @@ public class GlobalExceptionHandler {
         else if (e instanceof DuplicateDomainException) return BusinessErrorCodes.DUPLICATE_DOMAIN_NAME;
         else if (e instanceof DuplicateCollectionException) return BusinessErrorCodes.DUPLICATE_COLLECTION_NAME;
         else if (e instanceof DuplicateReportException) return BusinessErrorCodes.DUPLICATE_REPORT_NAME;
+        else if (e instanceof DuplicateRequestException) return BusinessErrorCodes.DUPLICATE_REQUEST_ACCESS;
         else if (e instanceof TokenGenerationException) return BusinessErrorCodes.TOKEN_GENERATION_FAILURE;
         return BusinessErrorCodes.NO_CODE;
     }
@@ -88,6 +91,16 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(BusinessErrorCodes.KEYCLOAK_SERVER_ERROR.getCode())
                         .error(BusinessErrorCodes.KEYCLOAK_SERVER_ERROR.getDescription() + ": " + e.getMessage())
+                        .build()
+                );
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ExceptionResponse> handleBusinessRuleException(BusinessRuleException e) {
+        return ResponseEntity.status(FORBIDDEN)
+                .body(ExceptionResponse.builder()
+                        .businessErrorCode(BusinessErrorCodes.BUSINESS_RULE_ERROR.getCode())
+                        .error(BusinessErrorCodes.BUSINESS_RULE_ERROR.getDescription() + ": " + e.getMessage())
                         .build()
                 );
     }

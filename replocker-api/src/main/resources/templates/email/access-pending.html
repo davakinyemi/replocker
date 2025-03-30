@@ -8,15 +8,15 @@
   <p>Your access request for <!--/*@thymesVar id="collectionName" type="java.lang.String"*/-->
   <strong th:text="${collectionName}"></strong> has been received and is pending admin approval.</p>
 
-  <p style="margin-top: 20px">
-    <strong>Request ID:</strong><br>
-    <!--/*@thymesVar id="requestId" type="java.util.UUID"*/-->
-    <code style="font-family: monospace; font-size: 16px" th:text="${requestId}"></code>
+  <p style="margin-top: 25px">
+    You'll be notified via email once the admin reviews your request.<br>
   </p>
 
-  <p style="margin-top: 25px">
-    You'll receive another email once the admin processes your request.<br>
-  </p>
+  <!--<p style="margin-top: 20px">
+    <strong>Request ID:</strong><br>
+    /*@thymesVar id="requestId" type="java.util.UUID"*/
+    <code style="font-family: monospace; font-size: 16px" th:text="${requestId}"></code>
+  </p>-->
 </body>
 
 </html>

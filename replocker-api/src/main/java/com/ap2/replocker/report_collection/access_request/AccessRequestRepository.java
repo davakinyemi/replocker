@@ -1,5 +1,7 @@
 package com.ap2.replocker.report_collection.access_request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +17,6 @@ public interface AccessRequestRepository extends JpaRepository<AccessRequest, UU
     Page<AccessRequest> findByReportCollectionId(UUID collectionId, Pageable pageable);
     Page<AccessRequest> findByReportCollectionIdAndStatus(UUID collectionId, RequestStatus status, Pageable pageable);
     Optional<AccessRequest> findByEmailAndReportCollectionId(String email, UUID collectionId);
+
+    boolean existsByEmailAndReportCollectionId(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email, UUID collectionId);
 }

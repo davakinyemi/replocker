@@ -2,6 +2,8 @@ package com.ap2.replocker.report_collection;
 
 import com.ap2.replocker.admin.AdminService;
 import com.ap2.replocker.common.PageResponse;
+import com.ap2.replocker.exception.custom.BusinessRuleException;
+import com.ap2.replocker.report_collection.access_request.AccessRequestDTO;
 import com.ap2.replocker.report_collection.access_request.AccessRequestResponse;
 import com.ap2.replocker.report_collection.access_request.AccessRequestService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -112,6 +114,16 @@ public class ReportCollectionController {
         @RequestHeader(value = "accessToken", required = false) String accessToken
     ) {
         return ResponseEntity.ok(this.reportCollectionService.getCollectionWithAccessCheck(collectionId, accessToken));
+    }
+
+    @Operation(summary = "Submit access request for locked collection")
+    @PostMapping("/public/{collectionId}/request-access")
+    public ResponseEntity<AccessRequestResponse> createAccessRequest(
+        @PathVariable UUID collectionId,
+        @Valid @RequestBody AccessRequestDTO requestDTO
+    ) throws BusinessRuleException {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(this.accessRequestService.createAccessRequest(collectionId, requestDTO));
     }
 
     /* @Operation(summary = "Create report collection (Admin only")
