@@ -43,12 +43,12 @@ public class AccessTokenService {
            throw new InvalidTokenException("Token not valid for this collection", tokenValue);
        } */
 
-       if (token.isRevoked() || !token.isActive()) {
-           throw new InvalidTokenException("Token revoked or no longer active", tokenValue);
-       }
-
        if (LocalDateTime.now().isAfter(token.getExpiresAt())) {
            throw new InvalidTokenException("Token expired", tokenValue);
+       }
+
+       if (token.isRevoked() || !token.isActive()) {
+           throw new InvalidTokenException("Token revoked/inactive", tokenValue);
        }
 
    }

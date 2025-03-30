@@ -109,9 +109,9 @@ public class ReportCollectionController {
     @GetMapping("/public/{collectionId}")
     public ResponseEntity<ReportCollectionResponse> getPublishedCollection(
         @PathVariable UUID collectionId,
-        @RequestHeader(value = "Authorization", required = false) String token
+        @RequestHeader(value = "accessToken", required = false) String accessToken
     ) {
-        return ResponseEntity.ok(this.reportCollectionService.getCollectionWithAccessCheck(collectionId, token));
+        return ResponseEntity.ok(this.reportCollectionService.getCollectionWithAccessCheck(collectionId, accessToken));
     }
 
     /* @Operation(summary = "Create report collection (Admin only")

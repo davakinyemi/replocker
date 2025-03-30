@@ -60,7 +60,7 @@ public class NotificationService {
     }
 
     public PageResponse<NotificationResponse> getUnreadNotifications(UUID adminId, int page, int size) {
-        Page<Notification> notifications = this.notificationRepository.findByAdminIdAndReadFalse(
+        Page<Notification> notifications = this.notificationRepository.findByAdminIdAndIsReadFalse(
                 adminId,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"))
         );

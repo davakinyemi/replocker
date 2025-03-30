@@ -14,7 +14,8 @@ import java.util.UUID;
  * @version 1.0
  */
 public interface NotificationRepository extends JpaRepository<Notification, UUID>, JpaSpecificationExecutor<Notification> {
-    Page<Notification> findByAdminIdAndReadFalse(UUID adminId, Pageable pageable);
+    @Query("SELECT n FROM Notification n WHERE n.admin.id = :adminId AND n.isRead = false")
+    Page<Notification> findByAdminIdAndIsReadFalse(UUID adminId, Pageable pageable);
 
     @Modifying
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.id = :id")

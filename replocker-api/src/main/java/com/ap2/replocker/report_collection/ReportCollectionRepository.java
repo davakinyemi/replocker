@@ -4,6 +4,7 @@ import com.ap2.replocker.admin.Admin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -13,8 +14,12 @@ import java.util.UUID;
 public interface ReportCollectionRepository extends JpaRepository<ReportCollection, UUID> {
     boolean existsByNameIgnoreCase(String name);
     @NonNull Optional<ReportCollection> findById(@NonNull UUID collectionId);
-    Page<ReportCollection> findByPublishedTrueAndLockedFalse(Pageable pageable);
-    Page<ReportCollection> findByPublishedTrue(Pageable pageable);
+
+    @Query("SELECT rc FROM ReportCollection rc WHERE rc.isPublished = true AND rc.isLocked = false")
+    Page<ReportCollection> findByIsPublishedTrueAndLockedFalse(Pageable pageable);
+
+    @Query("SELECT rc FROM ReportCollection rc WHERE rc.isPublished = true")
+    Page<ReportCollection> findByIsPublishedTrue(Pageable pageable);
 
     Page<ReportCollection> findByAdminId(UUID adminId, Pageable pageable);
 

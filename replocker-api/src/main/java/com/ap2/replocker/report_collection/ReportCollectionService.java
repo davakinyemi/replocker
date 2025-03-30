@@ -67,7 +67,7 @@ public class ReportCollectionService {
     }
 
     public PageResponse<ReportCollectionResponse> getCollectionsPublic(int page, int size) {
-        Page<ReportCollection> collections = this.reportCollectionRepository.findByPublishedTrue(
+        Page<ReportCollection> collections = this.reportCollectionRepository.findByIsPublishedTrue(
             PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"))
         );
 
@@ -81,7 +81,7 @@ public class ReportCollectionService {
         if (collection.isLocked()) {
             this.accessTokenService.validateToken(
                 accessToken,
-                collection.getId()
+                collectionId
             );
         }
 
