@@ -1,6 +1,6 @@
 package com.ap2.replocker.report_collection.access_request;
 
-import com.ap2.replocker.admin.notification.NotificationService;
+import com.ap2.replocker.admin.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -23,8 +23,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AccessRequestController {
     private final AccessRequestService accessRequestService;
-    private final NotificationService notificationService;
     private final AccessRequestMapper accessRequestMapper;
+    private final AdminService adminService;
 
     @Operation(summary = "Get access request details")
     @GetMapping("/{requestId}")
@@ -48,7 +48,8 @@ public class AccessRequestController {
         @Valid @RequestBody AccessRequestUpdateDTO updateDTO,
         @AuthenticationPrincipal Jwt jwt
     ) {
-        AccessRequestResponse response = this.accessRequestService.processAccessRequest(requestId, updateDTO);
+        UUID adminId = this.adminService.getAdminId(jwt);
+        AccessRequestResponse response = this.accessRequestService.processAccessRequest(adminId, requestId, updateDTO);
         return ResponseEntity.ok(response);
         /* this.notificationService.createAccessRequestNotification(
                 this.accessRequestService.getRequestById(requestId),

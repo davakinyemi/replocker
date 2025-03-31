@@ -19,4 +19,6 @@ public interface AccessRequestRepository extends JpaRepository<AccessRequest, UU
     Optional<AccessRequest> findByEmailAndReportCollectionId(String email, UUID collectionId);
 
     boolean existsByEmailAndReportCollectionId(@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email, UUID collectionId);
+
+    Optional<AccessRequest> findByIdAndReportCollectionAdminId(UUID accessRequestId, UUID adminId);
 }

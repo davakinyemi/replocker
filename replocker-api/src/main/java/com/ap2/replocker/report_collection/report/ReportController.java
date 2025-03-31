@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author Dave AKN
  * @version 1.0
- *//*
+ */
 
-@RestController
+/* @RestController
 @RequestMapping("/reports")
 @SecurityRequirement(name = "keycloak")
 @RequiredArgsConstructor

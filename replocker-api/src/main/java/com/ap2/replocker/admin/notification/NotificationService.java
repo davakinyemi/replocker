@@ -1,6 +1,5 @@
 package com.ap2.replocker.admin.notification;
 
-import com.ap2.replocker.admin.AdminRepository;
 import com.ap2.replocker.common.PageResponse;
 import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import jakarta.persistence.criteria.Predicate;
@@ -31,7 +30,6 @@ public class NotificationService {
     private final SimpMessagingTemplate messagingTemplate;
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
-    private final AdminRepository adminRepository;
 
     public PageResponse<NotificationResponse> filterNotifications(
             UUID adminId,

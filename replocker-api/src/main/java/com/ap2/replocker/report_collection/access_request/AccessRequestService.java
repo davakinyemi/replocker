@@ -61,8 +61,8 @@ public class AccessRequestService {
         ); */
     }
 
-    public AccessRequestResponse processAccessRequest(UUID accessRequestId, AccessRequestUpdateDTO update) {
-        AccessRequest request = this.accessRequestRepository.findById(accessRequestId)
+    public AccessRequestResponse processAccessRequest(UUID adminId, UUID accessRequestId, AccessRequestUpdateDTO update) {
+        AccessRequest request = this.accessRequestRepository.findByIdAndReportCollectionAdminId(accessRequestId, adminId)
                 .orElseThrow(() -> new AccessRequestNotFoundException(accessRequestId));
 
         request.setStatus(update.status());

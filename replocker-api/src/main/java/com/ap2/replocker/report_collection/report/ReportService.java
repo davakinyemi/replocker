@@ -8,7 +8,6 @@ import com.ap2.replocker.exception.custom.ReportNotFoundException;
 import com.ap2.replocker.file.FileService;
 import com.ap2.replocker.report_collection.ReportCollection;
 import com.ap2.replocker.report_collection.ReportCollectionRepository;
-import com.ap2.replocker.report_collection.ReportCollectionService;
 import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,6 @@ import java.util.UUID;
 public class ReportService {
     private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
-    private final ReportCollectionService reportCollectionService;
     private final AccessTokenService accessTokenService;
     private final ReportCollectionRepository reportCollectionRepository;
     private final FileService fileService;
