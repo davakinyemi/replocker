@@ -32,7 +32,7 @@ public class FileService {
     public String saveFile(
             @Nonnull MultipartFile sourceFile,
             @Nonnull String reportCollectionId
-    ) {
+    ) throws IOException {
         this.validateFileType(sourceFile);
 
         final String fileUploadSubPath = "report_collection" + separator + reportCollectionId;
@@ -44,29 +44,27 @@ public class FileService {
             @Nonnull MultipartFile sourceFile,
             @Nonnull String fileUploadSubPath,
             @Nonnull String reportCollectionId
-    ) {
+    ) throws IOException {
         final String finalUploadPath = this.fileUploadPath + separator + fileUploadSubPath;
         File targetFolder = new File(finalUploadPath);
-        if (!targetFolder.exists()) {
-            boolean folderCreated = targetFolder.mkdirs();
-            if (!folderCreated) {
-                log.warn("Could not create folder: {}", targetFolder);
-                return null;
-            }
+        if (!targetFolder.exists() && !targetFolder.mkdirs()) {
+            log.warn("Could not create folder: {}", targetFolder);
+            throw new IOException("Failed to create directory: " + targetFolder);
         }
 
         final String fileExtension = this.getFileExtension(sourceFile.getOriginalFilename());
-        String targetFilePath = finalUploadPath + separator + reportCollectionId + separator + currentTimeMillis() + "." + fileExtension;
-        Path targetPath = Paths.get(targetFilePath);
+        String targetFilePath = finalUploadPath + separator + currentTimeMillis() + "." + fileExtension;
+        // Path targetPath = Paths.get(targetFilePath);
 
         try {
-            Files.write(targetPath, sourceFile.getBytes());
+            Files.write(Paths.get(targetFilePath), sourceFile.getBytes());
             log.info("Uploaded file: {}", targetFilePath);
             return targetFilePath;
         } catch (IOException e) {
             log.error("Could not upload file: {}", targetFilePath, e);
+            throw new IOException("File upload failed: " + targetFilePath, e);
         }
-        return null;
+
     }
 
     public void deleteFile(@Nonnull String filePath) {

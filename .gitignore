@@ -10,3 +10,4 @@
 .idea/dataSources.local.xml
 
 /replocker-api/src/main/resources/application-secrets.yml
+/replocker-store

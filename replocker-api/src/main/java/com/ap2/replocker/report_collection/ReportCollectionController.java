@@ -26,6 +26,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -131,7 +132,7 @@ public class ReportCollectionController {
             @Valid ReportRequest reportRequest,
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable UUID collectionId
-    ) {
+    ) throws IOException {
         UUID adminId = adminService.getAdminId(jwt);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(this.reportService.createReport(reportRequest, adminId));
@@ -149,7 +150,7 @@ public class ReportCollectionController {
             @Valid @RequestPart("request") ReportRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal Jwt jwt
-    ) {
+    ) throws IOException {
         UUID adminId = adminService.getAdminId(jwt);
         return ResponseEntity.ok(this.reportService.updateReport(collectionId, reportId, request, file, adminId));
     }

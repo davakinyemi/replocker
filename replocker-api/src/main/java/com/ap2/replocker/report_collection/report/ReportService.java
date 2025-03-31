@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +36,7 @@ public class ReportService {
     private final ReportCollectionRepository reportCollectionRepository;
     private final FileService fileService;
 
-    public ReportResponse createReport(ReportRequest reportRequest, UUID adminId) {
+    public ReportResponse createReport(ReportRequest reportRequest, UUID adminId) throws IOException {
         ReportCollection reportCollection = this.reportCollectionRepository.findByIdAndAdminId(
                 reportRequest.reportCollectionId(),
                 adminId
@@ -43,7 +44,13 @@ public class ReportService {
 
         this.validateUniqueName(reportRequest.name(), reportRequest.reportCollectionId());
 
-        String filePath = this.fileService.saveFile(reportRequest.file(), reportCollection.getId().toString());
+        String filePath;
+
+        try {
+            filePath = this.fileService.saveFile(reportRequest.file(), reportCollection.getId().toString());
+        } catch (IOException e) {
+            throw new RuntimeException("File upload failed", e);
+        }
 
         Report report = this.reportMapper.toReport(reportRequest, reportCollection);
         report.setFilePath(filePath);
@@ -96,7 +103,7 @@ public class ReportService {
         ReportRequest request,
         MultipartFile file,
         UUID adminId
-    ) {
+    ) throws IOException {
         ReportCollection collection = this.reportCollectionRepository.findByIdAndAdminId(collectionId, adminId)
                 .orElseThrow(() -> new CollectionNotFoundException(collectionId));
 
