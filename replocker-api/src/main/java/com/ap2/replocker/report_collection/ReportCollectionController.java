@@ -3,19 +3,28 @@ package com.ap2.replocker.report_collection;
 import com.ap2.replocker.admin.AdminService;
 import com.ap2.replocker.common.PageResponse;
 import com.ap2.replocker.exception.custom.BusinessRuleException;
+import com.ap2.replocker.file.FileUtils;
 import com.ap2.replocker.report_collection.access_request.AccessRequestDTO;
 import com.ap2.replocker.report_collection.access_request.AccessRequestResponse;
 import com.ap2.replocker.report_collection.access_request.AccessRequestService;
+import com.ap2.replocker.report_collection.report.ReportRequest;
+import com.ap2.replocker.report_collection.report.ReportResponse;
+import com.ap2.replocker.report_collection.report.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -25,6 +34,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReportCollectionController {
     private final ReportCollectionService reportCollectionService;
+    private final ReportService reportService;
     private final AccessRequestService accessRequestService;
     private final AdminService adminService;
 
@@ -98,6 +108,78 @@ public class ReportCollectionController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Get reports in collection")
+    @GetMapping("/my/{collectionId}/reports")
+    @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
+    public ResponseEntity<PageResponse<ReportResponse>> getReportsAsAdmin(
+            @PathVariable UUID collectionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID adminId = this.adminService.getAdminId(jwt);
+        return ResponseEntity.ok(this.reportService.getReportsByCollectionAndAdmin(collectionId, adminId, page, size));
+    }
+
+    @Operation(summary = "Upload report to collection (RepLocker Admin)")
+    @PostMapping(
+            value = "/my/{collectionId}/upload-report",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
+    public ResponseEntity<ReportResponse> uploadReport(
+            @Valid ReportRequest reportRequest,
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID collectionId
+    ) {
+        UUID adminId = adminService.getAdminId(jwt);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(this.reportService.createReport(reportRequest, adminId));
+    }
+
+    @Operation(summary = "Update report (RepLocker Admin)")
+    @PutMapping(
+            value = "/my/{collectionId}/{reportId}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
+    public ResponseEntity<ReportResponse> updateReport(
+            @PathVariable UUID collectionId,
+            @PathVariable UUID reportId,
+            @Valid @RequestPart("request") ReportRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID adminId = adminService.getAdminId(jwt);
+        return ResponseEntity.ok(this.reportService.updateReport(collectionId, reportId, request, file, adminId));
+    }
+
+    /* @Operation(summary = "Update report (RepLocker Admin)")
+    @PutMapping("/my/{collectionId}/{reportId}")
+    @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
+    public ResponseEntity<ReportResponse> updateReport(
+        @PathVariable UUID collectionId,
+        @PathVariable UUID reportId,
+        @Valid @RequestBody ReportRequest request,
+        @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID adminId = adminService.getAdminId(jwt);
+        return ResponseEntity.ok(this.reportService.updateReport(collectionId, reportId, request, adminId));
+    } */
+
+    @Operation(summary = "Delete report (RepLocker Admin)")
+    @DeleteMapping("/my/{collectionId}/{reportId}/delete")
+    @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
+    public ResponseEntity<Void> deleteReport(
+        @PathVariable UUID collectionId,
+        @PathVariable UUID reportId,
+        @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID adminId = adminService.getAdminId(jwt);
+        this.reportService.deleteReport(collectionId, reportId, adminId);
+        return ResponseEntity.noContent().build();
+    }
+
     @Operation(summary = "List report collections (public)")
     @GetMapping("/public")
     public ResponseEntity<PageResponse<ReportCollectionResponse>> getPublishedCollections(
@@ -125,5 +207,32 @@ public class ReportCollectionController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(this.accessRequestService.createAccessRequest(collectionId, requestDTO));
     }
+
+    @Operation(summary = "Get reports in collection")
+    @GetMapping("/public/{collectionId}/reports")
+    public ResponseEntity<PageResponse<ReportResponse>> getReports(
+        @PathVariable UUID collectionId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestHeader(value = "accessToken", required = false) String accessToken
+    ) {
+        return ResponseEntity.ok(this.reportService.getReportsByCollection(collectionId, page, size, accessToken));
+    }
+
+    @Operation(summary = "Download report file")
+    @GetMapping("/public/{collectionId}/{reportId}/download")
+    public ResponseEntity<Resource> downloadReport(
+        @PathVariable UUID collectionId,
+        @PathVariable UUID reportId,
+        @RequestHeader(value = "accessToken", required = false) String accessToken
+    ) {
+        ReportResponse report = this.reportService.getReportByCollection(collectionId, reportId, accessToken);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + report.getName() + "\"")
+                .body(
+                        new ByteArrayResource(FileUtils.readFileFromLocation(report.getFilePath()))
+                );
+    }
+
 
 }

@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
         DomainNotFoundException.class,
         AccessRequestNotFoundException.class,
         CollectionNotFoundException.class,
+        ReportNotFoundException.class,
         DuplicateDomainException.class,
         DuplicateCollectionException.class,
         DuplicateReportException.class,
@@ -67,6 +68,7 @@ public class GlobalExceptionHandler {
         else if (e instanceof DomainNotFoundException) return BusinessErrorCodes.DOMAIN_NOT_FOUND;
         else if (e instanceof AccessRequestNotFoundException) return BusinessErrorCodes.ACCESS_REQUEST_NOT_FOUND;
         else if (e instanceof CollectionNotFoundException) return BusinessErrorCodes.COLLECTION_NOT_FOUND;
+        else if (e instanceof ReportNotFoundException) return BusinessErrorCodes.REPORT_NOT_FOUND;
         else if (e instanceof DuplicateDomainException) return BusinessErrorCodes.DUPLICATE_DOMAIN_NAME;
         else if (e instanceof DuplicateCollectionException) return BusinessErrorCodes.DUPLICATE_COLLECTION_NAME;
         else if (e instanceof DuplicateReportException) return BusinessErrorCodes.DUPLICATE_REPORT_NAME;

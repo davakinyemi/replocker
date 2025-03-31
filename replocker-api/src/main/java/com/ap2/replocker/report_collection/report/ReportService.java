@@ -1,15 +1,28 @@
 package com.ap2.replocker.report_collection.report;
 
+import com.ap2.replocker.common.PageResponse;
+import com.ap2.replocker.exception.custom.CollectionNotFoundException;
 import com.ap2.replocker.exception.custom.DuplicateReportException;
+import com.ap2.replocker.exception.custom.InvalidFileTypeException;
+import com.ap2.replocker.exception.custom.ReportNotFoundException;
 import com.ap2.replocker.file.FileService;
+import com.ap2.replocker.report_collection.ReportCollection;
 import com.ap2.replocker.report_collection.ReportCollectionRepository;
+import com.ap2.replocker.report_collection.ReportCollectionService;
+import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -19,8 +32,115 @@ import java.util.UUID;
 public class ReportService {
     private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
+    private final ReportCollectionService reportCollectionService;
+    private final AccessTokenService accessTokenService;
     private final ReportCollectionRepository reportCollectionRepository;
     private final FileService fileService;
+
+    public ReportResponse createReport(ReportRequest reportRequest, UUID adminId) {
+        ReportCollection reportCollection = this.reportCollectionRepository.findByIdAndAdminId(
+                reportRequest.reportCollectionId(),
+                adminId
+        ).orElseThrow(() -> new CollectionNotFoundException(reportRequest.reportCollectionId()));
+
+        this.validateUniqueName(reportRequest.name(), reportRequest.reportCollectionId());
+
+        String filePath = this.fileService.saveFile(reportRequest.file(), reportCollection.getId().toString());
+
+        Report report = this.reportMapper.toReport(reportRequest, reportCollection);
+        report.setFilePath(filePath);
+        report.setSizeBytes(reportRequest.file().getSize());
+        report.setType(ReportType.valueOf(
+                Objects.requireNonNull(reportRequest.file().getContentType()).split("/")[1].toUpperCase()
+        ));
+
+        return this.reportMapper.toReportResponse(this.reportRepository.save(report));
+    }
+
+    public PageResponse<ReportResponse> getReportsByCollectionAndAdmin(UUID collectionId, UUID adminId, int page, int size) {
+        ReportCollection collection = this.reportCollectionRepository.findByIdAndAdminId(collectionId, adminId)
+                .orElseThrow(() -> new CollectionNotFoundException(collectionId));
+
+        Page<Report> reports = this.reportRepository.findByReportCollectionId(
+                collectionId, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"))
+        );
+        return PageResponse.fromPage(reports.map(this.reportMapper::toReportResponse));
+    }
+
+    public PageResponse<ReportResponse> getReportsByCollection(UUID collectionId, int page, int size, String accessToken) {
+        ReportCollection collection = this.reportCollectionRepository.findById(collectionId)
+                .orElseThrow(() -> new CollectionNotFoundException(collectionId));
+
+        if (collection.isLocked()) {
+            this.accessTokenService.validateToken(accessToken, collection.getId());
+        }
+
+        Page<Report> reports = this.reportRepository.findByReportCollectionId(
+                collectionId, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"))
+        );
+        return PageResponse.fromPage(reports.map(this.reportMapper::toReportResponse));
+    }
+
+    public ReportResponse getReportByCollection(UUID reportCollectionId, UUID reportId, String accessToken) {
+        Report report = this.reportRepository.findByIdAndReportCollectionId(reportId, reportCollectionId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
+
+        if (report.getReportCollection().isLocked()) {
+            this.accessTokenService.validateToken(accessToken, report.getReportCollection().getId());
+        }
+
+        return this.reportMapper.toReportResponse(report);
+    }
+
+    public ReportResponse updateReport(
+        UUID collectionId,
+        UUID reportId,
+        ReportRequest request,
+        MultipartFile file,
+        UUID adminId
+    ) {
+        ReportCollection collection = this.reportCollectionRepository.findByIdAndAdminId(collectionId, adminId)
+                .orElseThrow(() -> new CollectionNotFoundException(collectionId));
+
+        Report report = this.reportRepository.findByIdAndReportCollectionId(reportId, collectionId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
+
+        if (!report.getName().equals(request.name()) && this.reportRepository.existsByNameAndCollectionIdExcludingId(
+                request.name(), collectionId, reportId
+        )) {
+            throw new DuplicateReportException(request.name());
+        }
+
+        if (file != null && !file.isEmpty()) {
+            this.validateFileType(file);
+            String newFilePath = this.fileService.saveFile(file, collectionId.toString());
+
+            this.fileService.deleteFile(report.getFilePath());
+
+            report.setFilePath(newFilePath);
+            report.setSizeBytes(file.getSize());
+            report.setType(ReportType.valueOf(
+                    Objects.requireNonNull(file.getContentType()).split("/")[1].toUpperCase()
+            ));
+
+        }
+
+        report.setName(request.name());
+
+        return this.reportMapper.toReportResponse(this.reportRepository.save(report));
+    }
+
+    public void deleteReport(UUID collectionId, UUID reportId, UUID adminId) {
+        ReportCollection collection = this.reportCollectionRepository.findByIdAndAdminId(collectionId, adminId)
+                .orElseThrow(() -> new CollectionNotFoundException(collectionId));
+
+        Report report = this.reportRepository.findByIdAndReportCollectionId(reportId, collectionId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
+
+        this.fileService.deleteFile(report.getFilePath());
+
+        this.reportRepository.delete(report);
+    }
 
     @Scheduled(cron = "0 0 3 * * *")
     public void purgeOldReports() {
@@ -34,5 +154,9 @@ public class ReportService {
         }
     }
 
-
+    private void validateFileType(MultipartFile file) {
+        if (!List.of("text/csv", "application/vnd.ms-excel").contains(file.getContentType())) {
+            throw new InvalidFileTypeException(file.getContentType());
+        }
+    }
 }

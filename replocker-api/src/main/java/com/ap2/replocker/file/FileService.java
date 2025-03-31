@@ -69,6 +69,15 @@ public class FileService {
         return null;
     }
 
+    public void deleteFile(@Nonnull String filePath) {
+        try {
+            Path targetPath = Paths.get(filePath);
+            Files.delete(targetPath);
+        } catch (IOException e) {
+            log.error("Could not delete file: {}", filePath, e);
+        }
+    }
+
     private void validateFileType(MultipartFile file) {
         String fileType = file.getContentType();
         if (!"text/csv".equals(fileType) && !"application/vnd.ms-excel".equals(fileType)) {

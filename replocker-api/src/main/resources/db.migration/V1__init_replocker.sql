@@ -94,6 +94,7 @@ CREATE INDEX idx_collection_published ON report_collection(is_published, is_lock
 
 -- report table indices
 CREATE UNIQUE INDEX uc_report_name_report_collection ON report(name, report_collection_id);
+CREATE INDEX idx_report_collection ON report(report_collection_id);
 CREATE INDEX idx_report_upload_date ON report(created_date);
 
 -- access request table indices
