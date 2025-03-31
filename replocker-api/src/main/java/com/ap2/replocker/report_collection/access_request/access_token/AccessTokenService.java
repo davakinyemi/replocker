@@ -53,7 +53,7 @@ public class AccessTokenService {
 
    }
 
-   public AccessTokenResponse createAccessToken(UUID accessRequestId) {
+   public AccessTokenResponse createAndSaveAccessToken(UUID accessRequestId) {
        AccessRequest request = this.accessRequestRepository.findById(accessRequestId)
                .orElseThrow(() -> new AccessRequestNotFoundException(accessRequestId));
 

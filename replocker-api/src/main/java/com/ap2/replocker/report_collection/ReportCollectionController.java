@@ -71,7 +71,7 @@ public class ReportCollectionController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(this.accessRequestService.getRequestsByCollection(collectionId, page, size));
+        return ResponseEntity.ok(this.accessRequestService.getRequestsByCollectionId(collectionId, page, size));
     }
 
     @Operation(summary = "Update report collection metadata")
@@ -117,7 +117,7 @@ public class ReportCollectionController {
     }
 
     @Operation(summary = "Submit access request for locked collection")
-    @PostMapping("/public/request-access/{collectionId}")
+    @PostMapping("/public/{collectionId}/request-access")
     public ResponseEntity<AccessRequestResponse> createAccessRequest(
         @PathVariable UUID collectionId,
         @Valid @RequestBody AccessRequestDTO requestDTO

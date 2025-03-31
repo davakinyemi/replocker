@@ -72,13 +72,23 @@ public class NotificationService {
         this.notificationRepository.markAsRead(notificationId);
     }
 
-    public void createAccessRequestNotification(AccessRequest request) {
+    public void createAccessRequestNotification(AccessRequest request, String notificationMessage) {
         Notification notification = Notification.builder()
-                .message("New access request for " + request.getReportCollection().getName() + ": " + request.getMessage())
+                // .message("New access request for " + request.getReportCollection().getName() + ": " + request.getMessage())
+                .message(notificationMessage)
                 .admin(request.getReportCollection().getAdmin())
                 .accessRequest(request)
                 .build();
         this.notificationRepository.save(notification);
+        this.messagingTemplate.convertAndSendToUser(
+                notification.getAdmin().getId().toString(),
+                "/topic/notifications",
+                this.notificationMapper.toNotificationResponse(notification)
+        );
+        /* this.messagingTemplate.convertAndSend(
+                "/topic/notifications",
+                this.notificationMapper.toNotificationResponse(notification)
+        ); */
     }
 
     /* public void notifyAdmin(UUID adminId, Notification notification) {

@@ -40,33 +40,56 @@ public class SecurityConfig {
                         requests
                                 .requestMatchers(
                                         HttpMethod.POST,
-                                        "/report-collections/public/request-access/**"
+                                        "/api/report-collections/public/**",
+                                        "/report-collections/public/**"
+                                        // "/report-collections/public/request-access/**"
                                 ).permitAll()
                                 .requestMatchers(
                                         HttpMethod.GET,
+                                        "/api/report-collections/public/**",
                                         "/report-collections/public/**"
                                 ).permitAll()
                                 .requestMatchers(
+                                        "/api/admins/**",
                                         "/admins/**",
-                                        "/report-collections/my/**"
+                                        "/api/report-collections/my/**",
+                                        "/report-collections/my/**",
+                                        "/api/access-requests/**",
+                                        "/access-requests/**"
                                 ).hasAnyRole(this.requiredRole)
                                 .requestMatchers(
+                                        "/api/v2/api-docs",
                                         "/v2/api-docs",
+                                        "/api/v3/api-docs",
                                         "/v3/api-docs",
+                                        "/api/v3/api-docs/**",
                                         "/v3/api-docs/**",
+                                        "/api/swagger-resources",
                                         "/swagger-resources",
+                                        "/api/swagger-resources/**",
                                         "/swagger-resources/**",
+                                        "/api/configuration/ui",
                                         "/configuration/ui",
+                                        "/api/configuration/security",
                                         "/configuration/security",
+                                        "/api/swagger-ui/**",
                                         "/swagger-ui/**",
+                                        "/api/webjars/**",
                                         "/webjars/**",
+                                        "/api/swagger-ui.html",
                                         "/swagger-ui.html",
+                                        "/api/ws/**",
                                         "/ws/**"
                                 ).permitAll().anyRequest().authenticated()
                 ).oauth2ResourceServer(auth ->
                         auth.jwt(token -> token.jwtAuthenticationConverter(this.keycloakJwtConverter()))
                                 .authenticationEntryPoint(this.customEntryPoint)
-                ).csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**", "/report-collections/public/**"));
+                ).csrf(csrf -> csrf.ignoringRequestMatchers(
+                        "/api/ws/**",
+                        "/ws/**",
+                        "/api/report-collections/public/**",
+                        "/report-collections/public/**")
+                );
         return http.build();
     }
 
