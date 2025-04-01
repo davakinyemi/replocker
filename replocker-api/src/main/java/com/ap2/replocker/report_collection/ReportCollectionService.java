@@ -2,7 +2,6 @@ package com.ap2.replocker.report_collection;
 
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.admin.AdminRepository;
-import com.ap2.replocker.admin.allowed_domain.AllowedDomainRepository;
 import com.ap2.replocker.common.PageResponse;
 import com.ap2.replocker.exception.custom.AdminNotFoundException;
 import com.ap2.replocker.exception.custom.CollectionNotFoundException;
@@ -97,9 +96,7 @@ public class ReportCollectionService {
 
         this.reportCollectionRepository.delete(collection);
 
-        collection.getReports().forEach(report -> {
-            this.fileService.deleteFile(report.getFilePath());
-        });
+        collection.getReports().forEach(report -> this.fileService.deleteFile(report.getFilePath()));
     }
 
     private void validateUniqueName(String name, UUID adminId) {

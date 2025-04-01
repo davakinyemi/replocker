@@ -14,11 +14,15 @@ import java.util.UUID;
  * @version 1.0
  */
 public interface AllowedDomainRepository extends JpaRepository<AllowedDomain, UUID> {
-    Page<AllowedDomain> findByAdminId(UUID adminId, Pageable pageable);
-    boolean existsByAdminIdAndDomainNameIgnoreCase(UUID adminId, String domainName);
+    @Query("SELECT d FROM AllowedDomain d WHERE d.admin.id = :adminId")
+    Page<AllowedDomain> findByAdminId(@Param("adminId") UUID adminId, Pageable pageable);
 
-    @Query("SELECT d FROM AllowedDomain d WHERE d.admin.id = :adminId AND LOWER(d.domainName) = LOWER(:domainName)")
-    Optional<AllowedDomain> findByAdminAndDomainCaseInsensitive(@Param("adminId") UUID adminId, @Param("domainName") String domainName);
+    @Query("SELECT CASE WHEN COUNT(d) > 0 THEN true ELSE false END " +
+            "FROM AllowedDomain d WHERE d.admin.id = :adminId AND LOWER(d.domainName) = LOWER(:domainName)")
+    boolean existsByAdminIdAndDomainNameIgnoreCase(@Param("adminId") UUID adminId, String domainName);
 
-    AllowedDomain findByDomainNameIgnoreCase(String domainName);
+    /* @Query("SELECT d FROM AllowedDomain d WHERE d.admin.id = :adminId AND LOWER(d.domainName) = LOWER(:domainName)")
+    Optional<AllowedDomain> findByAdminAndDomainCaseInsensitive(@Param("adminId") UUID adminId, @Param("domainName") String domainName); */
+
+    // AllowedDomain findByDomainNameIgnoreCase(String domainName);
 }
