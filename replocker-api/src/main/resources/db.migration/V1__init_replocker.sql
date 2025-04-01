@@ -79,6 +79,20 @@ CREATE TABLE websocket_audit (
     disconnect_time TIMESTAMPTZ
 );
 
+CREATE TABLE audit_log (
+    id UUID PRIMARY KEY,
+    action_type VARCHAR(20) NOT NULL,
+    entity_name VARCHAR(255) NOT NULL,
+    entity_id VARCHAR(36) NOT NULL,
+    performed_by VARCHAR(255) NOT NULL,
+    details VARCHAR(1000),
+    created_date TIMESTAMPTZ NOT NULL
+);
+
+-- audit log table indices
+CREATE INDEX idx_audit_entity ON audit_log(entity_name, entity_id);
+CREATE INDEX idx_audit_timestamp ON audit_log(created_date);
+
 -- admin table indices
 CREATE UNIQUE INDEX uc_admin_username ON admin(username);
 CREATE UNIQUE INDEX uc_admin_email ON admin(email);

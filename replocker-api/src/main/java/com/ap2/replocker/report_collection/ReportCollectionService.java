@@ -3,6 +3,8 @@ package com.ap2.replocker.report_collection;
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.admin.AdminRepository;
 import com.ap2.replocker.common.PageResponse;
+import com.ap2.replocker.common.audit_log.ActionType;
+import com.ap2.replocker.common.audit_log.AuditLogService;
 import com.ap2.replocker.exception.custom.AdminNotFoundException;
 import com.ap2.replocker.exception.custom.CollectionNotFoundException;
 import com.ap2.replocker.exception.custom.DuplicateCollectionException;
@@ -28,6 +30,7 @@ public class ReportCollectionService {
     private final AccessTokenService accessTokenService;
     private final AdminRepository adminRepository;
     private final FileService fileService;
+    private final AuditLogService auditLogService;
 
     public ReportCollectionResponse createCollection(ReportCollectionRequest request, UUID adminId) {
         Admin admin = this.adminRepository.findById(adminId)
@@ -35,9 +38,18 @@ public class ReportCollectionService {
 
         this.validateUniqueName(request.name(), adminId);
 
+        ReportCollection reportCollection = this.reportCollectionMapper.toReportCollection(request, admin);
+
+        this.auditLogService.logAction(
+                ActionType.CREATE,
+                "ReportCollection",
+                reportCollection.getId().toString(),
+                "Create Report Collection: " + reportCollection.getName()
+        );
+
         return this.reportCollectionMapper.toReportCollectionResponse(
-                this.reportCollectionRepository.save(
-                        this.reportCollectionMapper.toReportCollection(request, admin)));
+                this.reportCollectionRepository.save(reportCollection)
+        );
     }
 
     public PageResponse<ReportCollectionResponse> getCollectionsByAdmin(UUID adminId, int page, int size) {

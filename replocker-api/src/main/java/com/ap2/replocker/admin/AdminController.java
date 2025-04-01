@@ -6,10 +6,13 @@ import com.ap2.replocker.admin.allowed_domain.AllowedDomainService;
 import com.ap2.replocker.admin.notification.NotificationResponse;
 import com.ap2.replocker.admin.notification.NotificationService;
 import com.ap2.replocker.common.PageResponse;
+import com.ap2.replocker.common.audit_log.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +31,8 @@ public class AdminController {
     private final AdminService adminService;
     private final AllowedDomainService allowedDomainService;
     private final NotificationService notificationService;
+    private final AuditLogService auditLogService;
+    private final AuditLogMapper auditLogMapper;
 
     @Operation(summary = "Get current admin profile")
     @GetMapping("/me") // http://localhost:8088/api/admins/me
@@ -107,5 +112,20 @@ public class AdminController {
                 adminId, page, size
                 // UUID.fromString(jwt.getSubject()), page, size
         ));
+    }
+
+    @Operation(summary = "Get audit logs")
+    @GetMapping("/my/audit-logs")
+    @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
+    public ResponseEntity<PageResponse<AuditLogResponse>> getLogs(
+        @RequestParam(required = false) String entityName,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "50") int size
+    ) {
+        return ResponseEntity.ok(
+            entityName != null
+                ? this.auditLogService.getLogsByEntityName(entityName, page, size)
+                    : this.auditLogService.getLogs(page, size)
+        );
     }
 }
