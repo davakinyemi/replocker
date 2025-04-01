@@ -1,5 +1,16 @@
-CREATE TYPE REPORT_TYPE AS ENUM ('CSV', 'XLSX');
-CREATE TYPE ACCESS_REQUEST_TYPE AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+CREATE TYPE REPORT_TYPE AS ENUM (
+    'CSV',
+    'XLSX',
+    'XLSX',
+    'XLSM',
+    'XLSB',
+    'XLTX'
+);
+CREATE TYPE ACCESS_REQUEST_TYPE AS ENUM (
+    'PENDING',
+    'ACCEPTED',
+    'REJECTED'
+);
 
 CREATE TABLE admin (
     id UUID PRIMARY KEY,
@@ -29,7 +40,7 @@ CREATE TABLE report (
     -- type VARCHAR(20) NOT NULL CHECK (type IN ('CSV', 'XLSX')),
     type REPORT_TYPE NOT NULL,
     report_collection_id UUID NOT NULL REFERENCES report_collection(id) ON DELETE CASCADE,
-    created_date TIMESTAMP NOT NULL
+    created_date TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE access_request (
@@ -69,7 +80,7 @@ CREATE TABLE notification (
     is_read BOOLEAN NOT NULL DEFAULT FALSE,
     admin_id UUID NOT NULL REFERENCES admin(id),
     access_request_id UUID NOT NULL REFERENCES access_request(id) ON DELETE CASCADE,
-    created_date TIMESTAMP NOT NULL
+    created_date TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE websocket_audit (

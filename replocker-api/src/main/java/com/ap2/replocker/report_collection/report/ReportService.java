@@ -55,9 +55,10 @@ public class ReportService {
         Report report = this.reportMapper.toReport(reportRequest, reportCollection);
         report.setFilePath(filePath);
         report.setSizeBytes(reportRequest.file().getSize());
-        report.setType(ReportType.valueOf(
+        report.setType(ReportType.fromMimeType(reportRequest.file().getContentType()));
+        /* report.setType(ReportType.valueOf(
                 Objects.requireNonNull(reportRequest.file().getContentType()).split("/")[1].toUpperCase()
-        ));
+        )); */
 
         return this.reportMapper.toReportResponse(this.reportRepository.save(report));
     }
@@ -124,9 +125,10 @@ public class ReportService {
 
             report.setFilePath(newFilePath);
             report.setSizeBytes(file.getSize());
-            report.setType(ReportType.valueOf(
+            report.setType(ReportType.fromMimeType(file.getContentType()));
+            /* report.setType(ReportType.valueOf(
                     Objects.requireNonNull(file.getContentType()).split("/")[1].toUpperCase()
-            ));
+            )); */
 
         }
 
@@ -160,8 +162,13 @@ public class ReportService {
     }
 
     private void validateFileType(MultipartFile file) {
-        if (!List.of("text/csv", "application/vnd.ms-excel").contains(file.getContentType())) {
+        try {
+            ReportType.fromMimeType(file.getContentType());
+        } catch (IllegalArgumentException e) {
             throw new InvalidFileTypeException(file.getContentType());
         }
+        /* if (!List.of("text/csv", "application/vnd.ms-excel").contains(file.getContentType())) {
+            throw new InvalidFileTypeException(file.getContentType());
+        } */
     }
 }

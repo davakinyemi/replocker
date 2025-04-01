@@ -1,6 +1,7 @@
 package com.ap2.replocker.file;
 
 import com.ap2.replocker.exception.custom.InvalidFileTypeException;
+import com.ap2.replocker.report_collection.report.ReportType;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,10 +78,15 @@ public class FileService {
     }
 
     private void validateFileType(MultipartFile file) {
-        String fileType = file.getContentType();
+        try {
+            ReportType.fromMimeType(file.getContentType());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidFileTypeException(file.getContentType());
+        }
+        /* String fileType = file.getContentType();
         if (!"text/csv".equals(fileType) && !"application/vnd.ms-excel".equals(fileType)) {
             throw new InvalidFileTypeException(fileType);
-        }
+        } */
     }
 
     private String getFileExtension(String fileName) {

@@ -248,7 +248,7 @@ public class ReportCollectionController {
     }
 
     @Operation(summary = "Download report file")
-    @GetMapping("/public/{collectionId}/{reportId}/download")
+    @GetMapping("/public/{collectionId}/reports/{reportId}/download")
     public ResponseEntity<Resource> downloadReport(
         @PathVariable UUID collectionId,
         @PathVariable UUID reportId,
