@@ -48,27 +48,6 @@ public class EmailService {
                 properties,
                 "request-pending"
         );
-
-        /* try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED, UTF_8.name());
-
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("collectionName", collectionName);
-            properties.put("requestId", requestId);
-
-            Context context = new Context();
-            context.setVariables(properties);
-
-            helper.setFrom(this.systemEmail);
-            helper.setTo(toEmail);
-            helper.setSubject("Access Request Received: " + collectionName);
-            helper.setText(this.templateEngine.process("email/access-pending", context), true);
-
-            this.mailSender.send(message);
-        } catch (Exception e) {
-            log.error("Failed to send request-pending email: {}", e.getMessage());
-        } */
     }
 
     @Async
@@ -85,28 +64,6 @@ public class EmailService {
                 properties,
                 "request-accepted"
         );
-
-        /* try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED, UTF_8.name());
-
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("collectionName", collectionName);
-            properties.put("accessToken", accessToken);
-            properties.put("expiresAt", expiresAt.format(DateTimeFormatter.ofLocalizedPattern("dd MMM YYYY HH:mm")));
-
-            Context context = new Context();
-            context.setVariables(properties);
-
-            helper.setFrom(this.systemEmail);
-            helper.setTo(toEmail);
-            helper.setSubject("Access Granted: " + collectionName);
-            helper.setText(this.templateEngine.process("email/access-accepted", context), true);
-
-            this.mailSender.send(message);
-        } catch (Exception e) {
-            log.error("Failed to send request-accepted email: {}", e.getMessage());
-        } */
     }
 
     @Async
@@ -122,27 +79,36 @@ public class EmailService {
                 properties,
                 "request-rejected"
         );
+    }
 
-        /* try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED, UTF_8.name());
+    @Async
+    public void sendTokenExpiryWarning(String toEmail, LocalDateTime expiry, String collectionName, String accessToken) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("collectionName", collectionName);
+        properties.put("expiry", expiry);
+        properties.put("accessToken", accessToken);
 
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("collectionName", collectionName);
-            properties.put("adminComment", adminComment);
+        this.sendEmail(
+                toEmail,
+                "Access Token Expiring Soon",
+                "email/token-expiring",
+                properties,
+                "token-expiring"
+        );
+    }
 
-            Context context = new Context();
-            context.setVariables(properties);
+    public void sendTokenExpiredNotification(String toEmail, String collectionName, String accessToken) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("collectionName", collectionName);
+        properties.put("accessToken", accessToken);
 
-            helper.setFrom(this.systemEmail);
-            helper.setTo(toEmail);
-            helper.setSubject("Access Denied: " + collectionName);
-            helper.setText(this.templateEngine.process("email/access-denied", context), true);
-
-            this.mailSender.send(message);
-        } catch (Exception e) {
-            log.error("Failed to send request-rejected email: {}", e.getMessage());
-        } */
+        this.sendEmail(
+                toEmail,
+                "Access Token Expired",
+                "email/token-expired",
+                properties,
+                "token-expired"
+        );
     }
 
     private void sendEmail(String toEmail, String subject, String templateName, Map<String, Object> properties, String emailType) {

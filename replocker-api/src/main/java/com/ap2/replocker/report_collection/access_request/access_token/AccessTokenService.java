@@ -85,10 +85,10 @@ public class AccessTokenService {
         return token;
    }
 
-   @Scheduled(cron = "0 0 3 * * *")
+    /* @Scheduled(cron = "0 0 3 * * *")
     public void purgeExpiredTokens() {
        this.accessTokenRepository.deleteByExpiresAtBefore(LocalDateTime.now());
-   }
+    } */
 
    private String generateTokenValue() {
        SecureRandom random = new SecureRandom();

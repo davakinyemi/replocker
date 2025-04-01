@@ -7,6 +7,7 @@ import com.ap2.replocker.common.PageResponse;
 import com.ap2.replocker.exception.custom.AdminNotFoundException;
 import com.ap2.replocker.exception.custom.CollectionNotFoundException;
 import com.ap2.replocker.exception.custom.DuplicateCollectionException;
+import com.ap2.replocker.file.FileService;
 import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class ReportCollectionService {
     private final ReportCollectionMapper reportCollectionMapper;
     private final AccessTokenService accessTokenService;
     private final AdminRepository adminRepository;
+    private final FileService fileService;
 
     public ReportCollectionResponse createCollection(ReportCollectionRequest request, UUID adminId) {
         Admin admin = this.adminRepository.findById(adminId)
@@ -94,6 +96,10 @@ public class ReportCollectionService {
                 .orElseThrow(() -> new CollectionNotFoundException(collectionId));
 
         this.reportCollectionRepository.delete(collection);
+
+        collection.getReports().forEach(report -> {
+            this.fileService.deleteFile(report.getFilePath());
+        });
     }
 
     private void validateUniqueName(String name, UUID adminId) {

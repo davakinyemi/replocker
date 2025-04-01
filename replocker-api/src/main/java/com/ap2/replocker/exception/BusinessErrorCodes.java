@@ -18,6 +18,7 @@ public enum BusinessErrorCodes {
     TOKEN_GENERATION_FAILURE(403, FORBIDDEN, "Token generation failure"),
     COLLECTION_NOT_FOUND(404, NOT_FOUND, "Collection not found"),
     REPORT_NOT_FOUND(404, NOT_FOUND, "Report not found"),
+    NOTIFICATION_NOT_FOUND(404, NOT_FOUND, "Notification not found"),
     DUPLICATE_DOMAIN_NAME(409, FORBIDDEN, "Duplicate domain name"),
     DUPLICATE_COLLECTION_NAME(409, FORBIDDEN, "Duplicate collection name"),
     DUPLICATE_REPORT_NAME(409, FORBIDDEN, "Duplicate report name"),

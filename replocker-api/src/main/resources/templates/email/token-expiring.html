@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Token Expiring Soon</title>
+</head>
+<body>
+  <p>Your RepLocker access token: <!--/*@thymesVar id="accessToken" type="java.lang.String"*/-->
+    <span style="font-family: monospace; font-size: 18px" th:text="${accessToken}"></span> for <!--/*@thymesVar id="collectionName" type="java.lang.String"*/-->
+    <strong th:text="${collectionName}"></strong> will expire in 24 hours:</p>
+
+  <div style="margin: 20px 0; padding: 15px; background: #fff3cd; border-radius: 5px">
+    <strong>Expiry Time:</strong><br>
+    <!--/*@thymesVar id="expiry" type="java.lang.String"*/-->
+    <span th:text="${expiry}"></span>
+  </div>
+
+  <p>Please request a new token after expiry, if needed.</p>
+</body>
+</html>

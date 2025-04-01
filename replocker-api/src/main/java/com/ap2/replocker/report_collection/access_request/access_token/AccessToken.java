@@ -40,7 +40,7 @@ public class AccessToken extends BaseAuditingEntity {
     @JoinColumn(name = "report_collection_id", nullable = false)
     private ReportCollection reportCollection;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "access_request_id", nullable = false)
     private AccessRequest accessRequest;
 

@@ -3,6 +3,8 @@ package com.ap2.replocker.report_collection.access_request;
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.admin.allowed_domain.AllowedDomainRepository;
 import com.ap2.replocker.admin.allowed_domain.AllowedDomainService;
+import com.ap2.replocker.admin.notification.Notification;
+import com.ap2.replocker.admin.notification.NotificationRepository;
 import com.ap2.replocker.admin.notification.NotificationService;
 import com.ap2.replocker.common.PageResponse;
 import com.ap2.replocker.email.EmailService;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -38,6 +41,7 @@ public class AccessRequestService {
     private final AllowedDomainRepository allowedDomainRepository;
     private final AllowedDomainService allowedDomainService;
     private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
     private final EmailService emailService;
 
     public PageResponse<AccessRequestResponse> getRequestsByCollectionId(
@@ -65,8 +69,16 @@ public class AccessRequestService {
         AccessRequest request = this.accessRequestRepository.findByIdAndReportCollectionAdminId(accessRequestId, adminId)
                 .orElseThrow(() -> new AccessRequestNotFoundException(accessRequestId));
 
+        List<Notification> notifications = this.notificationRepository.findByAccessRequestId(accessRequestId)
+                .orElseThrow(() -> new NotificationNotFoundException(accessRequestId));
+
         request.setStatus(update.status());
         request.setAdminComment(update.adminComment());
+
+        notifications.forEach(notification -> {
+            notification.setRead(true);
+            this.notificationRepository.save(notification);
+        });
 
         AccessRequest updatedRequest = this.accessRequestRepository.save(request);
 
