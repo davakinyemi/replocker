@@ -1,7 +1,5 @@
 package com.ap2.replocker.report_collection.access_request.access_token;
 
-import com.ap2.replocker.report_collection.ReportCollection;
-import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
