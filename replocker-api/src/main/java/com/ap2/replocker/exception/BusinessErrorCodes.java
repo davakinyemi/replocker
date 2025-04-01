@@ -19,6 +19,7 @@ public enum BusinessErrorCodes {
     COLLECTION_NOT_FOUND(404, NOT_FOUND, "Collection not found"),
     REPORT_NOT_FOUND(404, NOT_FOUND, "Report not found"),
     NOTIFICATION_NOT_FOUND(404, NOT_FOUND, "Notification not found"),
+    ACCESS_TOKEN_NOT_FOUND(404, NOT_FOUND, "Access token not found"),
     DUPLICATE_DOMAIN_NAME(409, FORBIDDEN, "Duplicate domain name"),
     DUPLICATE_COLLECTION_NAME(409, FORBIDDEN, "Duplicate collection name"),
     DUPLICATE_REPORT_NAME(409, FORBIDDEN, "Duplicate report name"),

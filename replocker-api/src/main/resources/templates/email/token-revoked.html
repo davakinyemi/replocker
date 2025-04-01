@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Token Revoked</title>
+</head>
+<body>
+    <p>Your access token: <!--/*@thymesVar id="accessToken" type="java.lang.String"*/-->
+        <span style="font-family: monospace; font-size: 18px" th:text="${accessToken}"></span> to the report collection: <!--/*@thymesVar id="collectionName" type="java.lang.String"*/-->
+        <strong th:text="${collectionName}"></strong> has been <strong style="color: #dc3545">revoked</strong>.</p>
+    <p>Contact the administrator if you need further assistance.</p>
+
+</body>
+</html>

@@ -111,6 +111,20 @@ public class EmailService {
         );
     }
 
+    public void sendTokenRevokedNotification(String toEmail, String collectionName, String accessToken) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("collectionName", collectionName);
+        properties.put("accessToken", accessToken);
+
+        this.sendEmail(
+                toEmail,
+                "Access Token Revoked",
+                "email/token-revoked",
+                properties,
+                "token-revoked"
+        );
+    }
+
     private void sendEmail(String toEmail, String subject, String templateName, Map<String, Object> properties, String emailType) {
         try {
             MimeMessage message = mailSender.createMimeMessage();

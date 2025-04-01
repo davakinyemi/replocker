@@ -45,6 +45,7 @@ public class GlobalExceptionHandler {
         CollectionNotFoundException.class,
         ReportNotFoundException.class,
         NotificationNotFoundException.class,
+        AccessTokenNotFoundException.class,
         DuplicateDomainException.class,
         DuplicateCollectionException.class,
         DuplicateReportException.class,
@@ -70,6 +71,7 @@ public class GlobalExceptionHandler {
         else if (e instanceof CollectionNotFoundException) return BusinessErrorCodes.COLLECTION_NOT_FOUND;
         else if (e instanceof ReportNotFoundException) return BusinessErrorCodes.REPORT_NOT_FOUND;
         else if (e instanceof NotificationNotFoundException) return BusinessErrorCodes.NOTIFICATION_NOT_FOUND;
+        else if (e instanceof AccessTokenNotFoundException) return BusinessErrorCodes.ACCESS_TOKEN_NOT_FOUND;
         else if (e instanceof DuplicateDomainException) return BusinessErrorCodes.DUPLICATE_DOMAIN_NAME;
         else if (e instanceof DuplicateCollectionException) return BusinessErrorCodes.DUPLICATE_COLLECTION_NAME;
         else if (e instanceof DuplicateReportException) return BusinessErrorCodes.DUPLICATE_REPORT_NAME;

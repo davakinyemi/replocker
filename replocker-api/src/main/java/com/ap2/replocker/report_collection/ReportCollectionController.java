@@ -7,6 +7,8 @@ import com.ap2.replocker.file.FileUtils;
 import com.ap2.replocker.report_collection.access_request.AccessRequestDTO;
 import com.ap2.replocker.report_collection.access_request.AccessRequestResponse;
 import com.ap2.replocker.report_collection.access_request.AccessRequestService;
+import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenResponse;
+import com.ap2.replocker.report_collection.access_request.access_token.AccessTokenService;
 import com.ap2.replocker.report_collection.report.ReportRequest;
 import com.ap2.replocker.report_collection.report.ReportResponse;
 import com.ap2.replocker.report_collection.report.ReportService;
@@ -37,6 +39,7 @@ public class ReportCollectionController {
     private final ReportCollectionService reportCollectionService;
     private final ReportService reportService;
     private final AccessRequestService accessRequestService;
+    private final AccessTokenService accessTokenService;
     private final AdminService adminService;
 
     @Operation(summary = "List report collections by RepLocker admin")
@@ -124,7 +127,7 @@ public class ReportCollectionController {
 
     @Operation(summary = "Upload report to collection (RepLocker Admin)")
     @PostMapping(
-            value = "/my/{collectionId}/upload-report",
+            value = "/my/{collectionId}/reports/upload-report",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
@@ -140,7 +143,7 @@ public class ReportCollectionController {
 
     @Operation(summary = "Update report (RepLocker Admin)")
     @PutMapping(
-            value = "/my/{collectionId}/{reportId}",
+            value = "/my/{collectionId}/reports/{reportId}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
@@ -169,7 +172,7 @@ public class ReportCollectionController {
     } */
 
     @Operation(summary = "Delete report (RepLocker Admin)")
-    @DeleteMapping("/my/{collectionId}/{reportId}/delete")
+    @DeleteMapping("/my/{collectionId}/reports/{reportId}/delete")
     @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
     public ResponseEntity<Void> deleteReport(
         @PathVariable UUID collectionId,
@@ -178,6 +181,30 @@ public class ReportCollectionController {
     ) {
         UUID adminId = adminService.getAdminId(jwt);
         this.reportService.deleteReport(collectionId, reportId, adminId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "List access tokens for locked report collection")
+    @GetMapping("/my/{collectionId}/access-tokens")
+    @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
+    public ResponseEntity<PageResponse<AccessTokenResponse>> getAccessTokens(
+            @PathVariable UUID collectionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(this.accessTokenService.getTokensByCollectionId(collectionId, page, size));
+    }
+
+    @Operation(summary = "Revoke access token (RepLocker Admin)")
+    @DeleteMapping("/my/{collectionId}/access-tokens/{tokenId}/revoke")
+    @PreAuthorize("hasAnyRole('REPLOCKER_ADMIN')")
+    public ResponseEntity<Void> revokeAccessToken(
+        @PathVariable UUID collectionId,
+        @PathVariable UUID tokenId,
+        @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID adminId = adminService.getAdminId(jwt);
+        this.accessTokenService.revokeToken(collectionId, adminId, tokenId);
         return ResponseEntity.noContent().build();
     }
 

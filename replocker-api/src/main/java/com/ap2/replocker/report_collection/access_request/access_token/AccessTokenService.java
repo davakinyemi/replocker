@@ -1,13 +1,18 @@
 package com.ap2.replocker.report_collection.access_request.access_token;
 
+import com.ap2.replocker.common.PageResponse;
+import com.ap2.replocker.email.EmailService;
 import com.ap2.replocker.exception.custom.AccessRequestNotFoundException;
+import com.ap2.replocker.exception.custom.AccessTokenNotFoundException;
 import com.ap2.replocker.exception.custom.InvalidTokenException;
 import com.ap2.replocker.exception.custom.TokenGenerationException;
 import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import com.ap2.replocker.report_collection.access_request.AccessRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +32,7 @@ public class AccessTokenService {
     private final AccessTokenRepository accessTokenRepository;
     private final AccessTokenMapper accessTokenMapper;
     private final AccessRequestRepository accessRequestRepository;
+    private final EmailService emailService;
     private static final int MAX_GENERATION_ATTEMPTS = 10;
     private static final int TOKEN_VALUE_LENGTH = 6;
     private static final int MAX_VALIDITY_DAYS = 7;
@@ -98,4 +104,25 @@ public class AccessTokenService {
        }
        return tokenValue.toString();
    }
+
+    public void revokeToken(UUID collectionId, UUID adminId, UUID tokenId) {
+       AccessToken token = this.accessTokenRepository.findByIdAndReportCollectionId(tokenId, collectionId)
+               .orElseThrow(() -> new AccessTokenNotFoundException(tokenId));
+
+       /* if (!token.getReportCollection().getAdmin().getId().equals(adminId)) {
+           throw new UnauthorizedException("Admin does not own this collection");
+       } */
+
+        this.emailService.sendTokenRevokedNotification(token.getAccessRequest().getEmail(), token.getReportCollection().getName(), token.getTokenValue());
+
+        this.accessRequestRepository.delete(token.getAccessRequest());
+    }
+
+    public PageResponse<AccessTokenResponse> getTokensByCollectionId(UUID collectionId, int page, int size) {
+        Page<AccessToken> tokens = this.accessTokenRepository.findByReportCollectionId(
+                collectionId,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"))
+        );
+        return PageResponse.fromPage(tokens.map(this.accessTokenMapper::toAccessTokenResponse));
+    }
 }
