@@ -40,12 +40,12 @@ public class ReportCollectionService {
 
         ReportCollection reportCollection = this.reportCollectionMapper.toReportCollection(request, admin);
 
-        this.auditLogService.logAction(
+        /* this.auditLogService.logAction(
                 ActionType.CREATE,
                 "ReportCollection",
                 reportCollection.getId().toString(),
                 "Create Report Collection: " + reportCollection.getName()
-        );
+        ); */
 
         return this.reportCollectionMapper.toReportCollectionResponse(
                 this.reportCollectionRepository.save(reportCollection)
