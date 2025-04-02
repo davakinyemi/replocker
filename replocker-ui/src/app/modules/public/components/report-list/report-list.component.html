@@ -15,7 +15,7 @@
   <ng-container matColumnDef="download">
     <mat-header-cell *matHeaderCellDef> Download </mat-header-cell>
     <mat-cell *matCellDef="let report">
-      <button mat-icon-button (click)="this.downloadReport(report.id)">
+      <button mat-icon-button (click)="this.downloadReport(report)">
         <mat-icon>download</mat-icon>
       </button>
     </mat-cell>

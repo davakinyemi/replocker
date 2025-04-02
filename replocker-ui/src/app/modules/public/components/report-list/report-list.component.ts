@@ -71,6 +71,42 @@ export class ReportListComponent implements OnInit, AfterViewInit {
       collectionId: this.route.snapshot.paramMap.get('collectionId')!,
       reportId,
       accessToken: token!,
-    }).subscribe(() => {});
+    }).subscribe({
+      next: (blob) => this.handleFileDownload(blob, reportId),
+      error: () => this.snackBar.open(
+        'Failed to download report',
+        'Retry',
+        { duration: 5000 }
+      ).onAction().subscribe(() => this.downloadReport(report))
+    });
+  }
+
+  private handleFileDownload(blob: Blob, reportId: string) {
+    if (blob.size === 0) {
+      this.snackBar.open('Empty file content', 'Close', { duration: 3000 });
+      return;
+    }
+
+    const report = this.dataSource.data.find(r => r.id === reportId);
+    const fileName = this.getFileName(report);
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = fileName;
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
+  }
+
+  private getFileName(report?: ReportResponse): string {
+    const baseName = report?.name?.replace(/[^a-z0-9]/gi, '_') || 'report';
+    const extension = report?.type?.toLowerCase() || 'bin';
+    return `${baseName}.${extension}`;
   }
 }

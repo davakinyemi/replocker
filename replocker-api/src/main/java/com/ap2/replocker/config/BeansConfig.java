@@ -57,7 +57,7 @@ public class BeansConfig {
         return new ApplicationAuditAware();
     }
 
-    @Bean
+    /* @Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
@@ -79,7 +79,7 @@ public class BeansConfig {
         ));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
-    }
+    } */
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -88,7 +88,9 @@ public class BeansConfig {
             public void addCorsMappings(@Nonnull CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:4200")
-                        .allowedMethods("*");
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
