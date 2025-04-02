@@ -43,9 +43,14 @@ public class GlobalExceptionHandler {
         DomainNotFoundException.class,
         AccessRequestNotFoundException.class,
         CollectionNotFoundException.class,
+        ReportNotFoundException.class,
+        NotificationNotFoundException.class,
+        AccessTokenNotFoundException.class,
         DuplicateDomainException.class,
         DuplicateCollectionException.class,
-        DuplicateReportException.class
+        DuplicateReportException.class,
+        DuplicateRequestException.class,
+        DomainNotAllowedException.class,
     })
     public ResponseEntity<ExceptionResponse> handleBusinessExceptions(RuntimeException e) {
         BusinessErrorCodes errorCodes = this.resolveErrorCode(e);
@@ -64,9 +69,15 @@ public class GlobalExceptionHandler {
         else if (e instanceof DomainNotFoundException) return BusinessErrorCodes.DOMAIN_NOT_FOUND;
         else if (e instanceof AccessRequestNotFoundException) return BusinessErrorCodes.ACCESS_REQUEST_NOT_FOUND;
         else if (e instanceof CollectionNotFoundException) return BusinessErrorCodes.COLLECTION_NOT_FOUND;
+        else if (e instanceof ReportNotFoundException) return BusinessErrorCodes.REPORT_NOT_FOUND;
+        else if (e instanceof NotificationNotFoundException) return BusinessErrorCodes.NOTIFICATION_NOT_FOUND;
+        else if (e instanceof AccessTokenNotFoundException) return BusinessErrorCodes.ACCESS_TOKEN_NOT_FOUND;
         else if (e instanceof DuplicateDomainException) return BusinessErrorCodes.DUPLICATE_DOMAIN_NAME;
         else if (e instanceof DuplicateCollectionException) return BusinessErrorCodes.DUPLICATE_COLLECTION_NAME;
         else if (e instanceof DuplicateReportException) return BusinessErrorCodes.DUPLICATE_REPORT_NAME;
+        else if (e instanceof DuplicateRequestException) return BusinessErrorCodes.DUPLICATE_REQUEST_ACCESS;
+        else if (e instanceof TokenGenerationException) return BusinessErrorCodes.TOKEN_GENERATION_FAILURE;
+        else if (e instanceof DomainNotAllowedException) return BusinessErrorCodes.EMAIL_DOMAIN_NOT_PERMITTED;
         return BusinessErrorCodes.NO_CODE;
     }
 
@@ -87,6 +98,16 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(BusinessErrorCodes.KEYCLOAK_SERVER_ERROR.getCode())
                         .error(BusinessErrorCodes.KEYCLOAK_SERVER_ERROR.getDescription() + ": " + e.getMessage())
+                        .build()
+                );
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ExceptionResponse> handleBusinessRuleException(BusinessRuleException e) {
+        return ResponseEntity.status(FORBIDDEN)
+                .body(ExceptionResponse.builder()
+                        .businessErrorCode(BusinessErrorCodes.BUSINESS_RULE_ERROR.getCode())
+                        .error(BusinessErrorCodes.BUSINESS_RULE_ERROR.getDescription() + ": " + e.getMessage())
                         .build()
                 );
     }

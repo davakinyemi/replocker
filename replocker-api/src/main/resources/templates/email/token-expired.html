@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Token Expired</title>
+</head>
+<body>
+    <div style="margin: 20px 0; padding: 15px; background: #f8d7da; border-radius: 5px">
+        <strong>Notice:</strong> Your access token: <!--/*@thymesVar id="accessToken" type="java.lang.String"*/-->
+        <span style="font-family: monospace; font-size: 18px" th:text="${accessToken}"></span> for <!--/*@thymesVar id="collectionName" type="java.lang.String"*/-->
+        <strong th:text="${collectionName}"></strong> has expired and is no longer valid.
+    </div>
+
+    <p>Submit a new request if you need continued access.</p>
+
+</body>
+</html>

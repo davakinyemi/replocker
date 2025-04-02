@@ -1,5 +1,16 @@
-CREATE TYPE REPORT_TYPE AS ENUM ('CSV', 'XLSX');
-CREATE TYPE ACCESS_REQUEST_TYPE AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+CREATE TYPE REPORT_TYPE AS ENUM (
+    'CSV',
+    'XLSX',
+    'XLSX',
+    'XLSM',
+    'XLSB',
+    'XLTX'
+);
+CREATE TYPE ACCESS_REQUEST_TYPE AS ENUM (
+    'PENDING',
+    'ACCEPTED',
+    'REJECTED'
+);
 
 CREATE TABLE admin (
     id UUID PRIMARY KEY,
@@ -29,7 +40,7 @@ CREATE TABLE report (
     -- type VARCHAR(20) NOT NULL CHECK (type IN ('CSV', 'XLSX')),
     type REPORT_TYPE NOT NULL,
     report_collection_id UUID NOT NULL REFERENCES report_collection(id) ON DELETE CASCADE,
-    created_date TIMESTAMP NOT NULL
+    created_date TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE access_request (
@@ -54,7 +65,7 @@ CREATE TABLE allowed_domain(
 
 CREATE TABLE access_token (
     id UUID PRIMARY KEY,
-    token_value VARCHAR(36) UNIQUE NOT NULL,
+    token_value VARCHAR(6) UNIQUE NOT NULL CHECK (LENGTH(token_value) = 6),
     report_collection_id UUID NOT NULL REFERENCES report_collection(id) ON DELETE CASCADE,
     access_request_id UUID NOT NULL REFERENCES access_request(id),
     created_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -69,7 +80,7 @@ CREATE TABLE notification (
     is_read BOOLEAN NOT NULL DEFAULT FALSE,
     admin_id UUID NOT NULL REFERENCES admin(id),
     access_request_id UUID NOT NULL REFERENCES access_request(id) ON DELETE CASCADE,
-    created_date TIMESTAMP NOT NULL
+    created_date TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE websocket_audit (
@@ -78,6 +89,20 @@ CREATE TABLE websocket_audit (
     connection_time TIMESTAMPTZ NOT NULL,
     disconnect_time TIMESTAMPTZ
 );
+
+CREATE TABLE audit_log (
+    id UUID PRIMARY KEY,
+    action_type VARCHAR(20) NOT NULL,
+    entity_name VARCHAR(255) NOT NULL,
+    entity_id VARCHAR(36) NOT NULL,
+    performed_by VARCHAR(255) NOT NULL,
+    details VARCHAR(1000),
+    created_date TIMESTAMPTZ NOT NULL
+);
+
+-- audit log table indices
+CREATE INDEX idx_audit_entity ON audit_log(entity_name, entity_id);
+CREATE INDEX idx_audit_timestamp ON audit_log(created_date);
 
 -- admin table indices
 CREATE UNIQUE INDEX uc_admin_username ON admin(username);
@@ -89,10 +114,12 @@ CREATE UNIQUE INDEX uc_domain_admin ON allowed_domain(admin_id, lower(domain_nam
 
 -- report collection table indices
 CREATE UNIQUE INDEX uc_report_collection_name ON report_collection(name);
+CREATE INDEX idx_collection_admin ON report_collection(admin_id);
 CREATE INDEX idx_collection_published ON report_collection(is_published, is_locked);
 
 -- report table indices
 CREATE UNIQUE INDEX uc_report_name_report_collection ON report(name, report_collection_id);
+CREATE INDEX idx_report_collection ON report(report_collection_id);
 CREATE INDEX idx_report_upload_date ON report(created_date);
 
 -- access request table indices

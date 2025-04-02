@@ -1,7 +1,7 @@
 package com.ap2.replocker.admin.notification;
 
-import com.ap2.replocker.admin.AdminRepository;
 import com.ap2.replocker.common.PageResponse;
+import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,6 @@ public class NotificationService {
     private final SimpMessagingTemplate messagingTemplate;
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
-    private final AdminRepository adminRepository;
 
     public PageResponse<NotificationResponse> filterNotifications(
             UUID adminId,
@@ -60,7 +59,7 @@ public class NotificationService {
     }
 
     public PageResponse<NotificationResponse> getUnreadNotifications(UUID adminId, int page, int size) {
-        Page<Notification> notifications = this.notificationRepository.findByAdminIdAndReadFalse(
+        Page<Notification> notifications = this.notificationRepository.findByAdminIdAndIsReadFalse(
                 adminId,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"))
         );
@@ -71,16 +70,26 @@ public class NotificationService {
         this.notificationRepository.markAsRead(notificationId);
     }
 
-    /* public void createReportCollectionRequestAccessNotification(AccessRequest request) {
+    public void createAccessRequestNotification(AccessRequest request, String notificationMessage) {
         Notification notification = Notification.builder()
-                .message("New access request for report collection - " + request.getReportCollection().getName() + ": " + request.getMessage())
+                // .message("New access request for " + request.getReportCollection().getName() + ": " + request.getMessage())
+                .message(notificationMessage)
                 .admin(request.getReportCollection().getAdmin())
                 .accessRequest(request)
                 .build();
         this.notificationRepository.save(notification);
+        this.messagingTemplate.convertAndSendToUser(
+                notification.getAdmin().getId().toString(),
+                "/topic/notifications",
+                this.notificationMapper.toNotificationResponse(notification)
+        );
+        /* this.messagingTemplate.convertAndSend(
+                "/topic/notifications",
+                this.notificationMapper.toNotificationResponse(notification)
+        ); */
     }
 
-    public void notifyAdmin(UUID adminId, Notification notification) {
+    /* public void notifyAdmin(UUID adminId, Notification notification) {
         this.messagingTemplate.convertAndSendToUser(
                 adminId.toString(),
                 "/queue/notifications",

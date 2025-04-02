@@ -33,14 +33,14 @@ public class AccessToken extends BaseAuditingEntity {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "token_value", nullable = false)
+    @Column(name = "token_value", nullable = false, length = 6)
     private String tokenValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_collection_id", nullable = false)
     private ReportCollection reportCollection;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "access_request_id", nullable = false)
     private AccessRequest accessRequest;
 

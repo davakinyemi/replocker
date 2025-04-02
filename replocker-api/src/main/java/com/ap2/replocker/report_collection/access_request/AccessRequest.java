@@ -1,12 +1,15 @@
 package com.ap2.replocker.report_collection.access_request;
 
+import com.ap2.replocker.admin.notification.Notification;
 import com.ap2.replocker.common.BaseAuditingEntity;
 import com.ap2.replocker.report_collection.ReportCollection;
+import com.ap2.replocker.report_collection.access_request.access_token.AccessToken;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,4 +60,18 @@ public class AccessRequest extends BaseAuditingEntity {
 
     @Column(name = "admin_comment", length = 1000)
     private String adminComment;
+
+    @OneToOne(
+            mappedBy = "accessRequest",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private AccessToken accessToken;
+
+    @OneToMany(
+            mappedBy = "accessRequest",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Notification> notification;
 }

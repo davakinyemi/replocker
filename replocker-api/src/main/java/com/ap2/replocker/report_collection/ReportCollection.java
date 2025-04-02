@@ -2,12 +2,14 @@ package com.ap2.replocker.report_collection;
 
 import com.ap2.replocker.admin.Admin;
 import com.ap2.replocker.common.BaseAuditingEntity;
+import com.ap2.replocker.report_collection.access_request.AccessRequest;
 import com.ap2.replocker.report_collection.report.Report;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +49,17 @@ public class ReportCollection extends BaseAuditingEntity {
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
 
-    @OneToMany(mappedBy = "reportCollection", cascade = CascadeType.ALL)
+    @OneToMany(
+            mappedBy = "reportCollection",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Report> reports;
+
+    @OneToMany(
+            mappedBy = "reportCollection",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<AccessRequest> accessRequests = new ArrayList<>();
 }

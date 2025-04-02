@@ -1,3 +1,4 @@
+/*
 package com.ap2.replocker.compliance;
 
 import com.ap2.replocker.report_collection.access_request.access_token.AccessToken;
@@ -10,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+*/
 /**
  * @author Dave AKN
  * @version 1.0
- */
+ *//*
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -36,3 +39,4 @@ public class GdprComplianceService {
         this.reportRepository.deleteByCreatedDateBefore(threshold);
     }
 }
+*/

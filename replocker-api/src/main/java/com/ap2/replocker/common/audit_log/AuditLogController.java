@@ -1,9 +1,9 @@
 /*
-package com.ap2.replocker.report_collection.access_request.access_token;
+package com.ap2.replocker.common.audit_log;
 
-import com.ap2.replocker.admin.AdminService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,14 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
  *//*
 
 @RestController
-@RequestMapping("/access-tokens")
+@RequestMapping("/audit-logs")
 @SecurityRequirement(name = "keycloak")
+@PreAuthorize("hasRole('REPLOCKER_ADMIN')")
 @RequiredArgsConstructor
-public class AccessTokenController {
-    private final AccessTokenService accessTokenService;
-    private final AdminService adminService;
-
-
-
+public class AuditLogController {
 }
 */

@@ -6,6 +6,10 @@ import com.ap2.replocker.report_collection.report.Report;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ReportCollectionMapper {
@@ -30,7 +34,12 @@ public class ReportCollectionMapper {
                 .isLocked(reportCollection.isLocked())
                 .isPublished(reportCollection.isPublished())
                 .adminId(reportCollection.getAdmin().getId())
-                .reportIds(reportCollection.getReports().stream()
+                /* .reportIds(reportCollection.getReports().stream()
+                        .map(Report::getId)
+                        .toList()) */
+                .reportIds(Optional.ofNullable(reportCollection.getReports())
+                        .orElse(Collections.emptyList())
+                        .stream()
                         .map(Report::getId)
                         .toList())
                 .createdDate(reportCollection.getCreatedDate())

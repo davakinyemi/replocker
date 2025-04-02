@@ -6,7 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -14,9 +17,17 @@ import java.util.UUID;
  * @version 1.0
  */
 public interface NotificationRepository extends JpaRepository<Notification, UUID>, JpaSpecificationExecutor<Notification> {
-    Page<Notification> findByAdminIdAndReadFalse(UUID adminId, Pageable pageable);
+    @Query("SELECT n FROM Notification n WHERE n.admin.id = :adminId AND n.isRead = false")
+    Page<Notification> findByAdminIdAndIsReadFalse(@Param("adminId") UUID adminId, Pageable pageable);
 
     @Modifying
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.id = :id")
-    void markAsRead(UUID id);
+    void markAsRead(@Param("id") UUID id);
+
+    @Query("SELECT n FROM Notification n WHERE n.accessRequest.id = :accessRequestId")
+    Optional<List<Notification>> findByAccessRequestId(@Param("accessRequestId") UUID accessRequestId);
+
+    @Modifying
+    @Query("DELETE FROM Notification n WHERE n.accessRequest.id = :requestId")
+    void deleteByAccessRequestId(@Param("requestId") UUID requestId);
 }

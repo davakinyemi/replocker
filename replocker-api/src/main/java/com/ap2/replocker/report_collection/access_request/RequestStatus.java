@@ -6,6 +6,6 @@ package com.ap2.replocker.report_collection.access_request;
  */
 public enum RequestStatus {
     PENDING,
-    APPROVED,
+    ACCEPTED,
     REJECTED,
 }
