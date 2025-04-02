@@ -5,7 +5,7 @@
     <mat-cell *matCellDef="let col">
       <button mat-button (click)="this.viewCollection(col)">
         {{ col.name }}
-        <mat-icon *ngIf="col.locked">lock</mat-icon>
+        <!-- <mat-icon *ngIf="col.locked">lock</mat-icon> -->
       </button>
     </mat-cell>
   </ng-container>
@@ -26,9 +26,11 @@
   <ng-container matColumnDef="status">
     <mat-header-cell *matHeaderCellDef>Access</mat-header-cell>
     <mat-cell *matCellDef="let col">
-      <mat-chip [color]="col.locked ? 'warn' : 'primary'">
+      <!-- <mat-chip [color]="col.locked ? 'warn' : 'primary'">
         {{ col.locked ? 'Locked' : 'Open' }}
-      </mat-chip>
+      </mat-chip> -->
+      <mat-icon *ngIf="col.locked" [color]="'warn'">lock</mat-icon>
+      <mat-icon *ngIf="!col.locked" [color]="'primary'">lock_open</mat-icon>
     </mat-cell>
   </ng-container>
 
