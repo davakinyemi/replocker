@@ -7,6 +7,7 @@ import {
   ReportCollectionControllerService
 } from '../../../../services/openapi/services/report-collection-controller.service';
 import {AuthService} from '../../services/auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-report-collection-locked-dialog',
@@ -24,16 +25,20 @@ export class ReportCollectionLockedDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { collectionId: string },
     private formBuilder: FormBuilder,
     private reportCollectionService: ReportCollectionControllerService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {
     this.tokenForm = this.formBuilder.group({
-      token: ['', Validators.required, Validators.pattern(/^\d{6}$/)],
+      token: ['', [
+        Validators.required,
+        Validators.pattern(/^\d{6}$/)
+      ]],
     });
 
     this.accessRequestForm = this.formBuilder.group({
       name: ['', Validators.required],
-      email: ['', Validators.required],
-      message: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      message: ['', /* Validators.required */],
     });
   }
 
@@ -46,19 +51,24 @@ export class ReportCollectionLockedDialogComponent {
       accessToken: token
     }).subscribe({
       next: () => {
+        this.snackBar.open('Access granted!', 'Close', { duration: 3000 });
         this.authService.storeToken(this.data.collectionId, token);
         this.dialogRef.close({ accessGranted: true });
       },
       error: (err) => {
-        if (err.status === 403) {
-          this.tokenForm.get('token')?.setErrors({ invalid: true });
-        }
+        this.snackBar.open('Invalid access token', 'Close', { duration: 3000 });
+        this.tokenForm.get('token')?.setErrors({ invalid: true });
+        /* if (err.status === 403) {
+        } */
       }
     });
   }
 
   submitRequest() {
-    if (this.accessRequestForm.invalid) return;
+    if (this.accessRequestForm.invalid) {
+      this.snackBar.open('Please fill required fields', 'Close', { duration: 3000 });
+      return;
+    }
 
     const dto: AccessRequestDto = {
       ...this.accessRequestForm.value,
@@ -69,8 +79,14 @@ export class ReportCollectionLockedDialogComponent {
       collectionId: this.data.collectionId,
       body: dto,
     }).subscribe({
-      next: () => this.dialogRef.close({ requestSubmitted: true }),
-      error: () => this.accessRequestForm.setErrors({ submissionError: true })
+      next: () => {
+        this.snackBar.open('Access request submitted', 'Close', { duration: 3000 });
+        this.dialogRef.close({requestSubmitted: true})
+      },
+      error: () => {
+        this.snackBar.open('Failed to submit request', 'Close', { duration: 3000 });
+        this.accessRequestForm.setErrors({submissionError: true})
+      }
     });
   }
 

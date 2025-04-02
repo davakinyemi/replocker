@@ -66,7 +66,7 @@ export class ReportCollectionListComponent implements OnInit, AfterViewInit {
         data: { collectionId: collection.id }
       });
     } else {
-      this.router.navigate(['/collection', collection.id]).catch(error => console.error('Navigation failed:', error));
+      this.router.navigate(['/collections', collection.id]).catch(error => console.error('Navigation failed:', error));
     }
   }
 }

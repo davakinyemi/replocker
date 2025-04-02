@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable, tap} from 'rxjs';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {catchError, finalize, Observable, of, tap} from 'rxjs';
 import {ReportResponse} from '../../../../services/openapi/models/report-response';
 import {ReportCollectionResponse} from '../../../../services/openapi/models/report-collection-response';
 import {ActivatedRoute} from '@angular/router';
@@ -9,6 +9,10 @@ import {
 import {TitleService} from '../../services/title/title.service';
 import {map} from 'rxjs/operators';
 import {AuthService} from '../../services/auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-report-list',
@@ -16,16 +20,22 @@ import {AuthService} from '../../services/auth/auth.service';
   templateUrl: './report-list.component.html',
   styleUrl: './report-list.component.scss'
 })
-export class ReportListComponent implements OnInit {
+export class ReportListComponent implements OnInit, AfterViewInit {
   reports$!: Observable<ReportResponse[]>;
   collection$!: Observable<ReportCollectionResponse>;
-  displayedColumns = ['name'];
+  displayedColumns = ['name', 'type', 'download'];
+  dataSource = new MatTableDataSource<ReportResponse>([]);
+  isLoading = true;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private route: ActivatedRoute,
     private reportService: ReportCollectionControllerService,
     private authService: AuthService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    private snackBar: MatSnackBar
   ) {
   }
 
@@ -39,11 +49,22 @@ export class ReportListComponent implements OnInit {
     );
 
     this.reports$ = this.reportService.getReports({ collectionId }).pipe(
-      map(response => response.content || [])
+      map(response => response.content || []),
+      catchError(() => of([])),
+      finalize(() => this.isLoading = false)
     );
   }
 
-  downloadReport(reportId: string) {
+  ngAfterViewInit() {
+    this.reports$.subscribe(data => {
+      this.dataSource.data = data;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
+  }
+
+  downloadReport(report: ReportResponse) {
+    const reportId = report.id!
     const collectionId = this.route.snapshot.paramMap.get('collectionId')!;
     const token = this.authService.getValidToken(collectionId);
     this.reportService.downloadReport({

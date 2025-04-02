@@ -12,7 +12,35 @@ export const reportCollectionResolver: ResolveFn<ReportCollectionResponse> = (ro
   const auth = inject(AuthService);
   const router = inject(Router);
   const collectionId = route.paramMap.get('collectionId')!;
-  const token = auth.getValidToken(collectionId)!;
+
+  return reportService.getPublishedCollection({ collectionId }).pipe(
+    catchError((error) => {
+      if (error.status === 403) {
+        // Collection is locked, require token
+        const token = auth.getValidToken(collectionId);
+        if (!token) {
+          router.navigate(['/collections'], {
+            queryParams: { error: 'LOCKED_NO_TOKEN' }
+          }).catch(() => {});
+          return throwError(() => new Error('Locked collection requires token'));
+        }
+        return reportService.getPublishedCollection({
+          collectionId,
+          accessToken: token
+        });
+      }
+      return throwError(() => error);
+    })
+  );
+
+  // const token = auth.getValidToken(collectionId)!;
+
+  /* if (!token) {
+    router.navigate(['/collections'], {
+      queryParams: { error: 'NO_TOKEN' }
+    }).catch(() => {});
+    return throwError(() => new Error('No access token'));
+  }
 
   return reportService.getPublishedCollection({ collectionId, accessToken: token }).pipe(
     catchError((error) => {
@@ -23,5 +51,5 @@ export const reportCollectionResolver: ResolveFn<ReportCollectionResponse> = (ro
       }
       return throwError(() => error);
     })
-  );
+  ); */
 };

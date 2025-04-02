@@ -16,7 +16,7 @@ const routes: Routes = [
         data: { title: 'Report Collections' }
       },
       {
-        path: 'collections/:collectionId',
+        path: ':collectionId',
         component: ReportListComponent,
         resolve: {
           collection: reportCollectionResolver
