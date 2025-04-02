@@ -1,7 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {AccessRequestControllerService} from '../../../../services/openapi/services/access-request-controller.service';
 import {AccessRequestDto} from '../../../../services/openapi/models/access-request-dto';
 import {
   ReportCollectionControllerService
@@ -55,7 +54,7 @@ export class ReportCollectionLockedDialogComponent {
         this.authService.storeToken(this.data.collectionId, token);
         this.dialogRef.close({ accessGranted: true });
       },
-      error: (err) => {
+      error: () => {
         this.snackBar.open('Invalid access token', 'Close', { duration: 3000 });
         this.tokenForm.get('token')?.setErrors({ invalid: true });
         /* if (err.status === 403) {
