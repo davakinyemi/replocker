@@ -19,7 +19,7 @@
   <!-- Reports Column -->
   <ng-container matColumnDef="reports">
     <mat-header-cell *matHeaderCellDef>Reports</mat-header-cell>
-    <mat-cell *matCellDef="let col">{{ col.reportIds$?.length || 0 }}</mat-cell>
+    <mat-cell *matCellDef="let col">{{ col.reportIds?.length || 0 }}</mat-cell>
   </ng-container>
 
   <!-- Status Column -->
