@@ -19,7 +19,7 @@ export const reportCollectionResolver: ResolveFn<ReportCollectionResponse> = (ro
       if (error.status === 403) {
         router.navigate(['/collections'], {
           queryParams: { error: 'INVALID_TOKEN' }
-        }).catch((error) => {});
+        }).catch(() => {});
       }
       return throwError(() => error);
     })

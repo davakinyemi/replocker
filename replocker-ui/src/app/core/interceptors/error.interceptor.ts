@@ -1,12 +1,11 @@
 import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
-import {AuthService} from '../../modules/public/services/auth/auth.service';
 import {inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError, throwError} from 'rxjs';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth = inject(AuthService);
+  // const auth = inject(AuthService);
   const router = inject(Router);
   const snackBar = inject(MatSnackBar);
 
@@ -23,7 +22,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             snackBar.open('Invalid access token', 'Close', { duration: 5000 })
             break;
           case 404:
-            router.navigate(['/not-found']).catch(error => {});
+            router.navigate(['/not-found']).catch(() => {});
             break;
           case 422:
             showValidationErrors(error.error.errors)

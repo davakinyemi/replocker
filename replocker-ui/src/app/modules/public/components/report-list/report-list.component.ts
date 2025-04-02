@@ -50,8 +50,6 @@ export class ReportListComponent implements OnInit {
       collectionId: this.route.snapshot.paramMap.get('collectionId')!,
       reportId,
       accessToken: token!,
-    }).subscribe(blob => {
-
-    });
+    }).subscribe(() => {});
   }
 }
