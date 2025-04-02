@@ -3,7 +3,7 @@ import {inject} from '@angular/core';
 import {KeycloakService} from '../../utils/keycloak/keycloak.service';
 import {Role} from '../models/role.enum';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = (route) => {
   const kcService = inject(KeycloakService);
   const router = inject(Router);
 
