@@ -1,12 +1,13 @@
 import {inject, NgModule, provideAppInitializer} from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {MaterialModule} from './material/material.module';
 import {KeycloakService} from './utils/keycloak/keycloak.service';
 import {keycloakHttpInterceptor} from './utils/http/keycloak-http.interceptor';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 export function initializeKeycloak() {
   const kcService = inject(KeycloakService);
@@ -20,6 +21,8 @@ export function initializeKeycloak() {
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     MaterialModule
   ],
   providers: [

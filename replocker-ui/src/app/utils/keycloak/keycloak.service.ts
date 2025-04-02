@@ -15,8 +15,8 @@ export class KeycloakService {
     if (!this._keycloak) {
       this._keycloak = new Keycloak({
         url: 'http://localhost:9090',
-        realm: 'replocker',
-        clientId: 'replocker-app'
+        realm: 'replocker-app',
+        clientId: 'replocker-backend'
       });
     }
     return this._keycloak;
