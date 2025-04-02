@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Observable, Subject} from 'rxjs';
+import {filter} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +9,8 @@ import {HttpClient} from '@angular/common/http';
 export class AuthService {
 
   private readonly TOKEN_PREFIX = 'rep_token_';
+
+  private tokenValidity = new Subject<boolean>();
 
   constructor(private http: HttpClient) {
   }
@@ -25,5 +29,11 @@ export class AuthService {
 
     const { token, expiry } = JSON.parse(item);
     return Date.now() < expiry ? token : null;
+  }
+
+  watchTokenValidity(collectionId: string): Observable<boolean> {
+    return this.tokenValidity.pipe(
+      filter(() => !!this.getValidToken(collectionId))
+    );
   }
 }

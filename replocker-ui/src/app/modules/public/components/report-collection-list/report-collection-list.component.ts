@@ -64,7 +64,7 @@ export class ReportCollectionListComponent implements OnInit, AfterViewInit {
 
   viewCollection(collection: ReportCollectionResponse) {
     if (collection.locked) {
-      const token = this.getAccessToken(collection.id!);
+      const token = this.authService.getValidToken(collection.id!);
       if (token) {
         this.router.navigate(['/collections', collection.id]).then();
       } else {
@@ -79,9 +79,5 @@ export class ReportCollectionListComponent implements OnInit, AfterViewInit {
     } else {
       this.router.navigate(['/collections', collection.id]).catch(error => console.error('Navigation failed:', error));
     }
-  }
-
-  private getAccessToken(collectionId: string) {
-    return this.authService.getValidToken(collectionId)!;
   }
 }

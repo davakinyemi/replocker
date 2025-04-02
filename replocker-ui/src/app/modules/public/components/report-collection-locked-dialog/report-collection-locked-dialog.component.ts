@@ -7,6 +7,7 @@ import {
 } from '../../../../services/openapi/services/report-collection-controller.service';
 import {AuthService} from '../../services/auth/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'app-report-collection-locked-dialog',
@@ -50,8 +51,11 @@ export class ReportCollectionLockedDialogComponent {
       accessToken: token
     }).subscribe({
       next: () => {
-        this.snackBar.open('Access granted!', 'Close', { duration: 3000 });
         this.authService.storeToken(this.data.collectionId, token);
+        this.authService.watchTokenValidity(this.data.collectionId)
+          .pipe(take(1))
+          .subscribe(() => this.dialogRef.close({ accessGranted: true }));
+        this.snackBar.open('Access granted!', 'Close', { duration: 3000 });
         this.dialogRef.close({ accessGranted: true });
       },
       error: () => {
