@@ -1,9 +1,10 @@
 <mat-dialog-content>
-  <form *ngIf="!this.isRequestMode" [formGroup]="tokenForm">
+  <!-- Token Form -->
+  <form *ngIf="!this.isRequestMode" [formGroup]="this.tokenForm">
     <mat-form-field appearance="outline">
       <mat-label>6-Digit Access Token</mat-label>
       <input matInput formControlName="token" required maxlength="6">
-      <mat-error *ngIf="tokenForm.get('token')?.hasError('required')">
+      <mat-error *ngIf="this.tokenForm.get('token')?.hasError('required')">
         Access token required
       </mat-error>
     </mat-form-field>
@@ -18,5 +19,30 @@
     </div>
   </form>
 
+  <!-- Access Request Form -->
+  <form *ngIf="this.isRequestMode" [formGroup]="this.accessRequestForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Full Name</mat-label>
+      <input matInput formControlName="name" required>
+    </mat-form-field>
 
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Message (Optional)</mat-label>
+      <textarea matInput formControlName="message" rows="3"></textarea>
+    </mat-form-field>
+
+    <div class="dialog-actions">
+      <button mat-flat-button color="primary" (click)="this.submitRequest()">
+        Submit request
+      </button>
+      <button mat-button type="button" (click)="this.switchToTokenMode()">
+        Have a token?
+      </button>
+    </div>
+  </form>
 </mat-dialog-content>

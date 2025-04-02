@@ -1,1 +1,26 @@
-<p>report-collection-list works!</p>
+<mat-table [dataSource]="(this.collections$ | async) || []">
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef> Collection </mat-header-cell>
+    <mat-cell *matCellDef="let col">
+      <button mat-button (click)="this.viewCollection(col)">
+        {{ col.name }}
+        <mat-icon *ngIf="col.isLocked">lock</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Status chip -->
+  <ng-container matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef> Access </mat-header-cell>
+    <mat-cell *matCellDef="let col">
+      <mat-chip [color]="col.isLocked ? 'warn' : 'primary'">
+        {{ col.isLocked ? 'Locked' : 'Open' }}
+      </mat-chip>
+    </mat-cell>
+  </ng-container>
+</mat-table>
+
+<div *ngIf="(this.collections$ | async)?.length === 0" class="no-results">
+  <mat-icon>info</mat-icon> No report collections available
+</div>

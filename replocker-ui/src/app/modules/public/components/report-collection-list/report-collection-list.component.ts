@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {catchError, finalize, Observable, of} from 'rxjs';
+import {catchError, finalize, Observable, of, startWith} from 'rxjs';
 import {ReportCollectionResponse} from '../../../../services/openapi/models/report-collection-response';
 import {
   ReportCollectionControllerService
@@ -19,7 +19,7 @@ import {
   styleUrl: './report-collection-list.component.scss'
 })
 export class ReportCollectionListComponent implements OnInit {
-  collections$!: Observable<ReportCollectionResponse[]>;
+  collections$: Observable<ReportCollectionResponse[]> = of([]);
   displayedColumns = ['name', 'description', 'reports', 'status'];
   isLoading = true;
 
@@ -39,6 +39,7 @@ export class ReportCollectionListComponent implements OnInit {
   private loadCollections() {
     this.collections$ = this.reportCollectionService.getPublishedCollections().pipe(
       map(response => response.content || []),
+      startWith([]),
       catchError(() => of([])),
       finalize(() => this.isLoading = false)
     );

@@ -153,8 +153,26 @@ export class KeycloakService implements OnDestroy {
     return !!this._keycloak.token && !this._keycloak.isTokenExpired(thresholdSeconds);
   }
 
+  public isAuthenticated(): boolean {
+    return this._keycloak.authenticated || false;
+  }
+
   getTokenExpiration(): number {
     return this._keycloak.tokenParsed?.exp ?? 0;
+  }
+
+  hasAnyRole(requiredRoles: string[]): boolean {
+    if (!requiredRoles || requiredRoles.length === 0) return true;
+
+    const token = this._keycloak.tokenParsed;
+    if (!token) return false;
+
+    const clientRoles = token.resource_access?.[environment.keycloak.clientId]?.roles || [];
+    const realmRoles = token.realm_access?.roles || [];
+
+    return [...clientRoles, ...realmRoles].some(role =>
+      requiredRoles.includes(role)
+    );
   }
 
   accountManagement() {

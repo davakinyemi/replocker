@@ -8,6 +8,7 @@ import {MaterialModule} from './material/material.module';
 import {KeycloakService} from './utils/keycloak/keycloak.service';
 import {keycloakHttpInterceptor} from './utils/http/keycloak-http.interceptor';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {errorInterceptor} from './core/interceptors/error.interceptor';
 
 export function initializeKeycloak() {
   const kcService = inject(KeycloakService);
@@ -27,7 +28,10 @@ export function initializeKeycloak() {
   ],
   providers: [
     provideHttpClient(
-      withInterceptors([keycloakHttpInterceptor])
+      withInterceptors([
+        keycloakHttpInterceptor,
+        errorInterceptor
+      ])
     ),
     provideAppInitializer(initializeKeycloak)
   ],

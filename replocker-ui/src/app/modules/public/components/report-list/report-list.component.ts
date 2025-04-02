@@ -19,6 +19,7 @@ import {AuthService} from '../../services/auth/auth.service';
 export class ReportListComponent implements OnInit {
   reports$!: Observable<ReportResponse[]>;
   collection$!: Observable<ReportCollectionResponse>;
+  displayedColumns = ['name'];
 
   constructor(
     private route: ActivatedRoute,
@@ -29,6 +30,8 @@ export class ReportListComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.titleService.setTitle(this.route.snapshot.data['title']);
+
     const collectionId = this.route.snapshot.paramMap.get('collectionId')!;
 
     this.collection$ = this.reportService.getPublishedCollection({ collectionId }).pipe(
@@ -41,7 +44,8 @@ export class ReportListComponent implements OnInit {
   }
 
   downloadReport(reportId: string) {
-    const token = this.authService.getValidToken(this.route.snapshot.paramMap.get('collectionId')!);
+    const collectionId = this.route.snapshot.paramMap.get('collectionId')!;
+    const token = this.authService.getValidToken(collectionId);
     this.reportService.downloadReport({
       collectionId: this.route.snapshot.paramMap.get('collectionId')!,
       reportId,
