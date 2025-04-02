@@ -1,26 +1,47 @@
-<mat-table [dataSource]="(this.collections$ | async) || []">
+<mat-table [dataSource]="this.dataSource" matSort>
   <!-- Name Column -->
   <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef> Collection </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Collection</mat-header-cell>
     <mat-cell *matCellDef="let col">
       <button mat-button (click)="this.viewCollection(col)">
         {{ col.name }}
-        <mat-icon *ngIf="col.isLocked">lock</mat-icon>
+        <mat-icon *ngIf="col.locked">lock</mat-icon>
       </button>
     </mat-cell>
   </ng-container>
 
-  <!-- Status chip -->
+  <!-- Description Column -->
+  <ng-container matColumnDef="description">
+    <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+    <mat-cell *matCellDef="let col">{{ col.description || '-' }}</mat-cell>
+  </ng-container>
+
+  <!-- Reports Column -->
+  <ng-container matColumnDef="reports">
+    <mat-header-cell *matHeaderCellDef>Reports</mat-header-cell>
+    <mat-cell *matCellDef="let col">{{ col.reportIds$?.length || 0 }}</mat-cell>
+  </ng-container>
+
+  <!-- Status Column -->
   <ng-container matColumnDef="status">
-    <mat-header-cell *matHeaderCellDef> Access </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef>Access</mat-header-cell>
     <mat-cell *matCellDef="let col">
-      <mat-chip [color]="col.isLocked ? 'warn' : 'primary'">
-        {{ col.isLocked ? 'Locked' : 'Open' }}
+      <mat-chip [color]="col.locked ? 'warn' : 'primary'">
+        {{ col.locked ? 'Locked' : 'Open' }}
       </mat-chip>
     </mat-cell>
   </ng-container>
+
+  <mat-header-row *matHeaderRowDef="this.displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: this.displayedColumns;"></mat-row>
 </mat-table>
 
-<div *ngIf="(this.collections$ | async)?.length === 0" class="no-results">
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+<div *ngIf="isLoading" class="loading-overlay">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
+<div *ngIf="this.dataSource.data.length === 0 && !this.isLoading" class="no-results">
   <mat-icon>info</mat-icon> No report collections available
 </div>

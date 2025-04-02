@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 
 import { PublicRoutingModule } from './public-routing.module';
 import { ReportCollectionListComponent } from './components/report-collection-list/report-collection-list.component';
@@ -15,19 +15,25 @@ import {
   MatCellDef,
   MatColumnDef,
   MatHeaderCell,
-  MatHeaderCellDef,
+  MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef,
   MatRow, MatRowDef,
   MatTable
 } from '@angular/material/table';
 import {MatIcon} from '@angular/material/icon';
 import {MatChip} from '@angular/material/chips';
+import {MatSort, MatSortHeader} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatProgressBar} from '@angular/material/progress-bar';
+import { HeaderComponent } from './components/header/header.component';
+import {MatToolbar} from '@angular/material/toolbar';
 
 
 @NgModule({
   declarations: [
     ReportCollectionListComponent,
     ReportListComponent,
-    ReportCollectionLockedDialogComponent
+    ReportCollectionLockedDialogComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +55,15 @@ import {MatChip} from '@angular/material/chips';
     MatChip,
     MatRow,
     MatRowDef,
-    MatIconButton
+    MatIconButton,
+    MatSort,
+    MatSortHeader,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatPaginator,
+    MatProgressBar,
+    MatToolbar,
+    NgOptimizedImage
   ]
 })
 export class PublicModule { }

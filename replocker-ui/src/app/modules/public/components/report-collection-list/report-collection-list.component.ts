@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {catchError, finalize, Observable, of, startWith} from 'rxjs';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {catchError, finalize, Observable, of} from 'rxjs';
 import {ReportCollectionResponse} from '../../../../services/openapi/models/report-collection-response';
 import {
   ReportCollectionControllerService
@@ -11,6 +11,9 @@ import {Router} from '@angular/router';
 import {
   ReportCollectionLockedDialogComponent
 } from '../report-collection-locked-dialog/report-collection-locked-dialog.component';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-report-collection-list',
@@ -18,10 +21,14 @@ import {
   templateUrl: './report-collection-list.component.html',
   styleUrl: './report-collection-list.component.scss'
 })
-export class ReportCollectionListComponent implements OnInit {
+export class ReportCollectionListComponent implements OnInit, AfterViewInit {
   collections$: Observable<ReportCollectionResponse[]> = of([]);
+  dataSource = new MatTableDataSource<ReportCollectionResponse>([]);
   displayedColumns = ['name', 'description', 'reports', 'status'];
   isLoading = true;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private router: Router,
@@ -36,10 +43,18 @@ export class ReportCollectionListComponent implements OnInit {
     this.loadCollections();
   }
 
+  ngAfterViewInit() {
+    this.collections$.subscribe(data => {
+      this.dataSource.data = data;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
+  }
+
   private loadCollections() {
     this.collections$ = this.reportCollectionService.getPublishedCollections().pipe(
       map(response => response.content || []),
-      startWith([]),
+      // startWith([]),
       catchError(() => of([])),
       finalize(() => this.isLoading = false)
     );
