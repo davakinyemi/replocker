@@ -9,10 +9,10 @@
     <p>Your access to report-collection <!--/*@thymesVar id="collectionName" type="java.lang.String"*/-->
     <strong th:text="${collectionName}"></strong> has been accepted!</p>
 
-    <p style="margin-top: 20px">Access Code: <!--/*@thymesVar id="accessToken" type="java.lang.String"*/-->
+    <p style="margin-top: 20px">Access Token: <!--/*@thymesVar id="accessToken" type="java.lang.String"*/-->
     <span style="font-family: monospace; font-size: 18px" th:text="${accessToken}"></span></p>
 
-    <p style="margin-top: 20px">Expires: <!--/*@thymesVar id="expiryDate" type="java.lang.String"*/-->
-    <span th:text="${expiryDate}"></span></p>
+    <p style="margin-top: 20px">Expires: <!--/*@thymesVar id="expiresAt" type="java.lang.String"*/-->
+    <span th:text="${expiresAt}"></span></p>
 </body>
 </html>

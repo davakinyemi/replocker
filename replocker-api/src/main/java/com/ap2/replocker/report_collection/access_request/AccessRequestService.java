@@ -90,7 +90,7 @@ public class AccessRequestService {
             this.emailService.sendRequestAccepted(
                 updatedRequest.getEmail(),
                 token,
-                updatedRequest.getName(),
+                reportCollection.getName(),
                 accessToken.getExpiresAt()
             );
         } else {
