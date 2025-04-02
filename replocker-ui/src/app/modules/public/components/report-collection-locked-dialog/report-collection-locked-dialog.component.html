@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <form *ngIf="!this.isRequestMode" [formGroup]="tokenForm">
+    <mat-form-field appearance="outline">
+      <mat-label>6-Digit Access Token</mat-label>
+      <input matInput formControlName="token" required maxlength="6">
+      <mat-error *ngIf="tokenForm.get('token')?.hasError('required')">
+        Access token required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="dialog-actions">
+      <button mat-flat-button color="primary" (click)="this.submitToken()">
+        Submit Token
+      </button>
+      <button mat-button type="button" (click)="this.switchToRequestMode()">
+        Request access
+      </button>
+    </div>
+  </form>
+
+
+</mat-dialog-content>
