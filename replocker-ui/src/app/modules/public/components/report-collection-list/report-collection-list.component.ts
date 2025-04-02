@@ -14,6 +14,7 @@ import {
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-report-collection-list',
@@ -34,6 +35,7 @@ export class ReportCollectionListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private reportCollectionService: ReportCollectionControllerService,
     private titleService: TitleService,
+    private authService: AuthService,
     public dialog: MatDialog,
   ) {
   }
@@ -60,13 +62,26 @@ export class ReportCollectionListComponent implements OnInit, AfterViewInit {
     );
   }
 
-  async viewCollection(collection: ReportCollectionResponse) {
+  viewCollection(collection: ReportCollectionResponse) {
     if (collection.locked) {
-      this.dialog.open(ReportCollectionLockedDialogComponent, {
-        data: { collectionId: collection.id }
-      });
+      const token = this.getAccessToken(collection.id!);
+      if (token) {
+        this.router.navigate(['/collections', collection.id]).then();
+      } else {
+        this.dialog.open(ReportCollectionLockedDialogComponent, {
+          data: { collectionId: collection.id }
+        }).afterClosed().subscribe(result => {
+          if (result?.accessGranted) {
+            this.router.navigate(['/collections', collection.id]).then();
+          }
+        });
+      }
     } else {
       this.router.navigate(['/collections', collection.id]).catch(error => console.error('Navigation failed:', error));
     }
+  }
+
+  private getAccessToken(collectionId: string) {
+    return this.authService.getValidToken(collectionId)!;
   }
 }

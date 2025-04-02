@@ -43,12 +43,13 @@ export class ReportListComponent implements OnInit, AfterViewInit {
     // this.titleService.setTitle(this.route.snapshot.data['title']);
 
     const collectionId = this.route.snapshot.paramMap.get('collectionId')!;
+    const accessToken = this.authService.getValidToken(collectionId)!;
 
-    this.collection$ = this.reportService.getPublishedCollection({ collectionId }).pipe(
+    this.collection$ = this.reportService.getPublishedCollection({ collectionId, accessToken }).pipe(
       tap(collection => this.titleService.setTitle(collection.name!))
     );
 
-    this.reports$ = this.reportService.getReports({ collectionId }).pipe(
+    this.reports$ = this.reportService.getReports({ collectionId, accessToken }).pipe(
       map(response => response.content || []),
       catchError(() => of([])),
       finalize(() => this.isLoading = false)
