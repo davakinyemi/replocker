@@ -25,7 +25,7 @@ import {AuthService} from '../../services/auth/auth.service';
 export class ReportCollectionListComponent implements OnInit, AfterViewInit {
   collections$: Observable<ReportCollectionResponse[]> = of([]);
   dataSource = new MatTableDataSource<ReportCollectionResponse>([]);
-  displayedColumns = ['name', 'description', 'reports', 'status'];
+  displayedColumns = ['name', 'description', 'createdDate', 'reports', 'status'];
   isLoading = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -46,11 +46,17 @@ export class ReportCollectionListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.collections$.subscribe(data => {
-      this.dataSource.data = data;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    /* this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'createdDate': return new Date(item.createdDate); // Convert to Date object
+        // case 'reports': return item.reportIds?.length || 0;
+        default: return item[property as keyof ReportCollectionResponse];
+      }
+    }; */
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.collections$.subscribe(data => this.dataSource.data = data);
   }
 
   private loadCollections() {

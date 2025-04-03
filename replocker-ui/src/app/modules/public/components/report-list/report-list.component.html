@@ -1,14 +1,20 @@
-<ng-container *ngIf="this.dataSource.data.length">
-  <mat-table [dataSource]="this.dataSource" matSort>
+<ng-container>
+  <mat-table [hidden]="dataSource.data.length === 0" [dataSource]="dataSource" matSort>
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef> Report Name </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Report</mat-header-cell>
       <mat-cell *matCellDef="let report">{{ report.name }}</mat-cell>
+    </ng-container>
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="createdDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date"> Date Uploaded </mat-header-cell>
+      <mat-cell *matCellDef="let report">{{ report.createdDate | date:'dd.MM.yyyy, HH:mm' }}</mat-cell>
     </ng-container>
 
     <!-- Type Column -->
     <ng-container matColumnDef="type">
-      <mat-header-cell *matHeaderCellDef> File Type </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by file type"> File Type </mat-header-cell>
       <mat-cell *matCellDef="let report">{{ report.type }}</mat-cell>
     </ng-container>
 
@@ -16,7 +22,7 @@
     <ng-container matColumnDef="download">
       <mat-header-cell *matHeaderCellDef> Download </mat-header-cell>
       <mat-cell *matCellDef="let report">
-        <button mat-icon-button (click)="this.downloadReport(report)">
+        <button mat-icon-button (click)="downloadReport(report)">
           <mat-icon>download</mat-icon>
         </button>
       </mat-cell>
@@ -26,14 +32,14 @@
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons="true"></mat-paginator>
+  <mat-paginator [hidden]="dataSource.data.length === 0" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons="true"></mat-paginator>
 </ng-container>
 
 
-<div *ngIf="this.isLoading" class="loading-overlay">
+<div *ngIf="isLoading" class="loading-overlay">
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
 
-<div *ngIf="this.dataSource.data.length === 0 && !this.isLoading" class="no-results">
+<div *ngIf="dataSource.data.length === 0 && !isLoading" class="no-results">
   <mat-icon>info</mat-icon> No reports available
 </div>

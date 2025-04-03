@@ -23,7 +23,7 @@ import {MatSort} from '@angular/material/sort';
 export class ReportListComponent implements OnInit, AfterViewInit {
   reports$!: Observable<ReportResponse[]>;
   collection$!: Observable<ReportCollectionResponse>;
-  displayedColumns = ['name', 'type', 'download'];
+  displayedColumns = ['name', 'createdDate', 'type', 'download'];
   dataSource = new MatTableDataSource<ReportResponse>([]);
   isLoading = true;
 
@@ -57,11 +57,9 @@ export class ReportListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.reports$.subscribe(data => {
-      this.dataSource.data = data;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.reports$.subscribe(data => this.dataSource.data = data);
   }
 
   downloadReport(report: ReportResponse) {
