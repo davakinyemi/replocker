@@ -55,7 +55,7 @@ public class EmailService {
         Map<String, Object> properties = new HashMap<>();
         properties.put("collectionName", collectionName);
         properties.put("accessToken", accessToken);
-        properties.put("expiryAt", expiresAt.format(DATE_TIME_FORMATTER));
+        properties.put("expiresAt", expiresAt.format(DATE_TIME_FORMATTER));
 
         this.sendEmail(
                 toEmail,

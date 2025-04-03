@@ -21,8 +21,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 		in = SecuritySchemeIn.HEADER,
 		flows = @OAuthFlows(
 				password = @OAuthFlow(
-						authorizationUrl = "http://localhost:9090/realms/replocker/protocol/openid-connect/auth",
-						tokenUrl = "http://localhost:9090/realms/replocker/protocol/openid-connect/token"
+						authorizationUrl = "http://localhost:9090/realms/replocker-app/protocol/openid-connect/auth",
+						tokenUrl = "http://localhost:9090/realms/replocker-app/protocol/openid-connect/token"
 				)
 		)
 )
