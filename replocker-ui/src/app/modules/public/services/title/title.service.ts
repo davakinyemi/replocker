@@ -10,5 +10,6 @@ export class TitleService {
 
   setTitle(newTitle: string) {
     this.titleSubject.next(newTitle);
+    document.title = newTitle;
   }
 }
