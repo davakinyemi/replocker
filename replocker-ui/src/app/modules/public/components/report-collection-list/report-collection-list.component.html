@@ -1,44 +1,47 @@
-<mat-table [dataSource]="this.dataSource" matSort>
-  <!-- Name Column -->
-  <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Collection</mat-header-cell>
-    <mat-cell *matCellDef="let col">
-      <button mat-button (click)="this.viewCollection(col)">
-        {{ col.name }}
-        <!-- <mat-icon *ngIf="col.locked">lock</mat-icon> -->
-      </button>
-    </mat-cell>
-  </ng-container>
+<ng-container *ngIf="this.dataSource.data.length">
+  <mat-table [dataSource]="this.dataSource" matSort>
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Collection</mat-header-cell>
+      <mat-cell *matCellDef="let col">
+        <button mat-button (click)="this.viewCollection(col)">
+          {{ col.name }}
+          <!-- <mat-icon *ngIf="col.locked">lock</mat-icon> -->
+        </button>
+      </mat-cell>
+    </ng-container>
 
-  <!-- Description Column -->
-  <ng-container matColumnDef="description">
-    <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-    <mat-cell *matCellDef="let col">{{ col.description || '-' }}</mat-cell>
-  </ng-container>
+    <!-- Description Column -->
+    <ng-container matColumnDef="description">
+      <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+      <mat-cell *matCellDef="let col">{{ col.description || '-' }}</mat-cell>
+    </ng-container>
 
-  <!-- Reports Column -->
-  <ng-container matColumnDef="reports">
-    <mat-header-cell *matHeaderCellDef>Reports</mat-header-cell>
-    <mat-cell *matCellDef="let col">{{ col.reportIds?.length || 0 }}</mat-cell>
-  </ng-container>
+    <!-- Reports Column -->
+    <ng-container matColumnDef="reports">
+      <mat-header-cell *matHeaderCellDef>Reports</mat-header-cell>
+      <mat-cell *matCellDef="let col">{{ col.reportIds?.length || 0 }}</mat-cell>
+    </ng-container>
 
-  <!-- Status Column -->
-  <ng-container matColumnDef="status">
-    <mat-header-cell *matHeaderCellDef>Access</mat-header-cell>
-    <mat-cell *matCellDef="let col">
-      <!-- <mat-chip [color]="col.locked ? 'warn' : 'primary'">
-        {{ col.locked ? 'Locked' : 'Open' }}
-      </mat-chip> -->
-      <mat-icon *ngIf="col.locked" [color]="'warn'">lock</mat-icon>
-      <mat-icon *ngIf="!col.locked" [color]="'primary'">lock_open</mat-icon>
-    </mat-cell>
-  </ng-container>
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef>Access</mat-header-cell>
+      <mat-cell *matCellDef="let col">
+        <!-- <mat-chip [color]="col.locked ? 'warn' : 'primary'">
+          {{ col.locked ? 'Locked' : 'Open' }}
+        </mat-chip> -->
+        <mat-icon *ngIf="col.locked" [color]="'warn'">lock</mat-icon>
+        <mat-icon *ngIf="!col.locked" [color]="'primary'">lock_open</mat-icon>
+      </mat-cell>
+    </ng-container>
 
-  <mat-header-row *matHeaderRowDef="this.displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: this.displayedColumns;"></mat-row>
-</mat-table>
+    <mat-header-row *matHeaderRowDef="this.displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: this.displayedColumns;"></mat-row>
+  </mat-table>
 
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons="true"></mat-paginator>
+</ng-container>
+
 
 <div *ngIf="isLoading" class="loading-overlay">
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
