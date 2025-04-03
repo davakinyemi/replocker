@@ -75,7 +75,6 @@ public class KeycloakInitializer {
     public void initRealmAndAdminUser() {
         try {
             this.initRealm();
-            // this.configureUmaProtectionRole();
             this.initSingletonAdminUser();
         } catch (RuntimeException e) {
             throw new KeycloakException("Keycloak initialization failed: " + e.getMessage(), e);

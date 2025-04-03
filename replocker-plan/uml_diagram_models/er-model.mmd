@@ -1,11 +1,12 @@
 erDiagram
     ADMIN ||--o{ REPORT_COLLECTION : "creates"
+    ADMIN ||--o{ REPORT : "uploads"
     ADMIN ||--o{ ALLOWED_DOMAIN : "manages"
-    ADMIN ||--o{ WEBSOCKET_AUDIT : "initiates"
+%%    ADMIN ||--o{ WEBSOCKET_AUDIT : "initiates"
     ADMIN ||--o{ NOTIFICATION : "receives"
 
     REPORT_COLLECTION ||--o{ REPORT : "contains"
-    REPORT_COLLECTION ||--o{ ACCESS_REQUEST : "receives requests for"
+    REPORT_COLLECTION ||--o{ ACCESS_REQUEST : "receives requests"
     REPORT_COLLECTION ||--o{ ACCESS_TOKEN : "grants access to"
 
     ACCESS_REQUEST ||--|| ACCESS_TOKEN : "generates"
@@ -14,7 +15,7 @@ erDiagram
     ADMIN {
         UUID id PK
         VARCHAR(255) username UK
-        VARCHAR(64) email UK
+        VARCHAR(255) email UK
         UUID keycloak_user_id UK
         TIMESTAMPTZ created_date
         TIMESTAMPTZ last_modified_date
@@ -36,9 +37,10 @@ erDiagram
         VARCHAR(255) name
         VARCHAR(255) file_path
         BIGINT size_bytes
-        ENUM report_type "CSV/XLSX"
+        ENUM type "CSV/XLS/XLSX/XLSM/XLSB/XLTX"
         UUID report_collection_id FK
         TIMESTAMPTZ created_date
+        TIMESTAMPTZ last_modified_date
     }
 
     ACCESS_REQUEST {
@@ -50,17 +52,19 @@ erDiagram
         UUID report_collection_id FK
         TEXT admin_comment
         TIMESTAMPTZ created_date
+        TIMESTAMPTZ last_modified_date
     }
 
     ACCESS_TOKEN {
         UUID id PK
-        VARCHAR(36) token_value UK
+        VARCHAR(6) token_value UK
         UUID report_collection_id FK
         UUID access_request_id FK
         TIMESTAMPTZ created_date
         TIMESTAMPTZ expires_at
         BOOLEAN is_active
         BOOLEAN is_revoked
+        TIMESTAMPTZ last_modified_date
     }
 
     ALLOWED_DOMAIN {
@@ -78,11 +82,12 @@ erDiagram
         UUID admin_id FK
         UUID access_request_id FK
         TIMESTAMPTZ created_date
+        TIMESTAMPTZ last_modified_date
     }
 
-    WEBSOCKET_AUDIT {
-        UUID id PK
-        UUID admin_id FK
-        TIMESTAMPTZ connection_time
-        TIMESTAMPTZ disconnect_time
-    }
+%%    WEBSOCKET_AUDIT {
+%%        UUID id PK
+%%        UUID admin_id FK
+%%        TIMESTAMPTZ connection_time
+%%        TIMESTAMPTZ disconnect_time
+%%    }
