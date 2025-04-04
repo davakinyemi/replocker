@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -46,7 +45,7 @@ public class EmailServiceTest {
     }
 
     @Test
-    void sendTokenExpiryWarningEmail() throws Exception {
+    void sendTokenExpiryWarningEmail() {
         MimeMessage mockMessage = Mockito.mock(MimeMessage.class);
         when(this.mailSender.createMimeMessage()).thenReturn(mockMessage);
         when(templateEngine.process(eq("email/token-expiring"), any(Context.class)))
