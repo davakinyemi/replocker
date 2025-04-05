@@ -1,0 +1,77 @@
+@startuml
+
+left to right direction
+
+' Akteure
+actor "System" as System
+actor "Admin" as Admin
+
+' Use Cases
+rectangle "Systemintegration" {
+  usecase "Keycloak-Authentifizierung" as UC1
+  usecase "Admin-Nutzer-Synchronisierung" as UC2
+
+  usecase "Admin-Login validieren" as A1
+  usecase "JWT-Token ausstellen" as A2
+  usecase "Zugriffsrechte prüfen" as A3
+  usecase "Token-Signatur validieren" as A4
+
+  usecase "Admin-User synchronisieren" as B1
+  usecase "Rollen/Richtlinien sync" as B2
+  usecase "Sicherheitsrichtlinien konfigurieren" as B3
+  usecase "Sync-Logging" as B4
+}
+
+' Beziehungen
+System --> UC1
+System --> UC2
+Admin --> UC1
+Admin --> UC2
+
+UC1 --> A1 : includes
+UC1 --> A2 : includes
+UC1 --> A3 : includes
+UC1 --> A4 : includes
+
+UC2 --> B1 : includes
+UC2 --> B2 : includes
+UC2 --> B3 : includes
+UC2 --> B4 : includes
+
+' Notizen
+note right of UC1
+  **OAuth2-Flow:**
+  - Authorization Code Flow
+  - PKCE für öffentliche Clients
+  - JWT mit RS256-Signatur
+end note
+
+note left of A2
+  **Token-Generierung:**
+  - Zugriffstoken (15m)
+  - Refresh-Token (7d)
+  - Custom Claims für Admin-Rollen
+end note
+
+note bottom of A3
+  **Zugriffskontrolle:**
+  1. Realm-Rollen prüfen
+  2. Resource-Based Policies
+  3. Scope-Validierung
+end note
+
+note right of UC2
+  **Synchronisierungsregeln:**
+  - Einmal pro Stunde
+  - Delta-Updates
+  - Konfliktlösung: Last-Write-Wins
+end note
+
+note left of B3
+  **Sicherheitskonfiguration:**
+  - Session-Timeout: 1h
+  - 2FA-Erzwingung
+  - Brute-Force-Schutz
+end note
+
+@enduml

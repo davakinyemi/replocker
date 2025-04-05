@@ -1,0 +1,67 @@
+@startuml
+
+left to right direction
+
+' Akteure
+actor "System" as System
+
+' Use Cases
+rectangle "Keycloak-Integration" {
+  usecase "RepLocker-App-Realm-Initialisierung" as UC1
+  usecase "Singleton-Admin-Initialisierung" as UC2
+
+  usecase "Realm automatisch erstellen" as A1
+  usecase "Realm-Konfiguration setzen" as A2
+  usecase "Admin-Client konfigurieren" as A3
+  usecase "Realm-Keys generieren" as A4
+
+  usecase "Admin-Benutzer anlegen" as B1
+  usecase "Admin-Rollen zuweisen" as B2
+  usecase "Credentials konfigurieren" as B3
+  usecase "Sicherheitsmaßnahmen aktivieren" as B4
+}
+
+' Beziehungen
+System --> UC1
+System --> UC2
+UC1 --> A1 : includes
+UC1 --> A2 : includes
+UC1 --> A3 : includes
+UC1 --> A4 : includes
+UC2 --> B1 : includes
+UC2 --> B2 : includes
+UC2 --> B3 : includes
+UC2 --> B4 : includes
+
+' Notizen
+note right of UC1
+  **Automatisierte Realm-Erstellung:**
+  - Nutzt Keycloak REST-API/CLI
+  - Erstellt Realm "replocker-app"
+  - Konfiguriert Clients/Identity Provider
+  - Synchronisiert mit Master-Realm
+end note
+
+note left of UC2
+  **Admin-Setup:**
+  - Einmalige Initialisierung
+  - Nutzt KC_BOOTSTRAP_ADMIN_* Envvars
+  - Zwei-Faktor-Auth optional
+  - Master-Realm nur für Setup
+end note
+
+note bottom of A1
+  **Methoden:**
+  1. Keycloak-Admin-API (POST /realms)
+  2. Init-Skript mit realm.json
+  3. Docker-Entrypoint-Erweiterung
+end note
+
+note right of B3
+  **Sicherheit:**
+  - Passwort-Rotation erzwingen
+  - Session-Timeout: 1h
+  - Failed-Login-Lockout: 5 Versuche
+end note
+
+@enduml

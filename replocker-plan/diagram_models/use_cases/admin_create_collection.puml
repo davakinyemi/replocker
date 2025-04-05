@@ -1,0 +1,50 @@
+@startuml
+
+left to right direction
+
+' Akteur
+actor "Admin" as Admin
+
+' Use Cases
+rectangle "Administration" {
+  usecase "Sammlung erstellen/veröffentlichen" as UC1
+  usecase "Sammlung benennen" as UC2
+  usecase "Berichte hochladen" as UC3
+  usecase "Zugriffsstatus setzen" as UC4
+}
+
+' Beziehungen
+Admin --> UC1
+UC1 --> UC2 : includes
+UC1 --> UC3 : includes
+UC1 --> UC4 : includes
+
+' Notizen
+note right of UC1
+  **Gesamtprozess:**
+  1. Sammlung anlegen
+  2. Berichte hinzufügen
+  3. Veröffentlichungsstatus wählen
+  4. Sperrstatus definieren
+end note
+
+note bottom of UC2
+  **Sammlung benennen:**
+  - Eindeutiger Name erforderlich
+  - Beschreibung optional
+end note
+
+note bottom of UC3
+  **Berichte hochladen:**
+  - Unterstützte Formate: CSV, XLSX, etc.
+  - Maximalgröße: 50 MB
+end note
+
+note right of UC4
+  **Zugriffsstatus:**
+  - Veröffentlicht & entsperrt
+  - Veröffentlicht & gesperrt
+  - Nicht veröffentlicht
+end note
+
+@enduml

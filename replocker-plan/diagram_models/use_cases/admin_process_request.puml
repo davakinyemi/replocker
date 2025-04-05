@@ -1,0 +1,51 @@
+@startuml
+
+left to right direction
+
+' Akteur
+actor "Admin" as Admin
+
+' Use Cases
+rectangle "Administration" {
+  usecase "Zugriffsanfrage genehmigen/ablehnen" as UC1
+  usecase "Anfrage prüfen" as UC2
+  usecase "Token generieren oder Daten löschen" as UC3
+  usecase "E-Mail-Benachrichtigung senden" as UC4
+}
+
+' Beziehungen
+Admin --> UC1
+UC1 --> UC2 : includes
+UC1 --> UC3 : includes
+UC1 --> UC4 : includes
+
+' Notizen
+note right of UC1
+  **Gesamtprozess:**
+  1. Anfrage in Swagger UI öffnen
+  2. Entscheidung treffen
+  3. Systemaktion ausführen
+  4. Nutzer informieren
+end note
+
+note bottom of UC2
+  **Prüfkriterien:**
+  - Domain-Zugehörigkeit
+  - Historische Anfragen
+  - Begründung des Nutzers
+end note
+
+note bottom of UC3
+  **Entscheidungslogik:**
+  - Genehmigt: 6-stelligen Token generieren
+  - Abgelehnt: Nutzerdaten sofort löschen
+end note
+
+note right of UC4
+  **Benachrichtigungsinhalt:**
+  - Token-Code (bei Genehmigung)
+  - Ablehnungsgrund (optional)
+  - Löschhinweis (DSGVO)
+end note
+
+@enduml

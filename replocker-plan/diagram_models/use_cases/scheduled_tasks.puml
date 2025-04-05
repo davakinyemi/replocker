@@ -1,0 +1,42 @@
+@startuml
+
+left to right direction
+
+' Akteur
+actor "System" as System
+
+' Use Cases
+rectangle "Datenmanagement" {
+  usecase "Automatische Datenbereinigung" as UC1
+  usecase "Abgelaufene Tokens/Nutzerdaten identifizieren" as UC2
+  usecase "DSGVO-konform löschen" as UC3
+}
+
+' Beziehungen
+System --> UC1
+UC1 --> UC2 : includes
+UC1 --> UC3 : includes
+
+' Notizen
+note right of UC1
+  **Zeitgesteuert:**
+  - Tägliche Ausführung um 03:00 Uhr
+  - Protokollierung aller Löschvorgänge
+end note
+
+note bottom of UC2
+  **Identifikationskriterien:**
+  - Tokens: Ablaufdatum > aktuelles Datum
+  - Nutzerdaten: Assoziierte Tokens abgelaufen
+  - Historische Anfragen: 24h nach Ablehnung
+end note
+
+note right of UC3
+  **Löschprozess:**
+  1. Physisches Löschen aus DB
+  2. Session Storage bereinigen
+  3. Audit-Log mit Löschgrund erstellen
+  4. E-Mail-Bestätigung an Nutzer
+end note
+
+@enduml

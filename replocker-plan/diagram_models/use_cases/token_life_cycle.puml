@@ -1,0 +1,59 @@
+@startuml
+
+left to right direction
+
+' Akteur
+actor "System" as System
+actor "Admin" as Admin
+
+' Use Cases
+rectangle "Token-Lebenszyklus" {
+  usecase "Token-Generierung" as UC1
+  usecase "Token-Expiration" as UC2
+  usecase "Token-Widerruf" as UC3
+
+  usecase "6-stelligen Code erstellen" as A1
+  usecase "Gültigkeit (7 Tage) festlegen" as A2
+  usecase "Automatische Löschung" as A3
+  usecase "Benachrichtigung versenden" as A4
+}
+
+' Beziehungen
+System --> UC1
+System --> UC2
+Admin --> UC3
+
+UC1 --> A1 : includes
+UC1 --> A2 : includes
+UC2 --> A3 : includes
+UC2 --> A4 : includes
+UC3 --> A4 : includes
+UC3 --> A3 : includes
+
+' Notizen
+note right of UC1
+  **Generierungsregeln:**
+  - Kryptografisch sicherer Zufallscode
+  - Eindeutigkeit pro Sammlung
+end note
+
+note bottom of A2
+  **Zeitliche Beschränkung:**
+  - Exakter Ablaufzeitpunkt
+  - Serverzeit-basiert (UTC)
+end note
+
+note left of A3
+  **Löschprozess:**
+  1. Token aus Datenbank entfernen
+  2. DSGVO-konforme Protokollierung
+end note
+
+note right of A4
+  **Benachrichtigungstypen:**
+  - 24h vor Ablauf: Warnung
+  - Nach Ablauf: Bestätigung
+  - Bei Widerruf: Sofortige Info
+end note
+
+@enduml

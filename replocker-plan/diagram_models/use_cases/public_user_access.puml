@@ -1,0 +1,53 @@
+@startuml
+left to right direction
+
+' Actors
+actor "Öffentlicher Nutzer" as Nutzer
+actor "Admin" as Admin
+
+' Use Cases
+rectangle "Nutzerzugriff" {
+  usecase "Zugriff auf entsperrte Sammlung" as UC1
+  usecase "Zugriff auf gesperrte Sammlung" as UC2
+  usecase "Token managen" as UC3
+  usecase "Admin-Genehmigung" as UC4
+}
+
+' Relationships
+Nutzer --> UC1
+Nutzer --> UC2
+UC2 .> UC1 : extends
+UC2 --> UC3 : includes
+UC2 --> UC4 : includes
+Admin --> UC4
+
+' Notes
+note right of UC1
+  **Entsperrte Sammlung:**
+  - Keine Authentifizierung nötig
+  - Direkter Zugriff auf Berichte
+  - Berichtliste anzeigen
+  - Bericht herunterladen
+end note
+
+note left of UC2
+  **Gesperrte Sammlung:**
+  - Token im Session Storage
+  - Admin-Benachrichtigung
+  - Token gilt 7 Tage
+  - Berichte nach Genehmigung
+end note
+
+note bottom of UC3
+  **Token-Prozess:**
+  1. Eingeben vorhandener Token
+  2. Neue Token anfordern
+end note
+
+note right of UC4
+  **Admin-Workflow:**
+  1. Prüfung der Anfrage
+  2. Genehmigung/Ablehnung
+  3. Token generieren oder löschen
+end note
+@enduml

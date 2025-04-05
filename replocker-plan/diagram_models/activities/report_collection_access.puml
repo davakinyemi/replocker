@@ -1,0 +1,53 @@
+@startuml
+start
+:Nutzer wählt Sammlung aus;
+if (Sammlung entsperrt?) then (ja)
+  :Zugriff gewähren;
+  :Berichte anzeigen;
+  stop
+else (nein)
+  :Prüfe Session Storage\nauf vorhandenen Token;
+  if (Token vorhanden?) then (ja)
+    :Zugriff gewähren;
+    :Berichte anzeigen;
+    stop
+  else (nein)
+    :Öffne gesperrten Dialog;
+    repeat
+      if (Token eingeben?) then (ja)
+        :Validiere Token über API;
+        if (Token gültig?) then (ja)
+          :Token im Session Storage speichern;
+          :Zugriff gewähren;
+          :Dialog schließen;
+          break
+        else (nein)
+          :Fehlermeldung anzeigen;
+        endif
+      else (Zugriff anfordern)
+        :Formular ausfüllen (Name, E-Mail);
+        :Anfrage an Admin senden;
+        note right
+          **Admin-Workflow:**
+          1. Prüfung der Anfrage
+          2. Token generieren/löschen
+          3. E-Mail-Benachrichtigung
+        end note
+        repeat
+          :Warte auf Admin-Genehmigung;
+          if (Token erhalten?) then (ja)
+            :Token im Dialog eingeben;
+            :Validiere Token;
+            :Zugriff gewähren;
+            break
+          else (nein)
+            :Abbrechen möglich?;
+          endif
+        repeat while (Abbruch? == nein)
+      endif
+    repeat while (Erfolgreicher Zugriff? == nein)
+  endif
+  :Berichte anzeigen;
+endif
+stop
+@enduml

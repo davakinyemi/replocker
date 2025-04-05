@@ -1,0 +1,64 @@
+@startuml
+
+actor "Nutzer" as User
+participant "Frontend (Angular)" as Frontend
+participant "Router" as Router
+participant "reportCollectionResolver" as Resolver
+participant "TokenAuthService" as AuthService
+participant "ReportCollectionController" as Backend
+participant "SessionStorage" as Storage
+participant "ReportListComponent" as Component
+
+User -> Frontend: Navigiert zu /collections/123
+Frontend -> Router: Route aktivieren
+Router -> Resolver: resolve() aufrufen
+
+Resolver -> AuthService: getValidToken("123")
+AuthService -> Storage: getItem("rep_token_123")
+Storage --> AuthService: {token: "456789", expiry: ...}
+AuthService --> Resolver: "456789"
+
+Resolver -> Backend: getPublishedCollection(123, "456789")
+Backend --> Resolver: ReportCollectionResponse
+
+Resolver --> Router: Daten übergeben
+Router -> Component: ReportListComponent instanziieren
+
+Component -> Backend: getReports(123, "456789")
+Backend --> Component: ReportResponse[]
+
+Component -> Frontend: Tabelle rendern
+Frontend --> User: Sammlung anzeigen
+
+User -> Component: Klickt "Download"
+Component -> Backend: downloadReport(123, reportId, "456789")
+Backend --> Component: File-BLOB
+Component -> Frontend: Datei herunterladen
+
+Frontend --> User: Download startet
+
+alt Token ungültig/fehlt
+  Resolver -> AuthService: getValidToken("123")
+  AuthService -> Storage: getItem("rep_token_123")
+  Storage --> AuthService: null/abgelaufen
+  AuthService --> Resolver: null
+  Resolver -> Router: navigate(["/collections"])
+  Router --> Frontend: Redirect zu /collections
+  Frontend --> User: Sammlungsliste anzeigen
+end
+
+alt 403-Fehler im Resolver
+  Backend --> Resolver: 403 Forbidden
+  Resolver -> AuthService: storeToken("123", "")
+  AuthService -> Storage: removeItem("rep_token_123")
+  Resolver -> Router: navigate(["/collections"])
+  Router --> Frontend: Redirect
+end
+
+alt Download-Fehler
+  Backend --> Component: Fehler
+  Component -> Frontend: Snackbar "Fehlgeschlagen"
+  Frontend --> User: Retry-Button anzeigen
+end
+
+@enduml
