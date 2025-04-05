@@ -8,7 +8,7 @@ import {
 } from '../../../../services/openapi/services/report-collection-controller.service';
 import {TitleService} from '../../services/title/title.service';
 import {map} from 'rxjs/operators';
-import {AuthService} from '../../services/auth/auth.service';
+import {TokenAuthService} from '../../services/token-auth/token-auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
@@ -33,7 +33,7 @@ export class ReportListComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private reportService: ReportCollectionControllerService,
-    private authService: AuthService,
+    private authService: TokenAuthService,
     private titleService: TitleService,
     private snackBar: MatSnackBar
   ) {

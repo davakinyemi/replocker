@@ -5,7 +5,7 @@ import {AccessRequestDto} from '../../../../services/openapi/models/access-reque
 import {
   ReportCollectionControllerService
 } from '../../../../services/openapi/services/report-collection-controller.service';
-import {AuthService} from '../../services/auth/auth.service';
+import {TokenAuthService} from '../../services/token-auth/token-auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
 
@@ -25,7 +25,7 @@ export class ReportCollectionLockedDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { collectionId: string },
     private formBuilder: FormBuilder,
     private reportCollectionService: ReportCollectionControllerService,
-    private authService: AuthService,
+    private tokenAuthService: TokenAuthService,
     private snackBar: MatSnackBar
   ) {
     this.tokenForm = this.formBuilder.group({
@@ -51,8 +51,8 @@ export class ReportCollectionLockedDialogComponent {
       accessToken: token
     }).subscribe({
       next: () => {
-        this.authService.storeToken(this.data.collectionId, token);
-        this.authService.watchTokenValidity(this.data.collectionId)
+        this.tokenAuthService.storeToken(this.data.collectionId, token);
+        this.tokenAuthService.watchTokenValidity(this.data.collectionId)
           .pipe(take(1))
           .subscribe(() => this.dialogRef.close({ accessGranted: true }));
         this.snackBar.open('Access granted!', 'Close', { duration: 3000 });
@@ -61,13 +61,11 @@ export class ReportCollectionLockedDialogComponent {
       error: () => {
         this.snackBar.open('Invalid access token', 'Close', { duration: 3000 });
         this.tokenForm.get('token')?.setErrors({ invalid: true });
-        /* if (err.status === 403) {
-        } */
       }
     });
   }
 
-  submitRequest() {
+  submitAccessRequest() {
     if (this.accessRequestForm.invalid) {
       this.snackBar.open('Please fill required fields', 'Close', { duration: 3000 });
       return;

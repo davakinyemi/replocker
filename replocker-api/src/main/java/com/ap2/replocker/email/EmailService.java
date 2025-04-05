@@ -97,6 +97,7 @@ public class EmailService {
         );
     }
 
+    @Async
     public void sendTokenExpiredNotification(String toEmail, String collectionName, String accessToken) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("collectionName", collectionName);
@@ -111,6 +112,7 @@ public class EmailService {
         );
     }
 
+    @Async
     public void sendTokenRevokedNotification(String toEmail, String collectionName, String accessToken) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("collectionName", collectionName);

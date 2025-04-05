@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -6,7 +6,7 @@ import {filter} from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class TokenAuthService {
 
   private readonly TOKEN_PREFIX = 'rep_token_';
 

@@ -4,12 +4,12 @@ import {
   ReportCollectionControllerService
 } from '../../../../services/openapi/services/report-collection-controller.service';
 import {inject} from '@angular/core';
-import {AuthService} from '../../services/auth/auth.service';
+import {TokenAuthService} from '../../services/token-auth/token-auth.service';
 import {catchError, throwError} from 'rxjs';
 
 export const reportCollectionResolver: ResolveFn<ReportCollectionResponse> = (route) => {
   const reportService = inject(ReportCollectionControllerService);
-  const auth = inject(AuthService);
+  const auth = inject(TokenAuthService);
   const router = inject(Router);
   const collectionId = route.paramMap.get('collectionId')!;
   const token = auth.getValidToken(collectionId);
