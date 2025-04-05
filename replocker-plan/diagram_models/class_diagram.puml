@@ -1,0 +1,97 @@
+@startuml
+
+' Enumerationen
+enum ReportType {
+  CSV
+  XLS
+  XLSX
+  XLSM
+  XLSB
+  XLTX
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+' Basisklasse
+class BaseAuditingEntity {
+  - createdDate: LocalDateTime
+  - lastModifiedDate: LocalDateTime
+}
+
+' Entitäten
+class Admin {
+  - id: UUID
+  - username: String
+  - email: String
+  - keycloakUserId: UUID
+}
+Admin --|> BaseAuditingEntity
+
+class ReportCollection {
+  - id: UUID
+  - name: String
+  - description: String
+  - isLocked: boolean
+  - isPublished: boolean
+}
+ReportCollection --|> BaseAuditingEntity
+
+class Report {
+  - id: UUID
+  - name: String
+  - filePath: String
+  - sizeBytes: long
+  - type: ReportType
+}
+Report --|> BaseAuditingEntity
+
+class AccessRequest {
+  - id: UUID
+  - name: String
+  - email: String
+  - message: String
+  - status: RequestStatus
+  - adminComment: String
+}
+AccessRequest --|> BaseAuditingEntity
+
+class AccessToken {
+  - id: UUID
+  - tokenValue: String
+  - expiresAt: LocalDateTime
+  - isActive: boolean
+  - isRevoked: boolean
+}
+AccessToken --|> BaseAuditingEntity
+
+class AllowedDomain {
+  - id: UUID
+  - domainName: String
+}
+AllowedDomain --|> BaseAuditingEntity
+
+class Notification {
+  - id: UUID
+  - message: String
+  - isRead: boolean
+}
+Notification --|> BaseAuditingEntity
+
+' Beziehungen
+Admin "1" -- "*" ReportCollection : verwaltet
+Admin "1" -- "*" AllowedDomain : kontrolliert
+
+ReportCollection "1" -- "*" Report : enthält
+ReportCollection "1" -- "*" AccessRequest : hat
+ReportCollection "1" -- "*" AccessToken : verwendet
+
+AccessRequest "1" -- "1" AccessToken : generiert
+AccessRequest "1" -- "*" Notification : löst aus
+
+Notification "1" -- "1" Admin : empfängt
+
+@enduml

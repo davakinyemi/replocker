@@ -1,0 +1,105 @@
+@startuml
+
+' Enumerationen
+enum REPORT_TYPE {
+  CSV
+  XLSX
+  XLSM
+  XLSB
+  XLTX
+}
+
+enum ACCESS_REQUEST_TYPE {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+' Entitäten
+entity admin {
+  * id : UUID
+  --
+  username : VARCHAR(255)
+  email : VARCHAR(64)
+  keycloak_user_id : UUID
+  created_date : TIMESTAMPTZ
+  last_modified_date : TIMESTAMPTZ
+}
+
+entity report_collection {
+  * id : UUID
+  --
+  name : VARCHAR(255)
+  description : TEXT
+  is_locked : BOOLEAN
+  is_published : BOOLEAN
+  admin_id : UUID
+  created_date : TIMESTAMPTZ
+  last_modified_date : TIMESTAMPTZ
+}
+
+entity report {
+  * id : UUID
+  --
+  name : VARCHAR(255)
+  file_path : VARCHAR(255)
+  size_bytes : BIGINT
+  type : REPORT_TYPE
+  report_collection_id : UUID
+  created_date : TIMESTAMPTZ
+}
+
+entity access_request {
+  * id : UUID
+  --
+  name : VARCHAR(255)
+  email : VARCHAR(255)
+  message : TEXT
+  status : ACCESS_REQUEST_TYPE
+  report_collection_id : UUID
+  admin_comment : TEXT
+  created_date : TIMESTAMPTZ
+}
+
+entity allowed_domain {
+  * id : UUID
+  --
+  domain_name : VARCHAR(255)
+  admin_id : UUID
+  created_date : TIMESTAMPTZ
+  last_modified_date : TIMESTAMPTZ
+}
+
+entity access_token {
+  * id : UUID
+  --
+  token_value : VARCHAR(6)
+  report_collection_id : UUID
+  access_request_id : UUID
+  created_date : TIMESTAMPTZ
+  expires_at : TIMESTAMPTZ
+  is_active : BOOLEAN
+  is_revoked : BOOLEAN
+}
+
+entity notification {
+  * id : UUID
+  --
+  message : TEXT
+  is_read : BOOLEAN
+  admin_id : UUID
+  access_request_id : UUID
+  created_date : TIMESTAMPTZ
+}
+
+' Beziehungen
+admin ||--o{ report_collection : "verwaltet"
+report_collection ||--o{ report : "enthält"
+report_collection ||--o{ access_request : "hat"
+report_collection ||--o{ access_token : "verwendet"
+access_request ||--o{ access_token : "generiert"
+access_request ||--o{ notification : "löst aus"
+admin ||--o{ allowed_domain : "kontrolliert"
+admin ||--o{ notification : "empfängt"
+
+@enduml

@@ -1,6 +1,6 @@
 CREATE TYPE REPORT_TYPE AS ENUM (
     'CSV',
-    'XLSX',
+    'XLS',
     'XLSX',
     'XLSM',
     'XLSB',
@@ -83,14 +83,14 @@ CREATE TABLE notification (
     created_date TIMESTAMPTZ NOT NULL
 );
 
-CREATE TABLE websocket_audit (
+/* CREATE TABLE websocket_audit (
     id UUID PRIMARY KEY,
     admin_id UUID NOT NULL REFERENCES admin(id) ON DELETE CASCADE,
     connection_time TIMESTAMPTZ NOT NULL,
     disconnect_time TIMESTAMPTZ
-);
+); */
 
-CREATE TABLE audit_log (
+/* CREATE TABLE audit_log (
     id UUID PRIMARY KEY,
     action_type VARCHAR(20) NOT NULL,
     entity_name VARCHAR(255) NOT NULL,
@@ -98,11 +98,11 @@ CREATE TABLE audit_log (
     performed_by VARCHAR(255) NOT NULL,
     details VARCHAR(1000),
     created_date TIMESTAMPTZ NOT NULL
-);
+); */
 
 -- audit log table indices
-CREATE INDEX idx_audit_entity ON audit_log(entity_name, entity_id);
-CREATE INDEX idx_audit_timestamp ON audit_log(created_date);
+/* CREATE INDEX idx_audit_entity ON audit_log(entity_name, entity_id);
+CREATE INDEX idx_audit_timestamp ON audit_log(created_date); */
 
 -- admin table indices
 CREATE UNIQUE INDEX uc_admin_username ON admin(username);
@@ -134,4 +134,4 @@ CREATE INDEX idx_notification_admin_read ON notification(admin_id, is_read);
 CREATE INDEX idx_notification_admin_date ON notification(admin_id, created_date);
 
 -- websocket audit table indices
-CREATE INDEX idx_websocket_admin ON websocket_audit(admin_id);
+-- CREATE INDEX idx_websocket_admin ON websocket_audit(admin_id);

@@ -1,0 +1,61 @@
+@startuml
+
+title RepLocker MVP Systemarchitektur
+
+' Frontend-Komponenten
+node "Frontend (Angular 19)" as Frontend {
+  component "Sammlungsübersicht" as ViewCollections
+  component "Token-Eingabe" as InputTokens
+  component "Token-Anfrage" as RequestTokens
+  component "Bericht-Download" as DownloadReports
+  component "Session Storage" as SessionStorage
+}
+
+' Backend-Komponenten
+node "Backend API (Spring Boot 3)" as Backend {
+  component "Public API" as PublicAPI {
+    [+getPublishedCollections()]
+    [+downloadReport()]
+  }
+
+  component "Admin API" as AdminAPI {
+    [+createCollection()]
+    [+approveRequest()]
+  }
+
+  component "Keycloak-Initialisierung" as KeycloakInit
+  component "Admin-User-Synchronisierung" as AdminSync
+  component "E-Mail-Service" as EmailService
+  component "Datenbankzugriff" as DatabaseAccess
+  component "Dateispeicher-Service" as FileService
+}
+
+' Externe Dienste
+database "PostgreSQL\n(Docker Container)" as Database
+node "Keycloak Service\n(Docker Container)" as Keycloak
+node "SMTP-Service (Gmail)" as EmailServiceNode
+node "Swagger UI" as Swagger
+node "Lokaler Dateispeicher" as LocalFileStorage
+
+' Beziehungen
+Frontend --> Backend : REST API (HTTP)
+Backend --> Database : JDBC\nCRUD-Operationen
+Backend --> Keycloak : OAuth2/JWT\nAuthentifizierung
+Backend --> EmailServiceNode : SMTP-Protokoll
+Backend --> LocalFileStorage : Dateioperationen
+Swagger --> Backend : API-Tests\n(OpenAPI 3.0)
+
+' Interne Abhängigkeiten
+KeycloakInit --> Keycloak : Realm-Erstellung\nAdmin-User-Setup
+AdminSync --> Keycloak : Rollensynchronisation
+DatabaseAccess --> Database : Hibernate/JPA
+EmailService --> EmailServiceNode : JavaMailSender
+FileService --> LocalFileStorage : Dateioperationen
+
+' Frontend-Interaktionen
+ViewCollections --> SessionStorage : Token-Prüfung
+InputTokens --> SessionStorage : Token-Speicherung
+RequestTokens --> EmailService : Benachrichtigung
+DownloadReports --> LocalFileStorage : Dateiabruf
+
+@enduml
