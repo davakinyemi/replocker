@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
@@ -12,7 +11,7 @@ export class TokenAuthService {
 
   private tokenValidity = new Subject<boolean>();
 
-  constructor(private http: HttpClient) {
+  constructor() {
   }
 
   storeToken(collectionId: string, token: string) {
