@@ -34,9 +34,8 @@ end note
 note right of UC3
   **Löschprozess:**
   1. Physisches Löschen aus DB
-  2. Session Storage bereinigen
-  3. Audit-Log mit Löschgrund erstellen
-  4. E-Mail-Bestätigung an Nutzer
+  2. Audit-Log mit Löschgrund erstellen
+  3. E-Mail-Bestätigung an Nutzer
 end note
 
 @enduml
