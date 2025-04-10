@@ -1,0 +1,43 @@
+@startuml
+left to right direction
+
+package "Präsentationsschicht" {
+  [Angular 19 Frontend] as Frontend
+}
+
+package "Geschäftslogik-Schicht" {
+  [Spring Boot 3 Backend] as Backend
+  () "Token-Generierung" as TokenGen
+  () "Token-Validierung" as TokenVal
+  () "E-Mail-Dienst" as EmailService
+
+  Backend -- TokenGen
+  Backend -- TokenVal
+  Backend -- EmailService
+}
+
+package "Persistenzschicht" {
+  [PostgreSQL Database\n<<Docker>>] as Database
+  [File Storage] as Storage
+}
+
+package "Externe Dienste" {
+  [Keycloak\n<<Docker>>] as Keycloak
+  [SMTP Server] as SMTP
+}
+
+Frontend --> Backend : REST/HTTP\n(Zugriffsanfragen,\nZugriff auf Berichtssammlung)
+Backend --> Database : JPA/JDBC/Hibernate\n(Transaktionelle Vorgänge)
+Backend --> Storage : File I/O\n(Bericht Speicherung)
+Backend --> Keycloak : OpenID Connect\n(RepLocker Admin-Authentifizierung)
+Backend --> SMTP : SMTP Protocol\n(E-Mail-Benachrichtigungen)
+
+note right of Backend
+  Behandelt:
+  - Token-Verwaltung
+  - Integration der Authentifizierung
+  - Geschäftslogik
+  - Datenpersistenz
+end note
+
+@enduml
